@@ -12,7 +12,7 @@ using XFM.DAL;
 namespace XFM.DAL.Migrations
 {
     [DbContext(typeof(XFMContext))]
-    [Migration("20250805081625_initialmig")]
+    [Migration("20250806071321_initialmig")]
     partial class initialmig
     {
         /// <inheritdoc />
@@ -36,13 +36,13 @@ namespace XFM.DAL.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Mail")
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(120)
                         .HasColumnType("nvarchar(120)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Password")
                         .IsRequired()

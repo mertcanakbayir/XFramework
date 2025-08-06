@@ -11,7 +11,7 @@ using XFM.DAL.Entities;
 
 namespace XFM.BLL.Services.UserService
 {
-    internal class UserService : IUserService
+    public class UserService : IUserService
     {
         private readonly IMapper _mapper;
         private readonly IBaseRepository<User> _baseRepository;
@@ -22,7 +22,7 @@ namespace XFM.BLL.Services.UserService
         }
         public async Task<Result<UserDto>> GetUserByEmail(string email)
         {
-            var user = await _baseRepository.GetAsync(x => x.Mail == email);
+            var user = await _baseRepository.GetAsync(x => x.Email == email);
             if (user == null)
             {
                 return Result<UserDto>.Failure("Kullanıcı bulunamadı", null,404);

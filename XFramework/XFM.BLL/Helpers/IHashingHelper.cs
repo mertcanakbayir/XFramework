@@ -4,14 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using XFM.BLL.Result;
 
-namespace XFM.BLL.Services.UserService
+namespace XFM.BLL.HashService
 {
-    public interface IHashService
+    public interface IHashingHelper
     {
         string HashPassword(string plainedPassword);
-        string VerifyPassword(string hashedPassword, string plainedPassword);
+        bool VerifyPassword(string hashedPassword, string plainedPassword);
 
     }
 }
