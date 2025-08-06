@@ -1,7 +1,6 @@
 ﻿using Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using XFM.BLL.HashService;
 using XFM.BLL.Services.AuthService;
 using XFM.BLL.Services.UserService;
 using XFM.DAL.Entities;
@@ -26,13 +25,13 @@ namespace XFramework.Controllers
                 var result = await _authService.Register(registerDto);
                 if (!result.IsSuccess)
                 {
-                    return BadRequest(new
+                    return StatusCode(result.StatusCode,new
                     {
                         message = result.Message,
                         errors = result.Errors
                     });
                 }
-                return Ok(new
+                return StatusCode(result.StatusCode,new
                 {
                     message = result.Message
                 });
@@ -51,20 +50,20 @@ namespace XFramework.Controllers
                 var result = await _authService.Login(loginDto);
                 if (!result.IsSuccess)
                 {
-                    return BadRequest(new
+                    return StatusCode(result.StatusCode, new
                     {
                         message = result.Message,
                         errors = result.Errors
                     });
                 }
-                return Ok(new
+                return StatusCode(result.StatusCode,new
                 {
-                    message = result.Message
+                    message = result.Message,
+                    token=result.Data
                 });
             }
             catch (Exception er)
             {
-
                 return BadRequest(er.Message);
             }
         }

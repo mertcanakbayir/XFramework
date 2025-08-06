@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace XFM.BLL.HashService
+namespace XFM.BLL.Utilities.Hashing
 {
     public interface IHashingHelper
     {
