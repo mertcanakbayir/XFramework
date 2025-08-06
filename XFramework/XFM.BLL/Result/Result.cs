@@ -34,7 +34,7 @@
                 Errors = null,
                 StatusCode = statusCode
             };
-        }
+        }  
 
         public static Result<T> Failure(string message, List<string> errors = null, int statusCode = 200)
         {
