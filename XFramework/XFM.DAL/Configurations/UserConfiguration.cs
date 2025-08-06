@@ -10,7 +10,7 @@ namespace XFM.DAL.Configurations
         {
             builder.HasKey("Id");
             builder.Property(x => x.Username).HasMaxLength(50).IsRequired();
-            builder.Property(x=>x.Mail).IsRequired().HasMaxLength(120);
+            builder.Property(x=>x.Email).IsRequired().HasMaxLength(120);
         }
     }
 }

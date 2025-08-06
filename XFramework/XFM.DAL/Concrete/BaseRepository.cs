@@ -5,9 +5,8 @@ using XFM.DAL.Entities;
 
 namespace XFM.DAL.Concrete
 {
-    public class BaseRepository<TEntity, TContext> : IBaseRepository<TEntity> where TEntity : class
-        where TContext : DbContext
-    {
+    public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
+    {   
         private readonly XFMContext _xfmContext;
         public BaseRepository(XFMContext xfmContext)
         {
@@ -15,8 +14,16 @@ namespace XFM.DAL.Concrete
         }
         public async Task AddAsync(TEntity entity)
         {
-            await _xfmContext.AddAsync(entity);
-            await _xfmContext.SaveChangesAsync();
+            try
+            {
+                await _xfmContext.AddAsync(entity);
+                await _xfmContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Hatanın detaylarını logla veya at
+                throw new Exception("AddAsync sırasında hata oluştu.", ex);
+            }
         }
 
         public async Task DeleteAsync(int id)
