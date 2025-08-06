@@ -12,8 +12,8 @@ using XFM.DAL;
 namespace XFM.DAL.Migrations
 {
     [DbContext(typeof(XFMContext))]
-    [Migration("20250806071321_initialmig")]
-    partial class initialmig
+    [Migration("20250806103825_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -1,9 +1,12 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using XFM.BLL.HashService;
 using XFM.BLL.Mappings;
 using XFM.BLL.Services.AuthService;
 using XFM.BLL.Services.UserService;
+using XFM.BLL.Utilities.Hashing;
+using XFM.BLL.Utilities.JWT;
+using XFM.BLL.Utilities.ValidationRulers;
 using XFM.DAL;
 using XFM.DAL.Abstract;
 using XFM.DAL.Concrete;
@@ -14,6 +17,10 @@ builder.Services.AddScoped<IHashingHelper, HashingHelper>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ITokenHelper, TokenHelper>();
+
+builder.Services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
+
 builder.Services.AddAutoMapper(typeof(UserProfile).Assembly);
 
 builder.Services.AddControllers();
