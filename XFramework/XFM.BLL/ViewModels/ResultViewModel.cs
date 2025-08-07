@@ -1,6 +1,6 @@
 ﻿namespace XFM.BLL.Result
 {
-    public class Result<T>
+    public class ResultViewModel<T>
     {
         public bool IsSuccess { get; set; }
 
@@ -13,9 +13,9 @@
         public int StatusCode { get; set; }
 
 
-        public static Result<T> Success(T data, string message = "", int statusCode = 200)
+        public static ResultViewModel<T> Success(T data, string message = "", int statusCode = 200)
         {
-            return new Result<T>
+            return new ResultViewModel<T>
             {
                 IsSuccess = true,
                 Message = message,
@@ -25,9 +25,9 @@
             };
         }
 
-        public static Result<T> Success(string message = "", int statusCode = 200)
+        public static ResultViewModel<T> Success(string message = "", int statusCode = 200)
         {
-            return new Result<T>
+            return new ResultViewModel<T>
             {
                 IsSuccess = true,
                 Message = message,
@@ -36,9 +36,9 @@
             };
         }  
 
-        public static Result<T> Failure(string message, List<string> errors = null, int statusCode = 200)
+        public static ResultViewModel<T> Failure(string message, List<string> errors = null, int statusCode = 200)
         {
-            return new Result<T>
+            return new ResultViewModel<T>
             {
                 IsSuccess = false,
                 Message = message,

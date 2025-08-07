@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\XFM.BLL\XFM.BLL.csproj" />
-    <ProjectReference Include="..\XFM.DAL\XFM.DAL.csproj" />
+    <ProjectReference Include="..\XFM.BLL\XFramework.BLL.csproj" />
+    <ProjectReference Include="..\XFM.DAL\XFramework.DAL.csproj" />
   </ItemGroup>
 
 </Project>
