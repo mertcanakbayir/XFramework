@@ -9,7 +9,7 @@ namespace XFM.BLL.Services.UserService
 {
     public interface IUserService
     {
-        Task<Result<UserDto>> GetUserById(int id);
-        Task<Result<UserDto>> GetUserByEmail(string email);
+        Task<ResultViewModel<UserDto>> GetUserById(int id);
+        Task<ResultViewModel<UserDto>> GetUserByEmail(string email);
     }
 }

@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36310.24
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XFramework", "XFramework\XFramework.csproj", "{25CE9A55-C311-4236-B5B1-CA20ADBB72CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XFramework.API", "XFramework\XFramework.API.csproj", "{25CE9A55-C311-4236-B5B1-CA20ADBB72CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XFM.DAL", "XFM.DAL\XFM.DAL.csproj", "{839C71B5-5588-4D57-884E-EEF8F2DCA3E8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XFramework.DAL", "XFM.DAL\XFramework.DAL.csproj", "{839C71B5-5588-4D57-884E-EEF8F2DCA3E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XFM.BLL", "XFM.BLL\XFM.BLL.csproj", "{830C1683-BBE8-48F8-8C67-631C92D227FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XFramework.BLL", "XFM.BLL\XFramework.BLL.csproj", "{830C1683-BBE8-48F8-8C67-631C92D227FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dtos", "Dtos\Dtos.csproj", "{3B64D5C8-9876-4803-BEE5-C03FBFBD02EC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XFramework.Dtos", "Dtos\XFramework.Dtos.csproj", "{3B64D5C8-9876-4803-BEE5-C03FBFBD02EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -35,22 +35,22 @@ namespace XFM.BLL.Services.AuthService
             _tokenHelper = tokenHelper;
         }
 
-        public async Task<Result<string>> Login(LoginDto loginDto)
+        public async Task<ResultViewModel<string>> Login(LoginDto loginDto)
         {
             var validationResult=_loginDtoValidator.Validate(loginDto);
             if (!validationResult.IsValid) {
                 var errorMessages = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
-                return Result<string>.Failure("Lütfen girdiğiniz bilgileri kontrol edin.",errorMessages,400);
+                return ResultViewModel<string>.Failure("Lütfen girdiğiniz bilgileri kontrol edin.",errorMessages,400);
             }
             var existedUser = await _baseRepository.GetAsync(e => e.Email == loginDto.Email);
             if (existedUser == null)
             {
-                return Result<string>.Failure("Lütfen girdiğiniz bilgileri kontrol edin.", null, 401);  
+                return ResultViewModel<string>.Failure("Lütfen girdiğiniz bilgileri kontrol edin.", null, 401);  
             }
             bool verifyPassword = _hashService.VerifyPassword(loginDto.Password , existedUser.Password);
 
             if (!verifyPassword)
-                return Result<string>.Failure("Lütfen girdiğiniz bilgileri kontrol edin.", null, 401);
+                return ResultViewModel<string>.Failure("Lütfen girdiğiniz bilgileri kontrol edin.", null, 401);
 
             CreateTokenDto createTokenDto = new CreateTokenDto
             {
@@ -61,23 +61,23 @@ namespace XFM.BLL.Services.AuthService
             var token = _tokenHelper.CreateToken(createTokenDto);
             if (token != null)
             {
-                return Result<string>.Success(token.Token, message: "Giriş Başarılı", 200);
+                return ResultViewModel<string>.Success(token.Token, message: "Giriş Başarılı", 200);
             }
-            return Result<string>.Failure("Hata oluştu.", null, 401);
+            return ResultViewModel<string>.Failure("Hata oluştu.", null, 401);
         }
 
-        public async Task<Result<string>> Register(RegisterDto registerDto)
+        public async Task<ResultViewModel<string>> Register(RegisterDto registerDto)
         {
             var validationResult=_registerDtoValidator.Validate(registerDto);
             if (!validationResult.IsValid)
             {
                 var errorMessages = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
-                return Result<string>.Failure("Lütfen girdiğiniz bilgileri kontrol edin.", errorMessages, 200);
+                return ResultViewModel<string>.Failure("Lütfen girdiğiniz bilgileri kontrol edin.", errorMessages, 200);
             }
             var existingUser=await _baseRepository.GetAsync(e=>e.Email.Trim().ToLower()== registerDto.Email.Trim().ToLower(),asNoTracking:true);
             if (existingUser != null)
             {
-                return Result<string>.Failure("Lütfen benzersiz bir e-posta adresi girin.");
+                return ResultViewModel<string>.Failure("Lütfen benzersiz bir e-posta adresi girin.");
             }
 
            var hashPassword = _hashService.HashPassword(registerDto.Password);
@@ -92,7 +92,7 @@ namespace XFM.BLL.Services.AuthService
             };
              await _baseRepository.AddAsync(user);
 
-            return Result<string>.Success("Kullanıcı Başarıyla Kaydedildi.",201);
+            return ResultViewModel<string>.Success("Kullanıcı Başarıyla Kaydedildi.",201);
             
         }
     }

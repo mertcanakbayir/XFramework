@@ -20,26 +20,26 @@ namespace XFM.BLL.Services.UserService
             _baseRepository = baseRepository;
             _mapper = mapper;
         }
-        public async Task<Result<UserDto>> GetUserByEmail(string email)
+        public async Task<ResultViewModel<UserDto>> GetUserByEmail(string email)
         {
             var user = await _baseRepository.GetAsync(x => x.Email == email);
             if (user == null)
             {
-                return Result<UserDto>.Failure("Kullanıcı bulunamadı", null,404);
+                return ResultViewModel<UserDto>.Failure("Kullanıcı bulunamadı", null,404);
             }
             var userDto = _mapper.Map<UserDto>(user);
-            return Result<UserDto>.Success(userDto, "kullanıcı döndü", 200);
+            return ResultViewModel<UserDto>.Success(userDto, "kullanıcı döndü", 200);
         }
 
-        public async Task<Result<UserDto>> GetUserById(int id)
+        public async Task<ResultViewModel<UserDto>> GetUserById(int id)
         {
            var user = await _baseRepository.GetAsync(e=>e.Id == id);
             if(user == null)
             {
-                return Result<UserDto>.Failure("Kullanıcı bulunamadı",null,404);
+                return ResultViewModel<UserDto>.Failure("Kullanıcı bulunamadı",null,404);
             }
             var userDto = _mapper.Map<UserDto>(user);
-            return Result<UserDto>.Success(userDto, "Başarılı", 200);
+            return ResultViewModel<UserDto>.Success(userDto, "Başarılı", 200);
         }
     }
 }
