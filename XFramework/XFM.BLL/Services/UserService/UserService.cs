@@ -41,5 +41,20 @@ namespace XFM.BLL.Services.UserService
             var userDto = _mapper.Map<UserDto>(user);
             return ResultViewModel<UserDto>.Success(userDto, "Başarılı", 200);
         }
+
+        public async Task<ResultViewModel<List<UserDto>>> GetUsers()
+        {
+            var users = await _baseRepository.GetAllAsync(e=>e.RoleId==3);
+
+            if (!users.Any()) 
+            {
+                return ResultViewModel<List<UserDto>>.Failure("Kullanıcı bulunamadı", null, 404);
+            }
+
+            var userDtos = _mapper.Map<List<UserDto>>(users);
+
+            return ResultViewModel<List<UserDto>>.Success(userDtos, "Kullanıcılar", 200);
+        }
+
     }
 }

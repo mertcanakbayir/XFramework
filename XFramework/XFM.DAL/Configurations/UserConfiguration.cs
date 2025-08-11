@@ -11,6 +11,11 @@ namespace XFM.DAL.Configurations
             builder.HasKey("Id");
             builder.Property(x => x.Username).HasMaxLength(50).IsRequired();
             builder.Property(x=>x.Email).IsRequired().HasMaxLength(120);
+
+            builder.HasOne(u=>u.Role)
+                .WithMany(r=>r.Users)
+                .HasForeignKey(u=>u.RoleId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

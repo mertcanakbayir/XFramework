@@ -56,7 +56,8 @@ namespace XFM.BLL.Services.AuthService
             {
                 Email = existedUser.Email,
                 Username = existedUser.Username,
-                Id=existedUser.Id
+                Id=existedUser.Id,
+                Role=existedUser.RoleId.ToString()
             };
             var token = _tokenHelper.CreateToken(createTokenDto);
             if (token != null)
@@ -88,7 +89,8 @@ namespace XFM.BLL.Services.AuthService
                 Email = registerDto.Email,
                 IsActive=true,
                 CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
+                UpdatedAt = DateTime.Now,
+                RoleId=3
             };
              await _baseRepository.AddAsync(user);
 

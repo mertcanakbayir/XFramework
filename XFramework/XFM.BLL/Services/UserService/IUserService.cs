@@ -11,5 +11,7 @@ namespace XFM.BLL.Services.UserService
     {
         Task<ResultViewModel<UserDto>> GetUserById(int id);
         Task<ResultViewModel<UserDto>> GetUserByEmail(string email);
+
+        Task<ResultViewModel<List<UserDto>>> GetUsers();    
     }
 }
