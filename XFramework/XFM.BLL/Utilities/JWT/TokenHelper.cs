@@ -22,8 +22,11 @@ namespace XFM.BLL.Utilities.JWT
             {
                   new Claim(JwtRegisteredClaimNames.Sub,createTokenDto.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, createTokenDto.Email),
-                new Claim(JwtRegisteredClaimNames.PreferredUsername,createTokenDto.Username)
+                new Claim(JwtRegisteredClaimNames.PreferredUsername,createTokenDto.Username),
+                new Claim(ClaimTypes.Role, createTokenDto.Role)
+
             };
+
 
             var tokenExpiry = DateTime.Now.AddMinutes(_jwtSettings.ExpiresInMinutes);
 

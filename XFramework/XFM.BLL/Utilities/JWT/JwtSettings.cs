@@ -8,6 +8,6 @@
 
         public string Audience { get; set; } = "XFramework";
 
-        public int ExpiresInMinutes { get; set; }
+        public int ExpiresInMinutes { get; set; } = 60;
     }
 }

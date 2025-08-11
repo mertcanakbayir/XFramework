@@ -27,7 +27,7 @@ builder.Services.AddCors(options =>
         });
 });
 
-var jwtSettings = new JwtSettings(); // Bu senin class’taki default deðerleri alýr
+var jwtSettings = new JwtSettings(); 
 
 builder.Services.Configure<JwtSettings>(options =>
 {
@@ -57,6 +57,10 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
         ClockSkew = TimeSpan.Zero
     };
+});
+
+builder.Services.AddAuthorization(options => {
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("1"));
 });
 
 

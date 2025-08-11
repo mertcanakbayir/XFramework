@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XFM.DAL.Entities;
+using XFramework.DAL.Entities;
 
 namespace XFM.DAL
 {
@@ -11,6 +12,7 @@ namespace XFM.DAL
 
         public DbSet<User> Users { get; set; }
 
+        public DbSet<Role> Roles { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(XFMContext).Assembly);
