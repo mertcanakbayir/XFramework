@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using XFM.BLL.Services.UserService;
 using XFM.DAL.Abstract;
 using XFM.DAL.Entities;
@@ -19,7 +20,7 @@ namespace XFramework.Controllers
 
         [HttpGet("get-all-users")]
         [Authorize(Policy ="AdminOnly")]
-        public async Task<ActionResult> Get() {
+        public async Task<ActionResult> AdminRoleGetAll() {
             var result= await _userService.GetUsers();
             if (!result.IsSuccess)
             {
@@ -33,7 +34,25 @@ namespace XFramework.Controllers
                 data = result.Data
             });
         }
-
+        [HttpGet("get-all-users-forUser")]
+        [Authorize(Policy = "UserOnly")]
+        public async Task<ActionResult> UserRoleGetAll()
+        {
+            var result = await _userService.GetUsers();
+            if (!result.IsSuccess)
+            {
+                return StatusCode(result.StatusCode, new
+                {
+                    message = result.Message,
+                    errors = result.Errors
+                });
+            }
+            return StatusCode(result.StatusCode, new
+            {
+                message = result.Message,
+                data = result.Data
+            });
+        }   
     }
 }
 
