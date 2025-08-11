@@ -12,8 +12,8 @@ using XFM.DAL;
 namespace XFM.DAL.Migrations
 {
     [DbContext(typeof(XFMContext))]
-    [Migration("20250811112909_rolemig")]
-    partial class rolemig
+    [Migration("20250811130400_roleMig")]
+    partial class roleMig
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

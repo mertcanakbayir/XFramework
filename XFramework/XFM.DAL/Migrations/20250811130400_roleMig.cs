@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace XFM.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class rolemig : Migration
+    public partial class roleMig : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
