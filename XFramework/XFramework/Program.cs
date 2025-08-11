@@ -1,6 +1,9 @@
+using System.Text;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using XFM.BLL.Mappings;
 using XFM.BLL.Services.AuthService;
 using XFM.BLL.Services.UserService;
@@ -17,12 +20,45 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAngularClient",
         policy =>
         {
-            policy.WithOrigins("http://localhost:4200") // Angular URL
+            policy.WithOrigins("http://localhost:4200")
                   .AllowAnyHeader()
                   .AllowAnyMethod()
                   .AllowCredentials();
         });
 });
+
+var jwtSettings = new JwtSettings(); // Bu senin class’taki default deðerleri alýr
+
+builder.Services.Configure<JwtSettings>(options =>
+{
+    options.Key = jwtSettings.Key;
+    options.Issuer = jwtSettings.Issuer;
+    options.Audience = jwtSettings.Audience;
+    options.ExpiresInMinutes = jwtSettings.ExpiresInMinutes;
+});
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings.Issuer,
+        ValidAudience = jwtSettings.Audience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
+        ClockSkew = TimeSpan.Zero
+    };
+});
+
 
 
 // Add services to the container.
@@ -56,6 +92,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
