@@ -12,6 +12,19 @@ using XFM.DAL.Abstract;
 using XFM.DAL.Concrete;
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularClient",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200") // Angular URL
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+        });
+});
+
+
 // Add services to the container.
 builder.Services.AddScoped<IHashingHelper, HashingHelper>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
@@ -33,6 +46,7 @@ builder.Services.AddDbContext<XFMContext>(options =>
 );
 var app = builder.Build();
 
+app.UseCors("AllowAngularClient");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
