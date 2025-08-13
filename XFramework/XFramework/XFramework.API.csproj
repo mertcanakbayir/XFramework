@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\XFM.BLL\XFramework.BLL.csproj" />
-    <ProjectReference Include="..\XFM.DAL\XFramework.DAL.csproj" />
   </ItemGroup>
 
 </Project>

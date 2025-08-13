@@ -66,9 +66,6 @@ builder.Services.AddAuthorization(options => {
       policy.RequireClaim("Permission", "CreateOrder"));
 });
 
-
-
- 
 // Add services to the container.
 builder.Services.AddScoped<IHashingHelper, HashingHelper>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));

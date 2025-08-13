@@ -1,4 +1,5 @@
-﻿using Dtos;
+﻿using AutoMapper;
+using Dtos;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,6 +14,7 @@ using XFM.BLL.Utilities.JWT;
 using XFM.DAL.Abstract;
 using XFM.DAL.Concrete;
 using XFM.DAL.Entities;
+using XFramework.BLL.Mappings;
 using XFramework.DAL.Entities;
 
 namespace XFM.BLL.Services.AuthService
@@ -27,8 +29,10 @@ namespace XFM.BLL.Services.AuthService
         private readonly IValidator<RegisterDto> _registerDtoValidator;
         private readonly IValidator<LoginDto> _loginDtoValidator;
         private readonly ITokenHelper _tokenHelper;
+        private readonly IMapper _mapper;
 
-        public AuthService(IBaseRepository<User> userRepository,IBaseRepository<UserRole> userRoleRespository, IHashingHelper hashService, IUserService userService,IValidator<LoginDto> loginDtoValidator,IValidator<RegisterDto> registerDtoValidator, ITokenHelper tokenHelper)
+        public AuthService(IBaseRepository<User> userRepository,IBaseRepository<UserRole> userRoleRespository, IHashingHelper hashService, IUserService userService,IValidator<LoginDto> loginDtoValidator,IValidator<RegisterDto> registerDtoValidator, ITokenHelper tokenHelper,
+            IMapper mapper)
         {
             _hashService = hashService;
             _userRepository = userRepository;
@@ -37,6 +41,7 @@ namespace XFM.BLL.Services.AuthService
             _loginDtoValidator = loginDtoValidator;
             _registerDtoValidator = registerDtoValidator;
             _tokenHelper = tokenHelper;
+            _mapper = mapper;
         }
 
         public async Task<ResultViewModel<string>> Login(LoginDto loginDto)
@@ -58,13 +63,7 @@ namespace XFM.BLL.Services.AuthService
             if (!verifyPassword)
                 return ResultViewModel<string>.Failure("Lütfen girdiğiniz bilgileri kontrol edin.", null, 401);
 
-            CreateTokenDto createTokenDto = new CreateTokenDto
-            {
-                Email = existedUser.Email,
-                Username = existedUser.Username,
-                Id=existedUser.Id,
-                Role=roles
-            };
+          var createTokenDto=_mapper.Map<CreateTokenDto>(loginDto);
             var token = _tokenHelper.CreateToken(createTokenDto);
             if (token != null)
             {
@@ -88,16 +87,12 @@ namespace XFM.BLL.Services.AuthService
             }
 
            var hashPassword = _hashService.HashPassword(registerDto.Password);
-            var user = new User
-            {
-                Username = registerDto.Username,
-                Password = hashPassword,
-                Email = registerDto.Email,
-                IsActive=true,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
-            };
-             await _userRepository.AddAsync(user);
+            var user =_mapper.Map<User>(registerDto);
+            user.Password = _hashService.HashPassword(registerDto.Password);
+            user.IsActive = true;
+            user.CreatedAt = DateTime.Now;
+            user.UpdatedAt = DateTime.Now;
+            await _userRepository.AddAsync(user);
 
             var userRole = new UserRole
             {

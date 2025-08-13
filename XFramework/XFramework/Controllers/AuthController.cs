@@ -1,5 +1,6 @@
 ﻿using Dtos;
 using Microsoft.AspNetCore.Mvc;
+using XFM.BLL.Result;
 using XFM.BLL.Services.AuthService;
 
 namespace XFramework.Controllers
@@ -15,54 +16,16 @@ namespace XFramework.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult> Register(RegisterDto registerDto)
+        [ResultViewModelFilter]
+        public async Task<ResultViewModel<string>> Register(RegisterDto registerDto)
         {
-            try
-            {
-                var result = await _authService.Register(registerDto);
-                if (!result.IsSuccess)
-                {
-                    return StatusCode(result.StatusCode,new
-                    {
-                        message = result.Message,
-                        errors = result.Errors
-                    });
-                }
-                return StatusCode(result.StatusCode,new
-                {
-                    message = result.Message
-                });
-
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return await _authService.Register(registerDto);
         }
         [HttpPost("login")]
-        public async Task<ActionResult> Login(LoginDto loginDto)
+        [ResultViewModelFilter]
+        public async Task<ResultViewModel<string>> Login(LoginDto loginDto)
         {
-            try
-            {
-                var result = await _authService.Login(loginDto);
-                if (!result.IsSuccess)
-                {
-                    return StatusCode(result.StatusCode, new
-                    {
-                        message = result.Message,
-                        errors = result.Errors
-                    });
-                }
-                return StatusCode(result.StatusCode,new
-                {
-                    message = result.Message,
-                    token=result.Data
-                });
-            }
-            catch (Exception er)
-            {
-                return BadRequest(er.Message);
-            }
+           return await _authService.Login(loginDto);
         }
     }
 }
