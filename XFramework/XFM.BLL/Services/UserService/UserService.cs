@@ -44,7 +44,7 @@ namespace XFM.BLL.Services.UserService
 
         public async Task<ResultViewModel<List<UserDto>>> GetUsers()
         {
-            var users = await _baseRepository.GetAllAsync(e=>e.RoleId==3);
+            var users = await _baseRepository.GetAllAsync();
 
             if (!users.Any()) 
             {

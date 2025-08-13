@@ -6,6 +6,10 @@ namespace XFramework.DAL.Entities
     {
         public string Name { get; set; }
 
-        public ICollection<User> Users { get; set; }=new List<User>();
+        public ICollection<UserRole> UserRoles { get; set; }=new List<UserRole>();
+
+        public ICollection<EndpointRole> EndpointRoles { get; set; } = new List<EndpointRole>();
+
+        public ICollection<PageRole> PageRoles { get; set; } = new List<PageRole>();
     }
 }

@@ -10,7 +10,7 @@ namespace XFM.DAL.Abstract
 
         Task DeleteAsync(int id);
 
-        Task<List<T>> GetAllAsync(Expression<Func<T, bool>> filter=null!, bool includeInactive=false,bool asNoTracking=false, Func<IQueryable<T>> includeFunc=null!);
-        Task<T> GetAsync(Expression<Func<T, bool>> filter=null!, bool includeInactive=false,bool asNoTracking=false, Func<IQueryable<T>> includeFunc=null!);
+        Task<List<T>> GetAllAsync(Expression<Func<T, bool>> filter=null!, bool includeInactive=false,bool asNoTracking=false, Func<IQueryable<T>,IQueryable<T>> includeFunc=null!);
+        Task<T> GetAsync(Expression<Func<T, bool>> filter=null!, bool includeInactive=false,bool asNoTracking=false, Func<IQueryable<T>,IQueryable<T>> includeFunc=null!);
     }
 }

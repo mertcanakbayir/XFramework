@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using XFM.DAL;
 
@@ -11,9 +12,11 @@ using XFM.DAL;
 namespace XFramework.DAL.Migrations
 {
     [DbContext(typeof(XFMContext))]
-    partial class XFMContextModelSnapshot : ModelSnapshot
+    [Migration("20250813073046_initial")]
+    partial class initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,38 +93,6 @@ namespace XFramework.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Endpoints");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Action = "GetAll",
-                            Controller = "User",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            HttpMethod = "GET",
-                            IsActive = true,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Action = "Get",
-                            Controller = "Page",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            HttpMethod = "GET",
-                            IsActive = true,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Action = "Create",
-                            Controller = "Page",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            HttpMethod = "POST",
-                            IsActive = true,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
                 });
 
             modelBuilder.Entity("XFramework.DAL.Entities.EndpointRole", b =>
@@ -137,38 +108,6 @@ namespace XFramework.DAL.Migrations
                     b.HasIndex("EndpointId");
 
                     b.ToTable("EndpointRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            RoleId = 1,
-                            EndpointId = 1
-                        },
-                        new
-                        {
-                            RoleId = 1,
-                            EndpointId = 2
-                        },
-                        new
-                        {
-                            RoleId = 1,
-                            EndpointId = 3
-                        },
-                        new
-                        {
-                            RoleId = 2,
-                            EndpointId = 1
-                        },
-                        new
-                        {
-                            RoleId = 2,
-                            EndpointId = 2
-                        },
-                        new
-                        {
-                            RoleId = 3,
-                            EndpointId = 2
-                        });
                 });
 
             modelBuilder.Entity("XFramework.DAL.Entities.Page", b =>
@@ -195,24 +134,6 @@ namespace XFramework.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Page");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = true,
-                            PageUrl = "/dashboard",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = true,
-                            PageUrl = "/users",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
                 });
 
             modelBuilder.Entity("XFramework.DAL.Entities.PageRole", b =>
@@ -228,28 +149,6 @@ namespace XFramework.DAL.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("PageRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            PageId = 1,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            PageId = 2,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            PageId = 1,
-                            RoleId = 2
-                        },
-                        new
-                        {
-                            PageId = 1,
-                            RoleId = 3
-                        });
                 });
 
             modelBuilder.Entity("XFramework.DAL.Entities.Role", b =>
@@ -318,23 +217,6 @@ namespace XFramework.DAL.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("UserRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            UserId = 2,
-                            RoleId = 2
-                        },
-                        new
-                        {
-                            UserId = 3,
-                            RoleId = 3
-                        });
                 });
 
             modelBuilder.Entity("XFramework.DAL.Entities.EndpointRole", b =>
