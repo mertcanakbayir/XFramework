@@ -13,6 +13,8 @@ using XFM.BLL.Utilities.ValidationRulers;
 using XFM.DAL;
 using XFM.DAL.Abstract;
 using XFM.DAL.Concrete;
+using XFramework.API.Middlewares;
+using XFramework.BLL.Services.RoleAuthorizationService;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
@@ -58,21 +60,23 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero
     };
 });
-
+//??????
 builder.Services.AddAuthorization(options => {
-    options.AddPolicy("AdminOnly", policy => policy.RequireRole("1"));
-    options.AddPolicy("UserOnly", policy => policy.RequireRole("3"));
+    options.AddPolicy("CanCreateOrder", policy =>
+      policy.RequireClaim("Permission", "CreateOrder"));
 });
 
 
 
-
+ 
 // Add services to the container.
 builder.Services.AddScoped<IHashingHelper, HashingHelper>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenHelper, TokenHelper>();
+
+builder.Services.AddScoped<RoleAuthorizationService>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
 
@@ -100,6 +104,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseRoleAuthorization();
 
 app.MapControllers();
 

@@ -1,5 +1,6 @@
 ﻿using Dtos;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ using XFM.BLL.Utilities.JWT;
 using XFM.DAL.Abstract;
 using XFM.DAL.Concrete;
 using XFM.DAL.Entities;
+using XFramework.DAL.Entities;
 
 namespace XFM.BLL.Services.AuthService
 {
@@ -19,16 +21,18 @@ namespace XFM.BLL.Services.AuthService
     {
 
         private readonly IHashingHelper _hashService;
-        private readonly IBaseRepository<User> _baseRepository;
+        private readonly IBaseRepository<User> _userRepository;
+        private readonly IBaseRepository<UserRole> _userRoleRepository;
         private readonly IUserService _userService;
         private readonly IValidator<RegisterDto> _registerDtoValidator;
         private readonly IValidator<LoginDto> _loginDtoValidator;
         private readonly ITokenHelper _tokenHelper;
 
-        public AuthService(IBaseRepository<User> baseRepository, IHashingHelper hashService, IUserService userService,IValidator<LoginDto> loginDtoValidator,IValidator<RegisterDto> registerDtoValidator, ITokenHelper tokenHelper)
+        public AuthService(IBaseRepository<User> userRepository,IBaseRepository<UserRole> userRoleRespository, IHashingHelper hashService, IUserService userService,IValidator<LoginDto> loginDtoValidator,IValidator<RegisterDto> registerDtoValidator, ITokenHelper tokenHelper)
         {
             _hashService = hashService;
-            _baseRepository = baseRepository;
+            _userRepository = userRepository;
+            _userRoleRepository= userRoleRespository;
             _userService = userService;
             _loginDtoValidator = loginDtoValidator;
             _registerDtoValidator = registerDtoValidator;
@@ -42,11 +46,13 @@ namespace XFM.BLL.Services.AuthService
                 var errorMessages = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
                 return ResultViewModel<string>.Failure("Lütfen girdiğiniz bilgileri kontrol edin.",errorMessages,400);
             }
-            var existedUser = await _baseRepository.GetAsync(e => e.Email == loginDto.Email);
+            var existedUser = await _userRepository.GetAsync(e => e.Email == loginDto.Email,includeFunc:query=>query.Include(u=>u.UserRoles).ThenInclude(ur=>ur.Role));
+
             if (existedUser == null)
             {
                 return ResultViewModel<string>.Failure("Lütfen girdiğiniz bilgileri kontrol edin.", null, 401);  
             }
+            var roles=existedUser.UserRoles.Select(ur=>ur.Role.Name).ToList();
             bool verifyPassword = _hashService.VerifyPassword(loginDto.Password , existedUser.Password);
 
             if (!verifyPassword)
@@ -57,7 +63,7 @@ namespace XFM.BLL.Services.AuthService
                 Email = existedUser.Email,
                 Username = existedUser.Username,
                 Id=existedUser.Id,
-                Role=existedUser.RoleId.ToString()
+                Role=roles
             };
             var token = _tokenHelper.CreateToken(createTokenDto);
             if (token != null)
@@ -75,7 +81,7 @@ namespace XFM.BLL.Services.AuthService
                 var errorMessages = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
                 return ResultViewModel<string>.Failure("Lütfen girdiğiniz bilgileri kontrol edin.", errorMessages, 200);
             }
-            var existingUser=await _baseRepository.GetAsync(e=>e.Email.Trim().ToLower()== registerDto.Email.Trim().ToLower(),asNoTracking:true);
+            var existingUser=await _userRepository.GetAsync(e=>e.Email.Trim().ToLower()==registerDto.Email.Trim().ToLower(),asNoTracking:true);
             if (existingUser != null)
             {
                 return ResultViewModel<string>.Failure("Lütfen benzersiz bir e-posta adresi girin.");
@@ -89,10 +95,16 @@ namespace XFM.BLL.Services.AuthService
                 Email = registerDto.Email,
                 IsActive=true,
                 CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
-                RoleId=3
+                UpdatedAt = DateTime.Now
             };
-             await _baseRepository.AddAsync(user);
+             await _userRepository.AddAsync(user);
+
+            var userRole = new UserRole
+            {
+                RoleId = 3,
+                UserId = user.Id
+            };
+            await _userRoleRepository.AddAsync(userRole);
 
             return ResultViewModel<string>.Success("Kullanıcı Başarıyla Kaydedildi.",201);
             

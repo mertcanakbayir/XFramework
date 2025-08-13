@@ -21,7 +21,6 @@ namespace XFM.DAL.Concrete
             }
             catch (Exception ex)
             {
-                // Hatanın detaylarını logla veya at
                 throw new Exception("AddAsync sırasında hata oluştu.", ex);
             }
         }
@@ -40,7 +39,7 @@ namespace XFM.DAL.Concrete
             }
         }
 
-        public async Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> filter = null, bool includeInactive = false, bool asNoTracking = false, Func<IQueryable<TEntity>> includeFunc = null)
+        public async Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> filter = null, bool includeInactive = false, bool asNoTracking = false, Func<IQueryable<TEntity>,IQueryable<TEntity>> includeFunc = null)
         {
             var query = _xfmContext.Set<TEntity>().AsQueryable();
 
@@ -49,15 +48,23 @@ namespace XFM.DAL.Concrete
                 query = query.Where(e => ((BaseEntity)(object)e).IsActive);
             }
 
+            if (includeFunc != null)
+            {
+                query = includeFunc(query);
+            }
             if (filter != null)
             {
                 query = query.Where(filter);
+            }
+            if(asNoTracking)
+            {
+                query = query.AsNoTracking();
             }
 
             return await query.ToListAsync();
         }
 
-        public Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> filter = null, bool includeInactive = false, bool asNoTracking = false, Func<IQueryable<TEntity>> includeFunc = null)
+        public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> filter = null, bool includeInactive = false, bool asNoTracking = false, Func<IQueryable<TEntity>, IQueryable<TEntity>> includeFunc = null)
         {
             var query = _xfmContext.Set<TEntity>().AsQueryable();
 
@@ -65,13 +72,19 @@ namespace XFM.DAL.Concrete
             {
                 query = query.Where(e => ((BaseEntity)(object)e).IsActive);
             }
-
+            if(includeFunc!=null)
+            {
+                query = includeFunc(query);
+            }
             if (filter != null)
             {
                 query = query.Where(filter);
             }
-
-            return query.FirstOrDefaultAsync();
+            if (asNoTracking)
+            {
+                query = query.AsNoTracking();
+            }
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task UpdateAsync(TEntity entity)

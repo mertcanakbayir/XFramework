@@ -1,10 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Client;
+﻿using Microsoft.AspNetCore.Mvc;
 using XFM.BLL.Services.UserService;
-using XFM.DAL.Abstract;
-using XFM.DAL.Entities;
 namespace XFramework.Controllers
 {
     [Route("api/[controller]")]
@@ -17,42 +12,23 @@ namespace XFramework.Controllers
             _userService = userService;
         }
 
-
-        [HttpGet("get-all-users")]
-        [Authorize(Policy ="AdminOnly")]
-        public async Task<ActionResult> AdminRoleGetAll() {
-            var result= await _userService.GetUsers();
-            if (!result.IsSuccess)
-            {
-                return StatusCode(result.StatusCode,new {
-                    message=result.Message,
-                    errors= result.Errors } );
-            }
-            return StatusCode(result.StatusCode, new
-            {
-                message = result.Message,
-                data = result.Data
-            });
-        }
-        [HttpGet("get-all-users-forUser")]
-        [Authorize(Policy = "UserOnly")]
-        public async Task<ActionResult> UserRoleGetAll()
+        [HttpGet]
+        public async Task<ActionResult> GetAll()
         {
-            var result = await _userService.GetUsers();
-            if (!result.IsSuccess)
+            var result= await _userService.GetUsers();
+            if(!result.IsSuccess)
             {
                 return StatusCode(result.StatusCode, new
                 {
-                    message = result.Message,
-                    errors = result.Errors
+                    message=result.Message,
+                    errors=result.Errors
                 });
             }
-            return StatusCode(result.StatusCode, new
-            {
-                message = result.Message,
-                data = result.Data
+            return StatusCode(result.StatusCode, new {
+            data=result.Data,
+            message=result.Message
             });
-        }   
+        }
     }
 }
 

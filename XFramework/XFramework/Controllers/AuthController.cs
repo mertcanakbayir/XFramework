@@ -1,9 +1,6 @@
 ﻿using Dtos;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using XFM.BLL.Services.AuthService;
-using XFM.BLL.Services.UserService;
-using XFM.DAL.Entities;
 
 namespace XFramework.Controllers
 {

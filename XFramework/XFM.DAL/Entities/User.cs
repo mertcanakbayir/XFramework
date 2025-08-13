@@ -10,8 +10,7 @@ namespace XFM.DAL.Entities
 
         public string Password { get; set; }
 
-        public int RoleId { get; set; }
-        public Role Role { get; set; }
+        public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 
     }
 }
