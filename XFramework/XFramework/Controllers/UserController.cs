@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Dtos;
+using Microsoft.AspNetCore.Mvc;
+using XFM.BLL.Result;
 using XFM.BLL.Services.UserService;
 namespace XFramework.Controllers
 {
@@ -13,21 +15,10 @@ namespace XFramework.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetAll()
+        [ResultViewModelFilter]
+        public async Task<ResultViewModel<List<UserDto>>> GetAll()
         {
-            var result= await _userService.GetUsers();
-            if(!result.IsSuccess)
-            {
-                return StatusCode(result.StatusCode, new
-                {
-                    message=result.Message,
-                    errors=result.Errors
-                });
-            }
-            return StatusCode(result.StatusCode, new {
-            data=result.Data,
-            message=result.Message
-            });
+           return await _userService.GetUsers();
         }
     }
 }
