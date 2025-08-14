@@ -10,7 +10,7 @@ namespace XFramework.BLL.Mappings
         {
             CreateMap<User, CreateTokenDto>()
                 .ForMember(dest => dest.Role,
-                opt=>opt.MapFrom(src=>src.UserRoles.Select(ur=>ur.Role.Name).ToList()));
+                           opt => opt.MapFrom(src => src.UserRoles.Select(ur => ur.Role.Name).ToList()));
         }
     }
 }
