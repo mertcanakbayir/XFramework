@@ -63,7 +63,7 @@ namespace XFM.BLL.Services.AuthService
             if (!verifyPassword)
                 return ResultViewModel<string>.Failure("Lütfen girdiğiniz bilgileri kontrol edin.", null, 401);
 
-          var createTokenDto=_mapper.Map<CreateTokenDto>(loginDto);
+          var createTokenDto=_mapper.Map<CreateTokenDto>(existedUser);
             var token = _tokenHelper.CreateToken(createTokenDto);
             if (token != null)
             {

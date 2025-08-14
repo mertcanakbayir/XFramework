@@ -23,6 +23,8 @@ namespace XFM.DAL
         public DbSet<UserRole> UserRoles { get; set; }
 
         public DbSet<Page> Pages { get; set; }
+
+        public DbSet<MailSetting> MailSettings { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(XFMContext).Assembly);
@@ -33,11 +35,7 @@ namespace XFM.DAL
                 new Role { Id = 2, Name = "Moderator", IsActive = true },
                 new Role { Id = 3, Name = "User", IsActive = true }
             );
-            modelBuilder.Entity<UserRole>().HasData(
-                new UserRole { UserId = 1, RoleId = 1 }, // admin -> Admin
-                new UserRole { UserId = 2, RoleId = 2 }, // moderator -> Moderator
-                new UserRole { UserId = 3, RoleId = 3 }  // user -> User
-            );
+
 
             modelBuilder.Entity<Endpoint>().HasData(
                 new Endpoint { Id = 1, Controller = "User", Action = "GetAll", HttpMethod = "GET", IsActive = true },
@@ -68,6 +66,20 @@ namespace XFM.DAL
 
              new EndpointRole { EndpointId = 2, RoleId = 3 }
          );
+
+
+            modelBuilder.Entity<MailSetting>().HasData(
+          new MailSetting
+          {
+              Id = 1,
+              SmtpHost = "smtp.example.com",
+              SmtpPort = 587,
+              SmtpUser = "your-email@example.com",
+              EncryptedPassword = "ENCRYPTED_PASSWORD_HERE",
+              EnableSsl = true,
+              SenderEmail = "your-email@example.com",
+          }
+      );
 
         }
 

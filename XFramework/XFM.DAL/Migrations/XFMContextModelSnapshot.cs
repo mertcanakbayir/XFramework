@@ -171,6 +171,54 @@ namespace XFramework.DAL.Migrations
                         });
                 });
 
+            modelBuilder.Entity("XFramework.DAL.Entities.MailSetting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("EnableSsl")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("EncryptedPassword")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SenderEmail")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("SmtpHost")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<int>("SmtpPort")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SmtpUser")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MailSettings");
+                });
+
             modelBuilder.Entity("XFramework.DAL.Entities.Page", b =>
                 {
                     b.Property<int>("Id")
@@ -194,7 +242,7 @@ namespace XFramework.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Page");
+                    b.ToTable("Pages");
 
                     b.HasData(
                         new
@@ -305,6 +353,77 @@ namespace XFramework.DAL.Migrations
                         });
                 });
 
+            modelBuilder.Entity("XFramework.DAL.Entities.SystemSetting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SystemSetting");
+                });
+
+            modelBuilder.Entity("XFramework.DAL.Entities.SystemSettingDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Key")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SystemSettingId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SystemSettingId");
+
+                    b.ToTable("SystemSettingDetail");
+                });
+
             modelBuilder.Entity("XFramework.DAL.Entities.UserRole", b =>
                 {
                     b.Property<int>("UserId")
@@ -318,23 +437,6 @@ namespace XFramework.DAL.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("UserRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            UserId = 2,
-                            RoleId = 2
-                        },
-                        new
-                        {
-                            UserId = 3,
-                            RoleId = 3
-                        });
                 });
 
             modelBuilder.Entity("XFramework.DAL.Entities.EndpointRole", b =>
@@ -373,6 +475,17 @@ namespace XFramework.DAL.Migrations
                     b.Navigation("Page");
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("XFramework.DAL.Entities.SystemSettingDetail", b =>
+                {
+                    b.HasOne("XFramework.DAL.Entities.SystemSetting", "SystemSetting")
+                        .WithMany("SystemSettingDetails")
+                        .HasForeignKey("SystemSettingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SystemSetting");
                 });
 
             modelBuilder.Entity("XFramework.DAL.Entities.UserRole", b =>
@@ -416,6 +529,11 @@ namespace XFramework.DAL.Migrations
                     b.Navigation("PageRoles");
 
                     b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("XFramework.DAL.Entities.SystemSetting", b =>
+                {
+                    b.Navigation("SystemSettingDetails");
                 });
 #pragma warning restore 612, 618
         }

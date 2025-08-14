@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using XFM.BLL.Result;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-public class ResultViewModelFilter : Attribute, IAsyncActionFilter
+public class ValidateFilter : Attribute, IAsyncActionFilter
 {
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
