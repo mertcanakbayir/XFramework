@@ -1,4 +1,5 @@
 ﻿using XFM.DAL.Entities;
+using XFramework.DAL.Enums;
 
 namespace XFramework.DAL.Entities
 {
@@ -6,10 +7,10 @@ namespace XFramework.DAL.Entities
     {
         public int SystemSettingId { get; set; }
         public SystemSetting SystemSetting { get; set; }
-        public int Key { get; set; }
+        public string Key { get; set; }
 
         public string Value { get; set; }
 
-        public string Type { get; set; }
+        public SystemSettingType Type { get; set; }
     }
 }

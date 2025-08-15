@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using XFM.DAL;
 
@@ -11,9 +12,11 @@ using XFM.DAL;
 namespace XFramework.DAL.Migrations
 {
     [DbContext(typeof(XFMContext))]
-    partial class XFMContextModelSnapshot : ModelSnapshot
+    [Migration("20250815070533_typeMig")]
+    partial class typeMig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -217,6 +220,21 @@ namespace XFramework.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("MailSettings");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EnableSsl = true,
+                            EncryptedPassword = "ENCRYPTED_PASSWORD_HERE",
+                            IsActive = false,
+                            SenderEmail = "your-email@example.com",
+                            SmtpHost = "smtp.example.com",
+                            SmtpPort = 587,
+                            SmtpUser = "your-email@example.com",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("XFramework.DAL.Entities.Page", b =>
@@ -383,26 +401,6 @@ namespace XFramework.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SystemSetting");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Ayar denemesi için açıklama 1",
-                            IsActive = true,
-                            Name = "Ayar 1",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Ayar denemesi için açıklama 2",
-                            IsActive = true,
-                            Name = "Ayar 2",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
                 });
 
             modelBuilder.Entity("XFramework.DAL.Entities.SystemSettingDetail", b =>
@@ -419,10 +417,8 @@ namespace XFramework.DAL.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int>("Key")
+                        .HasColumnType("int");
 
                     b.Property<int>("SystemSettingId")
                         .HasColumnType("int");
@@ -444,30 +440,6 @@ namespace XFramework.DAL.Migrations
                     b.HasIndex("SystemSettingId");
 
                     b.ToTable("SystemSettingDetail");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = true,
-                            Key = "Ayar1Detail",
-                            SystemSettingId = 1,
-                            Type = "S",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Value = "Merhaba"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = true,
-                            Key = "Ayar2Detail",
-                            SystemSettingId = 1,
-                            Type = "DT",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Value = "2025-08-15 10:30:00"
-                        });
                 });
 
             modelBuilder.Entity("XFramework.DAL.Entities.UserRole", b =>
