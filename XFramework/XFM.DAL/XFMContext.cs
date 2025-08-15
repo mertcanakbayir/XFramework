@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XFM.DAL.Entities;
 using XFramework.DAL.Entities;
+using XFramework.DAL.Enums;
 
 namespace XFM.DAL
 {
@@ -68,20 +69,45 @@ namespace XFM.DAL
          );
 
 
-            modelBuilder.Entity<MailSetting>().HasData(
-          new MailSetting
-          {
-              Id = 1,
-              SmtpHost = "smtp.example.com",
-              SmtpPort = 587,
-              SmtpUser = "your-email@example.com",
-              EncryptedPassword = "ENCRYPTED_PASSWORD_HERE",
-              EnableSsl = true,
-              SenderEmail = "your-email@example.com",
-          }
-      );
 
+            modelBuilder.Entity<SystemSetting>().HasData(
+                new SystemSetting
+                {
+                    Id=1,
+                    Name = "Ayar 1",
+                    Description = "Ayar denemesi için açıklama 1",
+                    IsActive = true
+                },
+
+                 new SystemSetting
+                 {
+                     Id=2,
+                     Name = "Ayar 2",
+                     Description = "Ayar denemesi için açıklama 2",
+                     IsActive = true
+                 }
+                );
+
+
+            modelBuilder.Entity<SystemSettingDetail>().HasData(
+                new SystemSettingDetail
+                {
+                    Id=1,
+                    SystemSettingId = 1,
+                    Key = "Ayar1Detail",
+                    Value="Merhaba",
+                    Type=SystemSettingType.String,
+                    IsActive=true
+                },
+                new SystemSettingDetail
+                {
+                    Id=2,
+                    SystemSettingId = 1,
+                    Key = "Ayar2Detail",
+                    Value = "2025-08-15 10:30:00", 
+                    Type = SystemSettingType.DateTime,
+                    IsActive = true
+                });
         }
-
     }
 }

@@ -151,30 +151,6 @@ builder.Services.AddRateLimiter(options =>
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<XFMContext>();
-    var encryptionHelper = scope.ServiceProvider.GetRequiredService<EncryptionHelper>();
-
-    // Eðer MailSetting yoksa ekle
-    if (!db.MailSettings.Any())
-    {
-        var mailSetting = new MailSetting
-        {
-            SmtpHost = "smtp.wpoven.com",
-            SmtpPort = 587,
-            SmtpUser = "testuser@example.com",
-            EncryptedPassword = encryptionHelper.Encrypt("testpassword"),
-            EnableSsl = true,
-            SenderEmail = "testuser@example.com",
-            IsActive = true
-        };
-
-        db.MailSettings.Add(mailSetting);
-        db.SaveChanges();
-    }
-}
-
 app.UseCors("AllowAngularClient");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
