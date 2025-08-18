@@ -18,6 +18,7 @@ using XFM.DAL.Concrete;
 using XFramework.API.Middlewares;
 using XFramework.API.Services;
 using XFramework.BLL.Services.MailService;
+using XFramework.BLL.Services.RabbitMQService;
 using XFramework.BLL.Services.RoleAuthorizationService;
 using XFramework.BLL.Utilities;
 using XFramework.DAL.Entities;
@@ -35,7 +36,7 @@ builder.Services.AddCors(options =>
         });
 });
 
-var jwtSettings = new JwtSettings(); 
+var jwtSettings = new JwtSettings();
 
 builder.Services.Configure<JwtSettings>(options =>
 {
@@ -67,7 +68,8 @@ builder.Services.AddAuthentication(options =>
     };
 });
 //??????
-builder.Services.AddAuthorization(options => {
+builder.Services.AddAuthorization(options =>
+{
     options.AddPolicy("CanCreateOrder", policy =>
       policy.RequireClaim("Permission", "CreateOrder"));
 });
@@ -83,7 +85,10 @@ builder.Services.AddSingleton<ClientIpResolver>();
 builder.Services.AddTransient<MailService>();
 builder.Services.AddScoped<EncryptionHelper>();
 builder.Services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
-
+builder.Services.AddSingleton(new MailQueueService(
+    hostName: "localhost",
+    username: "deneme",
+    password: "deneme"));
 builder.Services.AddAutoMapper(typeof(UserProfile).Assembly);
 
 builder.Services.AddControllers();

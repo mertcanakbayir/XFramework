@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using XFM.BLL.Result;
 using XFramework.BLL.Services.MailService;
 using XFramework.Dtos;
 
@@ -12,21 +13,21 @@ namespace XFramework.API.Controllers
 
         public MailController(MailService mailService)
         {
-            _mailService = mailService; 
+            _mailService = mailService;
         }
 
         [HttpPost("send")]
-        public async Task<IActionResult> SendMail([FromBody] MailDto request)
+        [ValidateFilter]
+        public async Task<ResultViewModel<string>> SendMail([FromBody] MailDto request)
         {
-            try
-            {
-                await _mailService.SendEmailAsync(request.To, request.Subject, request.Body);
-                return Ok(new { message = "Mail gönderildi" });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
+            return await _mailService.SendEmailAsync(request.To, request.Subject, request.Body, 3);
+        }
+
+        [HttpPost("send-mq")]
+        [ValidateFilter]
+        public async Task<ResultViewModel<string>> SendMailMQ([FromBody] MailDto request)
+        {
+            return await _mailService.SendEmailAsync(request.To, request.Subject, request.Body, 3, false);
         }
     }
 }

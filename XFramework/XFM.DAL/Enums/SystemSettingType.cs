@@ -3,7 +3,7 @@
     public enum SystemSettingType
     {
         String,
-        Int, 
+        Int,
         Bool,
         DateTime
     }
