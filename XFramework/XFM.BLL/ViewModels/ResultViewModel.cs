@@ -13,7 +13,19 @@
         public int StatusCode { get; set; }
 
 
-        public static ResultViewModel<T> Success(T data, string message = "", int statusCode = 200)
+        public static ResultViewModel<T> Success(string message = "", int statusCode = 200)
+        {
+            return new ResultViewModel<T>
+            {
+                IsSuccess = true,
+                Message = message,
+                Errors = null,
+                StatusCode = statusCode
+            };
+        }
+
+        public static ResultViewModel<T> Success(T data,
+            string message = "", int statusCode = 200)
         {
             return new ResultViewModel<T>
             {
@@ -24,19 +36,8 @@
                 StatusCode = statusCode
             };
         }
-
-        public static ResultViewModel<T> Success(string message = "", int statusCode = 200)
-        {
-            return new ResultViewModel<T>
-            {
-                IsSuccess = true,
-                Message = message,
-                Errors = null,
-                StatusCode = statusCode
-            };
-        }  
-
-        public static ResultViewModel<T> Failure(string message, List<string> errors = null, int statusCode = 200)
+        public static ResultViewModel<T> Failure(string message,
+            List<string> errors = null, int statusCode = 200)
         {
             return new ResultViewModel<T>
             {

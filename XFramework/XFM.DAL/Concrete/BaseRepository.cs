@@ -6,7 +6,7 @@ using XFM.DAL.Entities;
 namespace XFM.DAL.Concrete
 {
     public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
-    {   
+    {
         private readonly XFMContext _xfmContext;
         public BaseRepository(XFMContext xfmContext)
         {
@@ -32,14 +32,17 @@ namespace XFM.DAL.Concrete
             {
                 throw new KeyNotFoundException("Kayıt Bulunamadı.");
             }
-            if (ent is BaseEntity baseEntity) {
+            if (ent is BaseEntity baseEntity)
+            {
                 baseEntity.IsActive = false;
                 _xfmContext.Update(ent);
                 await _xfmContext.SaveChangesAsync();
             }
         }
 
-        public async Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> filter = null, bool includeInactive = false, bool asNoTracking = false, Func<IQueryable<TEntity>,IQueryable<TEntity>> includeFunc = null)
+        public async Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> filter = null,
+            bool includeInactive = false, bool asNoTracking = false,
+            Func<IQueryable<TEntity>, IQueryable<TEntity>> includeFunc = null)
         {
             var query = _xfmContext.Set<TEntity>().AsQueryable();
 
@@ -56,7 +59,7 @@ namespace XFM.DAL.Concrete
             {
                 query = query.Where(filter);
             }
-            if(asNoTracking)
+            if (asNoTracking)
             {
                 query = query.AsNoTracking();
             }
@@ -72,7 +75,7 @@ namespace XFM.DAL.Concrete
             {
                 query = query.Where(e => ((BaseEntity)(object)e).IsActive);
             }
-            if(includeFunc!=null)
+            if (includeFunc != null)
             {
                 query = includeFunc(query);
             }
@@ -89,7 +92,7 @@ namespace XFM.DAL.Concrete
 
         public async Task UpdateAsync(TEntity entity)
         {
-               var entry = _xfmContext.Entry(entity);
+            var entry = _xfmContext.Entry(entity);
             var id = entry.Property("Id").CurrentValue;
             var existingEntity = await _xfmContext.Set<TEntity>().FindAsync(id);
 

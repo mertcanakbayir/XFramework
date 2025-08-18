@@ -5,7 +5,7 @@ using XFramework.DAL.Enums;
 
 namespace XFM.DAL
 {
-    public class XFMContext:DbContext
+    public class XFMContext : DbContext
     {
 
         public XFMContext(DbContextOptions<XFMContext> options)
@@ -71,43 +71,109 @@ namespace XFM.DAL
 
 
             modelBuilder.Entity<SystemSetting>().HasData(
-                new SystemSetting
-                {
-                    Id=1,
-                    Name = "Ayar 1",
-                    Description = "Ayar denemesi için açıklama 1",
-                    IsActive = true
-                },
+    new SystemSetting
+    {
+        Id = 1,
+        Name = "Ayar 1",
+        Description = "Ayar denemesi için açıklama 1",
+        IsActive = true
+    },
+    new SystemSetting
+    {
+        Id = 2,
+        Name = "Ayar 2",
+        Description = "Ayar denemesi için açıklama 2",
+        IsActive = true
+    },
+    new SystemSetting
+    {
+        Id = 3,
+        Name = "Mail Ayarları",
+        Description = "SMTP mail gönderim ayarları",
+        IsActive = true
+    }
+);
 
-                 new SystemSetting
-                 {
-                     Id=2,
-                     Name = "Ayar 2",
-                     Description = "Ayar denemesi için açıklama 2",
-                     IsActive = true
-                 }
-                );
 
 
             modelBuilder.Entity<SystemSettingDetail>().HasData(
                 new SystemSettingDetail
                 {
-                    Id=1,
+                    Id = 1,
                     SystemSettingId = 1,
                     Key = "Ayar1Detail",
-                    Value="Merhaba",
-                    Type=SystemSettingType.String,
-                    IsActive=true
+                    Value = "Merhaba",
+                    Type = SystemSettingType.String,
+                    IsActive = true
                 },
                 new SystemSettingDetail
                 {
-                    Id=2,
+                    Id = 2,
                     SystemSettingId = 1,
                     Key = "Ayar2Detail",
-                    Value = "2025-08-15 10:30:00", 
+                    Value = "2025-08-15 10:30:00",
                     Type = SystemSettingType.DateTime,
                     IsActive = true
-                });
+                }, new SystemSettingDetail
+                {
+                    Id = 3,
+                    SystemSettingId = 3,
+                    Key = "SmtpHost",
+                    Value = "smtp.freesmtpservers.com",
+                    Type = SystemSettingType.String,
+                    IsActive = true
+                },
+
+    new SystemSettingDetail
+    {
+        Id = 4,
+        SystemSettingId = 3,
+        Key = "SmtpPort",
+        Value = "25",
+        Type = SystemSettingType.Int,
+        IsActive = true
+    },
+
+    new SystemSettingDetail
+    {
+        Id = 5,
+        SystemSettingId = 3,
+        Key = "SmtpUser",
+        Value = "",
+        Type = SystemSettingType.String,
+        IsActive = true
+    },
+
+    new SystemSettingDetail
+    {
+        Id = 6,
+        SystemSettingId = 3,
+        Key = "EncryptedPassword",
+        Value = "",
+        Type = SystemSettingType.String,
+        IsActive = true
+    },
+
+    new SystemSettingDetail
+    {
+        Id = 7,
+        SystemSettingId = 3,
+        Key = "EnableSsl",
+        Value = "false",
+        Type = SystemSettingType.Bool,
+        IsActive = true
+    },
+
+    new SystemSettingDetail
+    {
+        Id = 8,
+        SystemSettingId = 3,
+        Key = "SenderEmail",
+        Value = "deneme@mertcan.com",
+        Type = SystemSettingType.String,
+        IsActive = true
+    }
+                );
         }
     }
 }
