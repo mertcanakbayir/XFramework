@@ -6,13 +6,13 @@ namespace XFramework.BLL.Services.RabbitMQService
 {
     public class MailQueueService
     {
-        private readonly string _hostName;
+        private readonly string _hostname;
         private readonly string _username;
         private readonly string _password;
 
-        public MailQueueService(string hostName, string username, string password)
+        public MailQueueService(string hostname, string username, string password)
         {
-            _hostName = hostName;
+            _hostname = hostname;
             _username = username;
             _password = password;
         }
@@ -21,7 +21,7 @@ namespace XFramework.BLL.Services.RabbitMQService
         {
             var factory = new ConnectionFactory
             {
-                HostName = _hostName,
+                HostName = _hostname,
                 UserName = _username,
                 Password = _password
             };

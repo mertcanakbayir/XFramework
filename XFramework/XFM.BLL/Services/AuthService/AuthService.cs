@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.ComponentModel.DataAnnotations;
+using AutoMapper;
 using Dtos;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -23,12 +24,14 @@ namespace XFM.BLL.Services.AuthService
         private readonly IUserService _userService;
         private readonly IValidator<RegisterDto> _registerDtoValidator;
         private readonly IValidator<LoginDto> _loginDtoValidator;
+        private readonly IValidator<ForgotPasswordDto> _forgotPasswordDtoValidator;
+        private readonly IValidator<ResetPasswordDto> _resetPasswordDtoValidator;
         private readonly ITokenHelper _tokenHelper;
         private readonly IMapper _mapper;
         private readonly MailService _mailService;
 
         public AuthService(IBaseRepository<User> userRepository, IBaseRepository<UserRole> userRoleRespository, IHashingHelper hashService, IUserService userService, IValidator<LoginDto> loginDtoValidator, IValidator<RegisterDto> registerDtoValidator, ITokenHelper tokenHelper,
-            IMapper mapper, MailService mailService)
+            IMapper mapper, MailService mailService, IValidator<ForgotPasswordDto> forgotPasswordDtoValidator, IValidator<ResetPasswordDto> resetPasswordDtoValidator)
         {
             _hashService = hashService;
             _userRepository = userRepository;
@@ -39,6 +42,8 @@ namespace XFM.BLL.Services.AuthService
             _tokenHelper = tokenHelper;
             _mapper = mapper;
             _mailService = mailService;
+            _forgotPasswordDtoValidator = forgotPasswordDtoValidator;
+            _resetPasswordDtoValidator = resetPasswordDtoValidator;
         }
 
         public async Task<ResultViewModel<string>> Login(LoginDto loginDto)
@@ -50,17 +55,14 @@ namespace XFM.BLL.Services.AuthService
                 return ResultViewModel<string>.Failure("Lütfen girdiğiniz bilgileri kontrol edin.", errorMessages, 400);
             }
             var existedUser = await _userRepository.GetAsync(e => e.Email == loginDto.Email, includeFunc: query => query.Include(u => u.UserRoles).ThenInclude(ur => ur.Role));
-
             if (existedUser == null)
             {
                 return ResultViewModel<string>.Failure("Lütfen girdiğiniz bilgileri kontrol edin.", null, 401);
             }
             var roles = existedUser.UserRoles.Select(ur => ur.Role.Name).ToList();
             bool verifyPassword = _hashService.VerifyPassword(loginDto.Password, existedUser.Password);
-
             if (!verifyPassword)
                 return ResultViewModel<string>.Failure("Lütfen girdiğiniz bilgileri kontrol edin.", null, 401);
-
             var createTokenDto = _mapper.Map<CreateTokenDto>(existedUser);
             var token = _tokenHelper.CreateToken(createTokenDto);
             if (token != null)
@@ -105,9 +107,11 @@ namespace XFM.BLL.Services.AuthService
 
         public async Task<ResultViewModel<string>> ResetPasswordAsync(ResetPasswordDto resetPasswordDto)
         {
-            if (resetPasswordDto.NewPassword != resetPasswordDto.ConfirmPassword)
+            var resetPasswordDtoValidation = _resetPasswordDtoValidator.Validate(resetPasswordDto);
+            if (!resetPasswordDtoValidation.IsValid)
             {
-                return ResultViewModel<string>.Failure("Şifreler uyuşmuyor", null, 400);
+                var errorMessages = resetPasswordDtoValidation.Errors.Select(e => e.ErrorMessage).ToList();
+                return ResultViewModel<string>.Failure("Lütfen girdiğiniz bilgileri kontrol edin.", errorMessages, 400);
             }
             var user = await _userRepository.GetAsync(u => u.Email == resetPasswordDto.Email);
             if (user == null)
@@ -132,6 +136,12 @@ namespace XFM.BLL.Services.AuthService
 
         public async Task<ResultViewModel<PasswordResetTokenDto>> ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto)
         {
+            var validationResult = _forgotPasswordDtoValidator.Validate(forgotPasswordDto);
+            if (!validationResult.IsValid)
+            {
+                var errorMessages = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
+                return ResultViewModel<PasswordResetTokenDto>.Failure("Lütfen girdiğiniz bilgileri kontrol edin", errorMessages, 400);
+            }
             var user = await _userRepository.GetAsync(u => u.Email == forgotPasswordDto.Email);
             if (user == null)
             {
@@ -143,17 +153,16 @@ namespace XFM.BLL.Services.AuthService
             var resetLink = $"https://frontend.com/reset-password?email={userDto.Email}&token={resetTokenDto.Token}";
 
             var mailResult = await _mailService.SendEmailAsync(
-       userDto.Email,
-       "Şifre Sıfırlama Talebi",
-       $"Şifre sıfırlama linkiniz: {resetLink}",
-       settingId: 3,
-       isQueue:true
+               userDto.Email,
+               "Şifre Sıfırlama Talebi",
+               $"Şifre sıfırlama linkiniz: {resetLink}",
+               settingId: 3
             );
 
             if (!mailResult.IsSuccess)
+            {
                 return ResultViewModel<PasswordResetTokenDto>.Failure("Mail gönderilirken hata oluştu: " + mailResult.Message, null, 500);
-
-
+            }
             return ResultViewModel<PasswordResetTokenDto>.Success(resetTokenDto, "Şifre sıfırlama tokeni üretildi", 200);
 
         }

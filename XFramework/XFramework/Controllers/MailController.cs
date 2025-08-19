@@ -27,7 +27,7 @@ namespace XFramework.API.Controllers
         [ValidateFilter]
         public async Task<ResultViewModel<string>> SendMailMQ([FromBody] MailDto request)
         {
-            return await _mailService.SendEmailAsync(request.To, request.Subject, request.Body, 3, false);
+            return await _mailService.SendEmailAsync(request.To, request.Subject, request.Body, 3, isQueue: true);
         }
     }
 }
