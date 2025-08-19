@@ -25,7 +25,6 @@ namespace XFM.DAL
 
         public DbSet<Page> Pages { get; set; }
 
-        public DbSet<MailSetting> MailSettings { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(XFMContext).Assembly);
@@ -41,7 +40,13 @@ namespace XFM.DAL
             modelBuilder.Entity<Endpoint>().HasData(
                 new Endpoint { Id = 1, Controller = "User", Action = "GetAll", HttpMethod = "GET", IsActive = true },
                 new Endpoint { Id = 2, Controller = "Page", Action = "Get", HttpMethod = "GET", IsActive = true },
-                new Endpoint { Id = 3, Controller = "Page", Action = "Create", HttpMethod = "POST", IsActive = true }
+                new Endpoint { Id = 3, Controller = "Page", Action = "Create", HttpMethod = "POST", IsActive = true },
+
+                new Endpoint { Id = 11, Controller = "Mail", Action = "SendMail", HttpMethod = "POST", IsActive = true },
+                new Endpoint { Id = 12, Controller = "Test", Action = "GetEnumTests", HttpMethod = "GET", IsActive = true },
+                new Endpoint { Id = 13, Controller = "Mail", Action = "SendMailMQ", HttpMethod = "POST", IsActive = true }
+
+
             );
             modelBuilder.Entity<Page>().HasData(
                 new Page { Id = 1, PageUrl = "/dashboard", IsActive = true },
@@ -65,7 +70,12 @@ namespace XFM.DAL
              new EndpointRole { EndpointId = 1, RoleId = 2 },
              new EndpointRole { EndpointId = 2, RoleId = 2 },
 
-             new EndpointRole { EndpointId = 2, RoleId = 3 }
+             new EndpointRole { EndpointId = 2, RoleId = 3 },
+
+             new EndpointRole { EndpointId = 11, RoleId = 1 },
+             new EndpointRole { EndpointId = 12, RoleId = 1 },
+             new EndpointRole { EndpointId = 13, RoleId = 1 }
+
          );
 
 
@@ -171,6 +181,14 @@ namespace XFM.DAL
         Key = "SenderEmail",
         Value = "deneme@mertcan.com",
         Type = SystemSettingType.String,
+        IsActive = true
+    },
+    new SystemSettingDetail
+    {
+        Id = 9,
+        SystemSettingId = 3,
+        Key = "IsQueue",
+        Value = "false",
         IsActive = true
     }
                 );

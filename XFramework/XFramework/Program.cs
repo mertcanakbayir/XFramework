@@ -85,10 +85,18 @@ builder.Services.AddSingleton<ClientIpResolver>();
 builder.Services.AddTransient<MailService>();
 builder.Services.AddScoped<EncryptionHelper>();
 builder.Services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
-builder.Services.AddSingleton(new MailQueueService(
-    hostName: "localhost",
-    username: "deneme",
-    password: "deneme"));
+builder.Services.AddSingleton<MailQueueService>(sp =>
+{
+    var config = builder.Configuration.GetSection("RabbitMQ");
+
+    var host = config["hostname"];
+    var user = config["username"];
+    var pass = config["password"];
+
+    return new MailQueueService(host, user, pass);
+});
+builder.Services.AddMemoryCache();
+
 builder.Services.AddAutoMapper(typeof(UserProfile).Assembly);
 
 builder.Services.AddControllers();

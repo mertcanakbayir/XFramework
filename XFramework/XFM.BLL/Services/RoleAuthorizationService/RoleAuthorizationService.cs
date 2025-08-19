@@ -1,42 +1,92 @@
-﻿    using Microsoft.EntityFrameworkCore;
-    using XFM.DAL;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using XFM.DAL;
 using XFM.DAL.Abstract;
+using XFM.DAL.Entities;
 using XFramework.DAL.Entities;
 
 namespace XFramework.BLL.Services.RoleAuthorizationService
+{
+    public class RoleAuthorizationService
     {
-        public class RoleAuthorizationService
-        {
         private readonly IBaseRepository<Page> _pageRepository;
         private readonly IBaseRepository<Endpoint> _endpointRepository;
-        
-            public RoleAuthorizationService(IBaseRepository<Page> pageRepository, IBaseRepository<Endpoint> endpointRepository)
-            {
-             _pageRepository = pageRepository;
+        private readonly IBaseRepository<User> _userRepository;
+        private readonly IMemoryCache _memoryCache;
+        public RoleAuthorizationService(IBaseRepository<Page> pageRepository, IBaseRepository<Endpoint> endpointRepository, IMemoryCache memoryCache, IBaseRepository<User> userRepository)
+        {
+            _pageRepository = pageRepository;
             _endpointRepository = endpointRepository;
-            }
-            public async Task<bool> HasAccessAsync(string path,string controller,string action, string httpMethod, List<string> userRoles)
+            _memoryCache = memoryCache;
+            _userRepository = userRepository;
+        }
+
+        private async Task<List<string>> GetAllPagesByUser(int userId)
+        {
+            string PagesCacheKey = "user_pages";
+            string cacheKey = $"{PagesCacheKey}:{userId}";
+            if (_memoryCache.TryGetValue(cacheKey, out List<string> cachedPages))
             {
-            var page = await _pageRepository.GetAsync(e => e.PageUrl.ToLower() == path.ToLower(),
-                includeFunc:query=>query.Include(e=>e.PageRoles).ThenInclude(pr=>pr.Role));
-            if (page==null)
-                {
-                    return false;
-                }
-            var allowedPageRoles=page.PageRoles.Select(pr=>pr.Role.Name).ToList();
-            if (!userRoles.Any(r=>allowedPageRoles.Contains(r))) {
+                return cachedPages;
+            }
+            var user = await _userRepository.GetAsync(e => e.Id == userId, includeFunc: query => query.Include(ur => ur.UserRoles).ThenInclude(r => r.Role).ThenInclude(pr => pr.PageRoles).ThenInclude(p => p.Page));
+            if (user == null)
+            {
+                return new List<string>();
+            }
+
+            var userPages = user.UserRoles.SelectMany(ur => ur.Role.PageRoles)
+                .Select(pr => pr.Page.PageUrl.ToLower())
+                .Distinct()
+                .ToList();
+            _memoryCache.Set(cacheKey, userPages, new MemoryCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+            });
+
+            return userPages;
+        }
+
+        private async Task<List<string>> GetAllEndpointsByUser(int userId)
+        {
+            string EndpointsCacheKey = "user_endpoints";
+            string cacheKey = $"{EndpointsCacheKey}:{userId}";
+            if (_memoryCache.TryGetValue(cacheKey, out List<string> cachedEndpoints))
+            {
+                return cachedEndpoints;
+            }
+            var user = await _userRepository.GetAsync(u => u.Id == userId, includeFunc: query => query.Include(ur => ur.UserRoles).ThenInclude(r => r.Role).ThenInclude(er => er.EndpointRoles).ThenInclude(e => e.Endpoint));
+            if (user == null) { return new List<string>(); }
+
+            var userEndpoints = user.UserRoles.SelectMany(ur => ur.Role.EndpointRoles)
+                .Select(er => $"{er.Endpoint.Controller.ToLower()}:{er.Endpoint.Action.ToLower()}:{er.Endpoint.HttpMethod.ToUpper()}").Distinct().ToList();
+
+            _memoryCache.Set(cacheKey, userEndpoints, new MemoryCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+            });
+
+            return userEndpoints;
+        }
+
+
+        public async Task<bool> HasAccessAsync(string path, string controller, string action, string httpMethod, int userId)
+        {
+            var userPages = await GetAllPagesByUser(userId);
+            if (!userPages.Contains(path.ToLower()))
+            {
                 return false;
             }
-            var endpoint = await _endpointRepository.GetAsync(filter:e=>e.Controller.ToLower()==controller.ToLower()
-                                                                         && e.Action.ToLower()==action.ToLower()
-                                                                         && e.HttpMethod.ToUpper()==httpMethod.ToUpper(),
-                                                                         includeFunc:query=>query.Include(e=>e.EndpointRoles).ThenInclude(er=>er.Role));
-            if (endpoint == null)
-            {
-                return false;
-            }
-            var allowedRoles=endpoint.EndpointRoles.Select(er=>er.Role.Name).ToList();
-            return userRoles.Any(r => allowedRoles.Contains(r));
-            }
+
+            var userEndpoints = await GetAllEndpointsByUser(userId);
+            string endpointKey = $"{controller.ToLower()}:{action.ToLower()}:{httpMethod.ToUpper()}";
+
+            return userEndpoints.Contains(endpointKey);
+        }
+        public void ClearUserCache(int userId)
+        {
+            _memoryCache.Remove($"user_pages:{userId}");
+            _memoryCache.Remove($"user_endpoints:{userId}");
         }
     }
+}

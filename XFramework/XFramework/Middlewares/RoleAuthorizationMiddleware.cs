@@ -12,13 +12,13 @@ namespace XFramework.API.Middlewares
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context,RoleAuthorizationService authorizationService)
+        public async Task InvokeAsync(HttpContext context, RoleAuthorizationService authorizationService)
         {
 
             try
             {
                 var path = context.Request.Path.Value?.ToLower();
-                if (path.Contains("/auth/login") || path.Contains("/auth/register"))
+                if (path.Contains("/auth/login") || path.Contains("/auth/register") || path.Contains("/auth/forgot-password") || path.Contains("/auth/reset-password"))
                 {
                     await _next(context);
                     return;
@@ -45,13 +45,20 @@ namespace XFramework.API.Middlewares
                 string httpMethod = context.Request.Method;
                 var userRoles = context.User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
                 string pageUrl = context.Request.Headers["PageUrl"].ToString()?.ToLower();
+                var userIdClaim = context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+                {
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    await context.Response.WriteAsync("Unauthorized");
+                    return;
+                }
                 if (string.IsNullOrEmpty(pageUrl))
                 {
                     context.Response.StatusCode = StatusCodes.Status400BadRequest;
                     await context.Response.WriteAsync("Page URL header missing");
                     return;
                 }
-                bool hasAccess = await authorizationService.HasAccessAsync(pageUrl, controllerName, actionName, httpMethod, userRoles);
+                bool hasAccess = await authorizationService.HasAccessAsync(pageUrl, controllerName, actionName, httpMethod, userId);
 
                 if (!hasAccess)
                 {
@@ -67,7 +74,7 @@ namespace XFramework.API.Middlewares
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 await context.Response.WriteAsync("Internal Server Error");
             }
-        
+
         }
     }
 }
