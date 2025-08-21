@@ -1,7 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
-using System.Threading.RateLimiting;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using XFM.BLL.Mappings;
 using XFM.BLL.Utilities.Hashing;
 using XFM.BLL.Utilities.JWT;
-using XFramework.API.Middlewares;
+using XFramework.API.Extensions;
 using XFramework.API.Services;
 using XFramework.BLL.Services.Abstracts;
 using XFramework.BLL.Services.Concretes;
@@ -106,58 +103,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<XFMContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
-
-builder.Services.AddRateLimiter(options =>
-{
-    var ipLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
-    {
-        var ipResolver = httpContext.RequestServices.GetRequiredService<ClientIpResolver>();
-        var ipAddress = ipResolver.GetClientIp(httpContext);
-
-        return RateLimitPartition.GetFixedWindowLimiter(
-            ipAddress,
-            _ => new FixedWindowRateLimiterOptions
-            {
-                PermitLimit = 20,
-                Window = TimeSpan.FromMinutes(1),
-                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                QueueLimit = 0
-            });
-    });
-
-    var userLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
-    {
-        var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? httpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
-        if (string.IsNullOrEmpty(userId))
-            return RateLimitPartition.GetNoLimiter<string>("anonymous");
-
-        return RateLimitPartition.GetFixedWindowLimiter(
-            userId,
-            _ => new FixedWindowRateLimiterOptions
-            {
-                PermitLimit = 50,
-                Window = TimeSpan.FromMinutes(1),
-                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                QueueLimit = 0
-            });
-    });
-    options.GlobalLimiter = PartitionedRateLimiter.CreateChained<HttpContext>(
-        new[] { ipLimiter, userLimiter }
-    );
-    options.OnRejected = async (context, token) =>
-    {
-        var ipResolver = context.HttpContext.RequestServices.GetRequiredService<ClientIpResolver>();
-        var ipAddress = ipResolver.GetClientIp(context.HttpContext);
-        var userId = context.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "anonymous";
-
-        string message = userId == "anonymous"
-            ? $"Ayný IP ({ipAddress}) üzerinden çok fazla istek yapýldý. Lütfen daha sonra deneyin."
-            : $"Kullanýcý ({userId}) üzerinden çok fazla istek yapýldý. Lütfen daha sonra deneyin.";
-
-        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
-        await context.HttpContext.Response.WriteAsync(message, token);
-    };
-});
+builder.Services.AddCustomRateLimiter();
 
 var app = builder.Build();
 

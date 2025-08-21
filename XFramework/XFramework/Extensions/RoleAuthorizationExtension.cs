@@ -1,4 +1,6 @@
-﻿namespace XFramework.API.Middlewares
+﻿using XFramework.API.Middlewares;
+
+namespace XFramework.API.Extensions
 {
     public static class RoleAuthorizationExtension
     {
