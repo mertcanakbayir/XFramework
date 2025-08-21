@@ -56,7 +56,6 @@ namespace XFramework.BLL.Services.Concretes
             }
             var role = _mapper.Map<Role>(roleAddDto);
             await _roleRepository.AddAsync(role);
-            _roleAuthorizationService.ClearAllCache();
             return ResultViewModel<string>.Success("Role başarıyla eklendi", 200);
         }
 
@@ -70,16 +69,23 @@ namespace XFramework.BLL.Services.Concretes
             }
             var pageRole = _mapper.Map<PageRole>(pageRoleAddDto);
             await _pageRoleRepository.AddAsync(pageRole);
-            _roleAuthorizationService.ClearAllCache();
+            var usersWithRole = await _userRepository.GetAllAsync(u => u.UserRoles.Any(ur => ur.RoleId == pageRoleAddDto.RoleId));
+            foreach (var user in usersWithRole)
+            {
+                _roleAuthorizationService.ClearUserPageCache(user.Id);
+            }
             return ResultViewModel<string>.Success("Başarılı", "Kullanıcı Sayfa Yetkisi başarıyla eklendi.", 200);
         }
 
         public async Task<ResultViewModel<string>> AddEndpointRole(EndpointRoleAddDto endpointRoleAddDto)
         {
-
             var endpointRole = _mapper.Map<EndpointRole>(endpointRoleAddDto);
             await _endpointRoleRepository.AddAsync(endpointRole);
-            _roleAuthorizationService.ClearAllCache();
+            var usersWithRole = await _userRepository.GetAllAsync(u => u.UserRoles.Any(ur => ur.RoleId == endpointRoleAddDto.RoleId));
+            foreach (var user in usersWithRole)
+            {
+                _roleAuthorizationService.ClearUserEndpointCache(user.Id);
+            }
             return ResultViewModel<string>.Success("Endpoint yetkisi başarıyla eklendi.", 200);
         }
     }
