@@ -7,21 +7,18 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using XFM.BLL.Mappings;
-using XFM.BLL.Services.AuthService;
-using XFM.BLL.Services.UserService;
 using XFM.BLL.Utilities.Hashing;
 using XFM.BLL.Utilities.JWT;
-using XFM.BLL.Utilities.ValidationRulers;
-using XFM.DAL;
-using XFM.DAL.Abstract;
-using XFM.DAL.Concrete;
 using XFramework.API.Middlewares;
 using XFramework.API.Services;
-using XFramework.BLL.Services.MailService;
-using XFramework.BLL.Services.RabbitMQService;
-using XFramework.BLL.Services.RoleAuthorizationService;
+using XFramework.BLL.Services.Abstracts;
+using XFramework.BLL.Services.Concretes;
 using XFramework.BLL.Utilities;
-using XFramework.DAL.Entities;
+using XFramework.BLL.Utilities.ValidationRulers;
+using XFramework.DAL;
+using XFramework.DAL.Abstract;
+using XFramework.DAL.Concrete;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
@@ -85,6 +82,8 @@ builder.Services.AddSingleton<ClientIpResolver>();
 builder.Services.AddTransient<MailService>();
 builder.Services.AddScoped<EncryptionHelper>();
 builder.Services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
+builder.Services.AddScoped<RoleService>();
+builder.Services.AddScoped<PageService>();
 builder.Services.AddSingleton<MailQueueService>(sp =>
 {
     var config = builder.Configuration.GetSection("RabbitMQ");
@@ -142,11 +141,9 @@ builder.Services.AddRateLimiter(options =>
                 QueueLimit = 0
             });
     });
-
     options.GlobalLimiter = PartitionedRateLimiter.CreateChained<HttpContext>(
         new[] { ipLimiter, userLimiter }
     );
-
     options.OnRejected = async (context, token) =>
     {
         var ipResolver = context.HttpContext.RequestServices.GetRequiredService<ClientIpResolver>();

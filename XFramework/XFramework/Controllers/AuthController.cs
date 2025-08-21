@@ -1,7 +1,7 @@
 ﻿using Dtos;
 using Microsoft.AspNetCore.Mvc;
-using XFM.BLL.Result;
-using XFM.BLL.Services.AuthService;
+using XFramework.BLL.Result;
+using XFramework.BLL.Services.Abstracts;
 using XFramework.Dtos;
 
 namespace XFramework.Controllers
@@ -28,7 +28,6 @@ namespace XFramework.Controllers
         {
             return await _authService.Login(loginDto);
         }
-        // TODO: forgot-password'a ve resetPasword'a fluentValidation eklenecek
         [HttpPost("forgot-password")]
         public async Task<ResultViewModel<PasswordResetTokenDto>> ForgotPassword(ForgotPasswordDto forgotPasswordDto)
         {

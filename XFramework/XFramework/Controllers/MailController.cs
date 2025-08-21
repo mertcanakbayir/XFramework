@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using XFM.BLL.Result;
-using XFramework.BLL.Services.MailService;
+using XFramework.BLL.Result;
+using XFramework.BLL.Services.Concretes;
 using XFramework.Dtos;
 
 namespace XFramework.API.Controllers
