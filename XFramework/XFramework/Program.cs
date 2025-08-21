@@ -18,7 +18,8 @@ using XFramework.DAL.Concrete;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(options =>
+
+    builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularClient",
         policy =>
@@ -81,6 +82,7 @@ builder.Services.AddScoped<EncryptionHelper>();
 builder.Services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
 builder.Services.AddScoped<RoleService>();
 builder.Services.AddScoped<PageService>();
+builder.Services.AddScoped<EndpointService>();
 builder.Services.AddSingleton<MailQueueService>(sp =>
 {
     var config = builder.Configuration.GetSection("RabbitMQ");
