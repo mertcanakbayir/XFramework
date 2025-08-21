@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using XFramework.BLL.Services.RoleAuthorizationService;
+using XFramework.BLL.Services.Concretes;
 
 namespace XFramework.API.Middlewares
 {

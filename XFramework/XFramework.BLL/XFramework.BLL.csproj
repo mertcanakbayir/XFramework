@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Remove="Utilities\NewFolder1\**" />
+		<Compile Remove="Utilities\NewFolder2\**" />
+		<Compile Remove="Utilities\NewFolder3\**" />
+		<EmbeddedResource Remove="Utilities\NewFolder1\**" />
+		<EmbeddedResource Remove="Utilities\NewFolder2\**" />
+		<EmbeddedResource Remove="Utilities\NewFolder3\**" />
+		<None Remove="Utilities\NewFolder1\**" />
+		<None Remove="Utilities\NewFolder2\**" />
+		<None Remove="Utilities\NewFolder3\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="12.0.1" />
+		<PackageReference Include="FluentValidation" Version="12.0.0" />
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
+		<PackageReference Include="MailKit" Version="4.13.0" />
+		<PackageReference Include="Microsoft.Extensions.Identity.Core" Version="9.0.8" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="9.0.8" />
+		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.13.0" />
+		<PackageReference Include="MimeKit" Version="4.13.0" />
+		<PackageReference Include="RabbitMQ.Client" Version="7.1.2" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.13.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Dtos\XFramework.Dtos.csproj" />
+		<ProjectReference Include="..\XFramework.DAL\XFramework.DAL.csproj" />
+	</ItemGroup>
+
+</Project>
