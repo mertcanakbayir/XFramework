@@ -17,8 +17,9 @@ namespace XFramework.BLL.Services.Concretes
         private readonly IValidator<RoleAddDto> _roleAddDtoValidator;
         private readonly IValidator<PageRoleAddDto> _pageRoleAddDtoValidator;
         private readonly IBaseRepository<EndpointRole> _endpointRoleRepository;
+        private readonly RoleAuthorizationService _roleAuthorizationService;
         public RoleService(IBaseRepository<Role> roleRepository, IMapper mapper, IBaseRepository<Page> pageRepository, IBaseRepository<User> userRepository, IBaseRepository<PageRole> pageRoleRepository,
-            IValidator<RoleAddDto> roleAddDtoValidator, IValidator<PageRoleAddDto> pageRoleAddDtoValidator, IBaseRepository<EndpointRole> endpointRoleRepository)
+            IValidator<RoleAddDto> roleAddDtoValidator, IValidator<PageRoleAddDto> pageRoleAddDtoValidator, IBaseRepository<EndpointRole> endpointRoleRepository, RoleAuthorizationService roleAuthorizationService)
         {
             _roleRepository = roleRepository;
             _mapper = mapper;
@@ -27,6 +28,7 @@ namespace XFramework.BLL.Services.Concretes
             _roleAddDtoValidator = roleAddDtoValidator;
             _pageRoleAddDtoValidator = pageRoleAddDtoValidator;
             _endpointRoleRepository = endpointRoleRepository;
+            _roleAuthorizationService = roleAuthorizationService;
         }
 
         public async Task<ResultViewModel<List<RoleDto>>> GetRolesByUser(int userId)
@@ -54,6 +56,7 @@ namespace XFramework.BLL.Services.Concretes
             }
             var role = _mapper.Map<Role>(roleAddDto);
             await _roleRepository.AddAsync(role);
+            _roleAuthorizationService.ClearAllCache();
             return ResultViewModel<string>.Success("Role başarıyla eklendi", 200);
         }
 
@@ -67,7 +70,7 @@ namespace XFramework.BLL.Services.Concretes
             }
             var pageRole = _mapper.Map<PageRole>(pageRoleAddDto);
             await _pageRoleRepository.AddAsync(pageRole);
-
+            _roleAuthorizationService.ClearAllCache();
             return ResultViewModel<string>.Success("Başarılı", "Kullanıcı Sayfa Yetkisi başarıyla eklendi.", 200);
         }
 
@@ -75,7 +78,8 @@ namespace XFramework.BLL.Services.Concretes
         {
 
             var endpointRole = _mapper.Map<EndpointRole>(endpointRoleAddDto);
-            _endpointRoleRepository.AddAsync(endpointRole);
+            await _endpointRoleRepository.AddAsync(endpointRole);
+            _roleAuthorizationService.ClearAllCache();
             return ResultViewModel<string>.Success("Endpoint yetkisi başarıyla eklendi.", 200);
         }
     }

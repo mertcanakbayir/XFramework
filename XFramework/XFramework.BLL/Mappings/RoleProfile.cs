@@ -14,6 +14,8 @@ namespace XFramework.BLL.Mappings
 
             CreateMap<PageRoleAddDto, PageRole>();
             CreateMap<PageRole, PageRoleAddDto>();
+
+            CreateMap<EndpointRoleAddDto, EndpointRole>();
         }
     }
 }

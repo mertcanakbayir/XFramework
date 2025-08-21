@@ -81,10 +81,12 @@ namespace XFramework.BLL.Services.Concretes
 
             return userEndpoints.Contains(endpointKey);
         }
-        public void ClearUserCache(int userId)
+        public void ClearAllCache()
         {
-            _memoryCache.Remove($"user_pages:{userId}");
-            _memoryCache.Remove($"user_endpoints:{userId}");
+            if (_memoryCache is MemoryCache memoryCache)
+            {
+                memoryCache.Compact(1.0);
+            }
         }
     }
 }

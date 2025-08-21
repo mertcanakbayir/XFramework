@@ -11,6 +11,8 @@ namespace XFramework.BLL.Mappings
             CreateMap<Endpoint, EndpointDto>();
 
             CreateMap<EndpointDto, Endpoint>();
+
+            CreateMap<EndpointAddDto, Endpoint>();
         }
     }
 }
