@@ -31,10 +31,11 @@ namespace XFramework.BLL.Services.Concretes
             return ResultViewModel<List<EndpointDto>>.Success(endpointsDto, "Kullanıcının yetkili olduğu endpointler:", 200);
         }
 
-        public async Task<ResultViewModel<string>> AddEndpoint(EndpointAddDto endpointAddDto)
+        public async Task<ResultViewModel<string>> AddEndpoint(EndpointAddDto endpointAddDto, int userId)
         {
             var endpointEntity = _mapper.Map<Endpoint>(endpointAddDto);
             await _endpointRepository.AddAsync(endpointEntity);
+            _endpointRepository.GetCurrentUser(userId);
             return ResultViewModel<string>.Success("Endpoint eklendi", 200);
 
 

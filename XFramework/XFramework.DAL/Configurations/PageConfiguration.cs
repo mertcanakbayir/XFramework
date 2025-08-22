@@ -10,6 +10,9 @@ namespace XFramework.DAL.Configurations
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.PageUrl).IsRequired();
+
+            builder.HasOne(e => e.Parent).WithMany(e => e.Children).HasForeignKey(e => e.ParentId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
     }

@@ -25,7 +25,8 @@ namespace XFramework.API.Controllers
         [HttpPost]
         public async Task<ResultViewModel<string>> AddEndpoint(EndpointAddDto endpointAddDto)
         {
-            return await _endpointService.AddEndpoint(endpointAddDto);
+            var userId = int.Parse(User.FindFirst("sub").Value);
+            return await _endpointService.AddEndpoint(endpointAddDto, userId);
         }
     }
 }
