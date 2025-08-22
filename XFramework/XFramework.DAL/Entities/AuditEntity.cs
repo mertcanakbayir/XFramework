@@ -1,9 +1,7 @@
 ﻿namespace XFramework.DAL.Entities
 {
-    public class BaseEntity
+    public class AuditEntity
     {
-        public int Id { get; set; }
-
         public DateTime CreatedAt { get; set; }
         public int CreatedBy { get; set; }
 

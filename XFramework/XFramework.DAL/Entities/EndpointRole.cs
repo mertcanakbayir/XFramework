@@ -1,6 +1,6 @@
 ﻿namespace XFramework.DAL.Entities
 {
-    public class EndpointRole : BaseEntity
+    public class EndpointRole : AuditEntity
     {
         public int EndpointId { get; set; }
         public Endpoint Endpoint { get; set; }

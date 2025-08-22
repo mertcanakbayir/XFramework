@@ -46,13 +46,9 @@ namespace XFramework.DAL.Concrete
         {
             var query = _xfmContext.Set<TEntity>().AsQueryable();
 
-            if (!includeInactive && typeof(BaseEntity).IsAssignableFrom(typeof(TEntity)))
+            if (!includeInactive)
             {
-                //    ((BaseEntity)(object)e).IsActive;
-                //query = query.OfType<BaseEntity>()
-                //.Where(e => e.IsActive)
-                //.Cast<TEntity>();
-                query = query.Where(e => ((BaseEntity)(object)e).IsActive);
+                query = query.Where(e => EF.Property<bool>(e, "IsActive"));
             }
 
             if (includeFunc != null)
@@ -75,13 +71,9 @@ namespace XFramework.DAL.Concrete
         {
             var query = _xfmContext.Set<TEntity>().AsQueryable();
 
-            if (!includeInactive && typeof(BaseEntity).IsAssignableFrom(typeof(TEntity)))
+            if (!includeInactive)
             {
-                ////query = query.Where(e => e is BaseEntity baseEntity && baseEntity.IsActive);
-                //query = query.OfType<BaseEntity>()
-                //.Where(e => e.IsActive)
-                //.Cast<TEntity>();
-                query = query.Where(e => ((BaseEntity)(object)e).IsActive);
+                query = query.Where(e => EF.Property<bool>(e, "IsActive"));
             }
             if (includeFunc != null)
             {
@@ -112,6 +104,20 @@ namespace XFramework.DAL.Concrete
             if (existingEntity == null)
                 throw new KeyNotFoundException("Güncellenecek nesne veritabanında bulunamadı.");
 
+            var revisionProperty = _xfmContext.Entry(existingEntity).Properties.FirstOrDefault(p => p.Metadata.Name == "Revision");
+            if (revisionProperty != null)
+            {
+                var currentRevision = Convert.ToInt32(revisionProperty.CurrentValue);
+                var incomingRevision = Convert.ToInt32(_xfmContext.Entry(entity).Property("Revision").CurrentValue);
+
+
+                if (currentRevision != incomingRevision)
+                {
+                    throw new InvalidOperationException("Kayıt başka kullanıcı tarafından güncellenmiş.");
+                }
+
+                _xfmContext.Entry(entity).Property("Revision").CurrentValue = currentRevision += 1;
+            }
             _xfmContext.Entry(existingEntity).CurrentValues.SetValues(entity);
             await _xfmContext.SaveChangesAsync();
         }

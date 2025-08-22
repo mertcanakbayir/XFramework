@@ -33,8 +33,8 @@ namespace XFramework.BLL.Services.Concretes
                 return ResultViewModel<string>.Failure("Lütfen Girdiğiniz bilgileri kontrol edin.", errors, 400);
             }
             var pageEntity = _mapper.Map<Page>(pageAddDto);
-            _pageRepository.AddAsync(pageEntity);
             _pageRepository.GetCurrentUser(userId);
+            _pageRepository.AddAsync(pageEntity);
             return ResultViewModel<string>.Success("Sayfa Eklendi", 200);
         }
 
@@ -48,6 +48,18 @@ namespace XFramework.BLL.Services.Concretes
             var pages = user.UserRoles.Select(ur => ur.Role).SelectMany(pr => pr.PageRoles).Select(p => p.Page).ToList();
             var pagesDto = _mapper.Map<List<PageDto>>(pages);
             return ResultViewModel<List<PageDto>>.Success(pagesDto, "Kullanıcı Rolleri:", 200);
+        }
+
+        public async Task<ResultViewModel<string>> UpdatePage(PageAddDto pageAddDto)
+        {
+            var page = await _pageRepository.GetAsync(e => e.Id == pageAddDto.Id);
+            if (page == null)
+            {
+                return ResultViewModel<string>.Failure("Güncellenecek sayfa bulunamadı", statusCode: 400);
+            }
+            var pageEntity = _mapper.Map<Page>(pageAddDto);
+            await _pageRepository.UpdateAsync(pageEntity);
+            return ResultViewModel<string>.Success("Sayfa güncellendi", statusCode: 200);
         }
     }
 

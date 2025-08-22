@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\XFramework.BLL\XFramework.BLL.csproj" />
     <ProjectReference Include="..\XFramework.DAL\XFramework.DAL.csproj" />
   </ItemGroup>
 

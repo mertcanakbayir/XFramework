@@ -22,8 +22,7 @@ namespace XFramework.DAL.Migrations
                 name: "UpdatedBy",
                 table: "Users",
                 type: "int",
-                nullable: false,
-                defaultValue: 0);
+                nullable: true);
 
             migrationBuilder.AddColumn<DateTime>(
                 name: "CreatedAt",
@@ -64,8 +63,7 @@ namespace XFramework.DAL.Migrations
                 name: "UpdatedBy",
                 table: "UserRoles",
                 type: "int",
-                nullable: false,
-                defaultValue: 0);
+                nullable: true);
 
             migrationBuilder.AddColumn<int>(
                 name: "CreatedBy",
@@ -78,8 +76,7 @@ namespace XFramework.DAL.Migrations
                 name: "UpdatedBy",
                 table: "SystemSettingDetail",
                 type: "int",
-                nullable: false,
-                defaultValue: 0);
+                nullable: true);
 
             migrationBuilder.AddColumn<int>(
                 name: "CreatedBy",
@@ -92,8 +89,7 @@ namespace XFramework.DAL.Migrations
                 name: "UpdatedBy",
                 table: "SystemSetting",
                 type: "int",
-                nullable: false,
-                defaultValue: 0);
+                nullable: true);
 
             migrationBuilder.AddColumn<int>(
                 name: "CreatedBy",
@@ -106,8 +102,7 @@ namespace XFramework.DAL.Migrations
                 name: "UpdatedBy",
                 table: "Roles",
                 type: "int",
-                nullable: false,
-                defaultValue: 0);
+                nullable: true);
 
             migrationBuilder.AddColumn<int>(
                 name: "CreatedBy",
@@ -120,8 +115,7 @@ namespace XFramework.DAL.Migrations
                 name: "UpdatedBy",
                 table: "Pages",
                 type: "int",
-                nullable: false,
-                defaultValue: 0);
+                nullable: true);
 
             migrationBuilder.AddColumn<DateTime>(
                 name: "CreatedAt",
@@ -162,8 +156,7 @@ namespace XFramework.DAL.Migrations
                 name: "UpdatedBy",
                 table: "PageRoles",
                 type: "int",
-                nullable: false,
-                defaultValue: 0);
+                nullable: true);
 
             migrationBuilder.AddColumn<int>(
                 name: "CreatedBy",
@@ -176,8 +169,7 @@ namespace XFramework.DAL.Migrations
                 name: "UpdatedBy",
                 table: "Endpoints",
                 type: "int",
-                nullable: false,
-                defaultValue: 0);
+                nullable: true);
 
             migrationBuilder.AddColumn<DateTime>(
                 name: "CreatedAt",
@@ -218,8 +210,7 @@ namespace XFramework.DAL.Migrations
                 name: "UpdatedBy",
                 table: "EndpointRoles",
                 type: "int",
-                nullable: false,
-                defaultValue: 0);
+                nullable: true);
         }
 
         /// <inheritdoc />

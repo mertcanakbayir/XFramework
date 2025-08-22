@@ -1,7 +1,7 @@
 ﻿
 namespace XFramework.DAL.Entities
 {
-    public class UserRole : BaseEntity
+    public class UserRole : AuditEntity
     {
         public int UserId { get; set; }
         public User User { get; set; }

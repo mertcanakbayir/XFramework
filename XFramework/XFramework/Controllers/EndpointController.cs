@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using XFramework.BLL.Result;
 using XFramework.BLL.Services.Concretes;
 using XFramework.Dtos;
@@ -25,7 +26,11 @@ namespace XFramework.API.Controllers
         [HttpPost]
         public async Task<ResultViewModel<string>> AddEndpoint(EndpointAddDto endpointAddDto)
         {
-            var userId = int.Parse(User.FindFirst("sub").Value);
+            var subClaim = User?.FindFirst(ClaimTypes.NameIdentifier);
+            if (subClaim == null)
+                return ResultViewModel<string>.Failure("User not authorized");
+
+            var userId = int.Parse(subClaim.Value);
             return await _endpointService.AddEndpoint(endpointAddDto, userId);
         }
     }
