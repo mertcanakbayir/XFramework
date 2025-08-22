@@ -98,6 +98,11 @@ namespace XFramework.DAL.Concrete
             return await query.FirstOrDefaultAsync();
         }
 
+        public void GetCurrentUser(int userId)
+        {
+            _xfmContext.UserId = userId;
+        }
+
         public async Task UpdateAsync(TEntity entity)
         {
             var entry = _xfmContext.Entry(entity);

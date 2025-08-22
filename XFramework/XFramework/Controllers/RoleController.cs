@@ -24,20 +24,22 @@ namespace XFramework.API.Controllers
         [HttpPost]
         public async Task<ResultViewModel<string>> AddUserRole(RoleAddDto addRole)
         {
-            return await _roleService.AddRole(addRole);
+            int userId = int.Parse(User.FindFirst("sub").Value);
+            return await _roleService.AddRole(addRole, userId);
         }
 
         [HttpPost("addPageRole")]
         public async Task<ResultViewModel<string>> AddPageRole(PageRoleAddDto pageRoleAddDto)
         {
-            return await _roleService.AddPageRole(pageRoleAddDto);
+            int userId = int.Parse(User.FindFirst("sub").Value);
+            return await _roleService.AddPageRole(pageRoleAddDto, userId);
         }
 
         [HttpPost("addEndpointRole")]
         public async Task<ResultViewModel<string>> AddEndpointRole(EndpointRoleAddDto endpointRoleAddDto)
         {
-
-            return await _roleService.AddEndpointRole(endpointRoleAddDto);
+            int userId = int.Parse(User.FindFirst("sub").Value);
+            return await _roleService.AddEndpointRole(endpointRoleAddDto, userId);
         }
 
     }

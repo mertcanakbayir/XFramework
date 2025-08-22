@@ -19,7 +19,8 @@ namespace XFramework.API.Controllers
         [ValidateFilter]
         public async Task<ResultViewModel<string>> AddPage(PageAddDto pageAddDto)
         {
-            return await _pageService.AddPage(pageAddDto);
+            var userId = int.Parse(User.FindFirst("sub").Value);
+            return await _pageService.AddPage(pageAddDto, userId);
         }
 
         [HttpGet]

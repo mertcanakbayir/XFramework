@@ -16,5 +16,7 @@ namespace XFramework.DAL.Abstract
         Task<T> GetAsync(Expression<Func<T, bool>> filter = null!,
             bool includeInactive = false, bool asNoTracking = false,
             Func<IQueryable<T>, IQueryable<T>> includeFunc = null!);
+
+        void GetCurrentUser(int userId);
     }
 }

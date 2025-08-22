@@ -24,7 +24,7 @@ namespace XFramework.BLL.Services.Concretes
             _pageAddDtoValidator = pageAddDtoValidator;
         }
 
-        public async Task<ResultViewModel<string>> AddPage(PageAddDto pageAddDto)
+        public async Task<ResultViewModel<string>> AddPage(PageAddDto pageAddDto, int userId)
         {
             var validationResult = _pageAddDtoValidator.Validate(pageAddDto);
             if (!validationResult.IsValid)
@@ -34,7 +34,7 @@ namespace XFramework.BLL.Services.Concretes
             }
             var pageEntity = _mapper.Map<Page>(pageAddDto);
             _pageRepository.AddAsync(pageEntity);
-
+            _pageRepository.GetCurrentUser(userId);
             return ResultViewModel<string>.Success("Sayfa Eklendi", 200);
         }
 
