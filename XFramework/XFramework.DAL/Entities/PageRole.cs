@@ -1,6 +1,6 @@
 ﻿namespace XFramework.DAL.Entities
 {
-    public class PageRole : BaseEntity
+    public class PageRole : AuditEntity
     {
         public int PageId { get; set; }
 

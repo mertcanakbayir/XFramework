@@ -34,8 +34,8 @@ namespace XFramework.BLL.Services.Concretes
         public async Task<ResultViewModel<string>> AddEndpoint(EndpointAddDto endpointAddDto, int userId)
         {
             var endpointEntity = _mapper.Map<Endpoint>(endpointAddDto);
-            await _endpointRepository.AddAsync(endpointEntity);
             _endpointRepository.GetCurrentUser(userId);
+            await _endpointRepository.AddAsync(endpointEntity);
             return ResultViewModel<string>.Success("Endpoint eklendi", 200);
 
 

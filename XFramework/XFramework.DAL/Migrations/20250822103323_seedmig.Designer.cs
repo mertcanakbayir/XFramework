@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using XFramework.DAL;
 
@@ -11,9 +12,11 @@ using XFramework.DAL;
 namespace XFramework.DAL.Migrations
 {
     [DbContext(typeof(XFMContext))]
-    partial class XFMContextModelSnapshot : ModelSnapshot
+    [Migration("20250822103323_seedmig")]
+    partial class seedmig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,9 +54,6 @@ namespace XFramework.DAL.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Revision")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -74,7 +74,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             HttpMethod = "GET",
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -86,7 +85,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             HttpMethod = "GET",
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -98,7 +96,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             HttpMethod = "POST",
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -110,7 +107,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             HttpMethod = "POST",
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -122,7 +118,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             HttpMethod = "GET",
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -134,7 +129,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             HttpMethod = "POST",
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -146,7 +140,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             HttpMethod = "POST",
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -158,7 +151,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             HttpMethod = "POST",
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -170,7 +162,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             HttpMethod = "POST",
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -182,7 +173,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             HttpMethod = "POST",
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -194,7 +184,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             HttpMethod = "POST",
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
@@ -216,9 +205,6 @@ namespace XFramework.DAL.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Revision")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -239,7 +225,6 @@ namespace XFramework.DAL.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -249,7 +234,6 @@ namespace XFramework.DAL.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -259,7 +243,6 @@ namespace XFramework.DAL.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -269,7 +252,6 @@ namespace XFramework.DAL.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -279,7 +261,6 @@ namespace XFramework.DAL.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -289,7 +270,6 @@ namespace XFramework.DAL.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -299,7 +279,6 @@ namespace XFramework.DAL.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -309,7 +288,6 @@ namespace XFramework.DAL.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -319,7 +297,6 @@ namespace XFramework.DAL.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -329,7 +306,6 @@ namespace XFramework.DAL.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -339,7 +315,6 @@ namespace XFramework.DAL.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -349,7 +324,6 @@ namespace XFramework.DAL.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
@@ -378,9 +352,6 @@ namespace XFramework.DAL.Migrations
                     b.Property<int?>("ParentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Revision")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -401,7 +372,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             IsActive = true,
                             PageUrl = "/dashboard",
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -411,7 +381,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             IsActive = true,
                             PageUrl = "/users",
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
@@ -433,9 +402,6 @@ namespace XFramework.DAL.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Revision")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -456,7 +422,6 @@ namespace XFramework.DAL.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -466,7 +431,6 @@ namespace XFramework.DAL.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -476,7 +440,6 @@ namespace XFramework.DAL.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -486,7 +449,6 @@ namespace XFramework.DAL.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
@@ -513,9 +475,6 @@ namespace XFramework.DAL.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)");
 
-                    b.Property<int>("Revision")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -534,7 +493,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             IsActive = true,
                             Name = "Admin",
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -544,7 +502,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             IsActive = true,
                             Name = "Moderator",
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -554,7 +511,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             IsActive = true,
                             Name = "User",
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
@@ -586,9 +542,6 @@ namespace XFramework.DAL.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Revision")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -608,7 +561,6 @@ namespace XFramework.DAL.Migrations
                             Description = "Ayar denemesi için açıklama 1",
                             IsActive = true,
                             Name = "Ayar 1",
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -619,7 +571,6 @@ namespace XFramework.DAL.Migrations
                             Description = "Ayar denemesi için açıklama 2",
                             IsActive = true,
                             Name = "Ayar 2",
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -630,7 +581,6 @@ namespace XFramework.DAL.Migrations
                             Description = "SMTP mail gönderim ayarları",
                             IsActive = true,
                             Name = "Mail Ayarları",
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
@@ -656,9 +606,6 @@ namespace XFramework.DAL.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("Revision")
-                        .HasColumnType("int");
 
                     b.Property<int>("SystemSettingId")
                         .HasColumnType("int");
@@ -692,7 +639,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             IsActive = true,
                             Key = "Ayar1Detail",
-                            Revision = 1,
                             SystemSettingId = 1,
                             Type = "S",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -705,7 +651,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             IsActive = true,
                             Key = "Ayar2Detail",
-                            Revision = 1,
                             SystemSettingId = 1,
                             Type = "DT",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -718,7 +663,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             IsActive = true,
                             Key = "SmtpHost",
-                            Revision = 1,
                             SystemSettingId = 3,
                             Type = "S",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -731,7 +675,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             IsActive = true,
                             Key = "SmtpPort",
-                            Revision = 1,
                             SystemSettingId = 3,
                             Type = "I",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -744,7 +687,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             IsActive = true,
                             Key = "SmtpUser",
-                            Revision = 1,
                             SystemSettingId = 3,
                             Type = "S",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -757,7 +699,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             IsActive = true,
                             Key = "EncryptedPassword",
-                            Revision = 1,
                             SystemSettingId = 3,
                             Type = "S",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -770,7 +711,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             IsActive = true,
                             Key = "EnableSsl",
-                            Revision = 1,
                             SystemSettingId = 3,
                             Type = "B",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -783,7 +723,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             IsActive = true,
                             Key = "SenderEmail",
-                            Revision = 1,
                             SystemSettingId = 3,
                             Type = "S",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -796,7 +735,6 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             IsActive = true,
                             Key = "IsQueue",
-                            Revision = 1,
                             SystemSettingId = 3,
                             Type = "S",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -830,9 +768,6 @@ namespace XFramework.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Revision")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -857,7 +792,6 @@ namespace XFramework.DAL.Migrations
                             Email = "admin@test.com",
                             IsActive = true,
                             Password = "AQAAAAIAAYagAAAAEBV9CdhPcsGb7++CWXFC+hFKkqkxKR7LfvNFEgWzEBolNu1bW3WXvLd5FF/mCcDwAw==",
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(1089),
                             Username = "admin"
                         });
@@ -880,9 +814,6 @@ namespace XFramework.DAL.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Revision")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -903,7 +834,6 @@ namespace XFramework.DAL.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsActive = true,
-                            Revision = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });

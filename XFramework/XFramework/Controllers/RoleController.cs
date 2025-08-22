@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using XFramework.BLL.Result;
 using XFramework.BLL.Services.Concretes;
 using XFramework.Dtos;
@@ -24,21 +25,33 @@ namespace XFramework.API.Controllers
         [HttpPost]
         public async Task<ResultViewModel<string>> AddUserRole(RoleAddDto addRole)
         {
-            int userId = int.Parse(User.FindFirst("sub").Value);
+            var subClaim = User?.FindFirst(ClaimTypes.NameIdentifier);
+            if (subClaim == null)
+                return ResultViewModel<string>.Failure("User not authorized");
+
+            var userId = int.Parse(subClaim.Value);
             return await _roleService.AddRole(addRole, userId);
         }
 
         [HttpPost("addPageRole")]
         public async Task<ResultViewModel<string>> AddPageRole(PageRoleAddDto pageRoleAddDto)
         {
-            int userId = int.Parse(User.FindFirst("sub").Value);
+            var subClaim = User?.FindFirst(ClaimTypes.NameIdentifier);
+            if (subClaim == null)
+                return ResultViewModel<string>.Failure("User not authorized");
+
+            var userId = int.Parse(subClaim.Value);
             return await _roleService.AddPageRole(pageRoleAddDto, userId);
         }
 
         [HttpPost("addEndpointRole")]
         public async Task<ResultViewModel<string>> AddEndpointRole(EndpointRoleAddDto endpointRoleAddDto)
         {
-            int userId = int.Parse(User.FindFirst("sub").Value);
+            var subClaim = User?.FindFirst(ClaimTypes.NameIdentifier);
+            if (subClaim == null)
+                return ResultViewModel<string>.Failure("User not authorized");
+
+            var userId = int.Parse(subClaim.Value);
             return await _roleService.AddEndpointRole(endpointRoleAddDto, userId);
         }
 

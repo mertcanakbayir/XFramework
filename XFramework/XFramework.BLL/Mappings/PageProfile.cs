@@ -12,6 +12,7 @@ namespace XFramework.BLL.Mappings
             CreateMap<PageDto, Page>();
 
             CreateMap<PageAddDto, Page>();
+            CreateMap<Page, PageAddDto>();
         }
     }
 }
