@@ -17,13 +17,13 @@ namespace XFramework.Controllers
         }
 
         [HttpPost("register")]
-        [ValidateFilter]
+        [TypeFilter(typeof(ValidateFilter))]
         public async Task<ResultViewModel<string>> Register(RegisterDto registerDto)
         {
             return await _authService.Register(registerDto);
         }
         [HttpPost("login")]
-        [ValidateFilter]
+        [TypeFilter(typeof(ValidateFilter))]
         public async Task<ResultViewModel<string>> Login(LoginDto loginDto)
         {
             return await _authService.Login(loginDto);
