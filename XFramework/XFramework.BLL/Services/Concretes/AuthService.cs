@@ -146,9 +146,7 @@ namespace XFramework.BLL.Services.Concretes
             }
             var userDto = _mapper.Map<UserDto>(user);
             var resetTokenDto = _tokenHelper.CreatePasswordResetToken(userDto);
-
-            var resetLink = $"https://frontend.com/reset-password?email={userDto.Email}&token={resetTokenDto.Token}";
-
+            var resetLink = $"https://localhost:4200/reset-password?email={userDto.Email}&token={resetTokenDto.Token}";
             var mailResult = await _mailService.SendEmailAsync(
                userDto.Email,
                "Şifre Sıfırlama Talebi",

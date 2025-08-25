@@ -7,14 +7,11 @@ namespace XFramework.BLL.Services.Concretes
 {
     public class RoleAuthorizationService
     {
-        private readonly IBaseRepository<Page> _pageRepository;
-        private readonly IBaseRepository<Endpoint> _endpointRepository;
         private readonly IBaseRepository<User> _userRepository;
         private readonly IMemoryCache _memoryCache;
-        public RoleAuthorizationService(IBaseRepository<Page> pageRepository, IBaseRepository<Endpoint> endpointRepository, IMemoryCache memoryCache, IBaseRepository<User> userRepository)
+        public RoleAuthorizationService(IMemoryCache memoryCache, IBaseRepository<User> userRepository)
         {
-            _pageRepository = pageRepository;
-            _endpointRepository = endpointRepository;
+
             _memoryCache = memoryCache;
             _userRepository = userRepository;
         }
@@ -32,7 +29,6 @@ namespace XFramework.BLL.Services.Concretes
             {
                 return new List<string>();
             }
-
             var userPages = user.UserRoles.SelectMany(ur => ur.Role.PageRoles)
                 .Select(pr => pr.Page.PageUrl.ToLower())
                 .Distinct()
@@ -41,7 +37,6 @@ namespace XFramework.BLL.Services.Concretes
             {
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
             });
-
             return userPages;
         }
 

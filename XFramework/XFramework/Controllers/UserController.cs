@@ -15,7 +15,7 @@ namespace XFramework.Controllers
         }
 
         [HttpGet]
-        [ValidateFilter]
+        [TypeFilter(typeof(ValidateFilter))]
         public async Task<ResultViewModel<List<UserDto>>> GetAll()
         {
             return await _userService.GetUsers();

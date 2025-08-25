@@ -1,12 +1,16 @@
+using System.Data;
 using System.Text;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
+using Serilog.Sinks.MSSqlServer;
 using XFM.BLL.Mappings;
 using XFM.BLL.Utilities.Hashing;
 using XFM.BLL.Utilities.JWT;
 using XFramework.API.Extensions;
+using XFramework.API.Middlewares;
 using XFramework.API.Services;
 using XFramework.BLL.Services.Abstracts;
 using XFramework.BLL.Services.Concretes;
@@ -19,7 +23,7 @@ using XFramework.DAL.Concrete;
 var builder = WebApplication.CreateBuilder(args);
 
 
-    builder.Services.AddCors(options =>
+builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularClient",
         policy =>
@@ -105,7 +109,37 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<XFMContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+
+builder.Services.AddDbContext<XFrameworkLogContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("LogConnection"))
+);
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Warning()
+    .Enrich.FromLogContext()
+    .WriteTo.MSSqlServer(
+    connectionString: builder.Configuration.GetConnectionString("LogConnection"),
+    sinkOptions: new MSSqlServerSinkOptions
+    {
+        TableName = "Logs",
+        SchemaName = "dbo",
+        AutoCreateSqlTable = true,
+        BatchPostingLimit = 50,
+        BatchPeriod = TimeSpan.FromSeconds(10)
+    },
+    columnOptions: new ColumnOptions
+    {
+        AdditionalColumns = new List<SqlColumn>
+        {
+               new SqlColumn("UserId", SqlDbType.NVarChar, dataLength: 100),
+               new SqlColumn("IPAddress", SqlDbType.NVarChar, dataLength: 50),
+               new SqlColumn("ActionName", SqlDbType.NVarChar, dataLength: 250),
+        }
+    }
+    )
+    .CreateLogger();
 builder.Services.AddCustomRateLimiter();
+builder.Host.UseSerilog();
 
 var app = builder.Build();
 
@@ -118,10 +152,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<LoggingMiddleware>();
 app.UseAuthentication();
 app.UseRateLimiter();
 app.UseAuthorization();
-
 app.UseRoleAuthorization();
 
 app.MapControllers();

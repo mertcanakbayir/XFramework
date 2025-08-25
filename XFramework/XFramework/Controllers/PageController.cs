@@ -17,7 +17,7 @@ namespace XFramework.API.Controllers
             _pageService = pageService;
         }
         [HttpPost]
-        [ValidateFilter]
+        [TypeFilter(typeof(ValidateFilter))]
         public async Task<ResultViewModel<string>> AddPage(PageAddDto pageAddDto)
         {
             var subClaim = User?.FindFirst(ClaimTypes.NameIdentifier);
@@ -29,10 +29,16 @@ namespace XFramework.API.Controllers
         }
 
         [HttpGet]
-        [ValidateFilter]
+        [TypeFilter(typeof(ValidateFilter))]
         public async Task<ResultViewModel<List<PageDto>>> GetPagesByUser(int userId)
         {
             return await _pageService.GetPagesByUser(userId);
+        }
+
+        [HttpGet("all")]
+        public async Task<ResultViewModel<List<PageDto>>> GetPages()
+        {
+            return await _pageService.GetAllPages();
         }
 
         [HttpPut]

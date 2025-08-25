@@ -6,6 +6,16 @@ namespace XFramework.API.Controllers
     [ApiController]
     public class TestController : ControllerBase
     {
-       
+        [HttpGet("throw")]
+        public IActionResult ThrowException()
+        {
+            throw new Exception("Bu bir test exception");
+        }
+
+        [HttpGet("ok")]
+        public IActionResult OkTest()
+        {
+            return Ok(new { Message = "Her şey yolunda" });
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Serilog;
 using XFramework.BLL.Services.Concretes;
 
 namespace XFramework.API.Middlewares
@@ -14,67 +15,58 @@ namespace XFramework.API.Middlewares
 
         public async Task InvokeAsync(HttpContext context, RoleAuthorizationService authorizationService)
         {
-
-            try
+            var path = context.Request.Path.Value?.ToLower();
+            if (path.Contains("/auth/login") || path.Contains("/auth/register")
+                || path.Contains("/auth/forgot-password") || path.Contains("/auth/reset-password") || path.Contains("/api/test")
+                || path.Contains("api/page"))
             {
-                var path = context.Request.Path.Value?.ToLower();
-                if (path.Contains("/auth/login") || path.Contains("/auth/register") || path.Contains("/auth/forgot-password") || path.Contains("/auth/reset-password"))
-                {
-                    await _next(context);
-                    return;
-                }
-                if (context.User.Identity?.IsAuthenticated == false)
-                {
-                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                    await context.Response.WriteAsync("Unauthorized");
-                    return;
-                }
-
-
-                var endpoint = context.GetEndpoint();
-                var actionDescriptor = endpoint?.Metadata.GetMetadata<ControllerActionDescriptor>();
-
-                if (actionDescriptor == null)
-                {
-                    await _next(context);
-                    return;
-                }
-
-                string controllerName = actionDescriptor.ControllerName;
-                string actionName = actionDescriptor.ActionName;
-                string httpMethod = context.Request.Method;
-                var userRoles = context.User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
-                string pageUrl = context.Request.Headers["PageUrl"].ToString()?.ToLower();
-                var userIdClaim = context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
-                {
-                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                    await context.Response.WriteAsync("Unauthorized");
-                    return;
-                }
-                if (string.IsNullOrEmpty(pageUrl))
-                {
-                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                    await context.Response.WriteAsync("Page URL header missing");
-                    return;
-                }
-                bool hasAccess = await authorizationService.HasAccessAsync(pageUrl, controllerName, actionName, httpMethod, userId);
-
-                if (!hasAccess)
-                {
-                    context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                    await context.Response.WriteAsync("Forbidden");
-                    return;
-                }
-
                 await _next(context);
+                return;
             }
-            catch (Exception ex)
+            if (context.User.Identity?.IsAuthenticated == false)
             {
-                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                await context.Response.WriteAsync("Internal Server Error");
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                await context.Response.WriteAsync("Unauthorized");
+                return;
             }
 
+
+            var endpoint = context.GetEndpoint();
+            var actionDescriptor = endpoint?.Metadata.GetMetadata<ControllerActionDescriptor>();
+
+            if (actionDescriptor == null)
+            {
+                await _next(context);
+                return;
+            }
+
+            string controllerName = actionDescriptor.ControllerName;
+            string actionName = actionDescriptor.ActionName;
+            string httpMethod = context.Request.Method;
+            var userRoles = context.User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+            string pageUrl = context.Request.Headers["PageUrl"].ToString()?.ToLower();
+            var userIdClaim = context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+            {
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                await context.Response.WriteAsync("Unauthorized");
+                return;
+            }
+            if (string.IsNullOrEmpty(pageUrl))
+            {
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                await context.Response.WriteAsync("Page URL header missing");
+                return;
+            }
+            bool hasAccess = await authorizationService.HasAccessAsync(pageUrl, controllerName, actionName, httpMethod, userId);
+
+            if (!hasAccess)
+            {
+                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                await context.Response.WriteAsync("Forbidden");
+                return;
+            }
+            await _next(context);
         }
     }
 }
