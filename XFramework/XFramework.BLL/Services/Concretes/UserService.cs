@@ -1,24 +1,36 @@
 ﻿using AutoMapper;
 using Dtos;
+using FluentValidation;
+using XFM.BLL.Utilities.Hashing;
 using XFramework.BLL.Result;
-using XFramework.BLL.Services.Abstracts;
 using XFramework.DAL.Abstract;
 using XFramework.DAL.Entities;
+using XFramework.Dtos;
 
 namespace XFramework.BLL.Services.Concretes
 {
-    public class UserService : IUserService
+    public class UserService
     {
         private readonly IMapper _mapper;
-        private readonly IBaseRepository<User> _baseRepository;
-        public UserService(IBaseRepository<User> baseRepository, IMapper mapper)
+        private readonly IBaseRepository<User> _userRepository;
+        private readonly IHashingHelper _hashingHelper;
+        private readonly IValidator<UserAddDto> _userAddDtoValidator;
+        private readonly IValidator<UserUpdateDto> _userUpdateDtoValidator;
+        private readonly CurrentUserService _currentUserService;
+        public UserService(IBaseRepository<User> userRepository, IMapper mapper, IHashingHelper hashingHelper,
+            IValidator<UserAddDto> userAddDtoValidator,
+            IValidator<UserUpdateDto> userUpdateDtoValidator, CurrentUserService currentUserService)
         {
-            _baseRepository = baseRepository;
+            _userRepository = userRepository;
             _mapper = mapper;
+            _hashingHelper = hashingHelper;
+            _userAddDtoValidator = userAddDtoValidator;
+            _userUpdateDtoValidator = userUpdateDtoValidator;
+            _currentUserService = currentUserService;
         }
         public async Task<ResultViewModel<UserDto>> GetUserByEmail(string email)
         {
-            var user = await _baseRepository.GetAsync(x => x.Email == email);
+            var user = await _userRepository.GetAsync(x => x.Email == email);
             if (user == null)
             {
                 return ResultViewModel<UserDto>.Failure("Kullanıcı bulunamadı", null, 404);
@@ -29,7 +41,7 @@ namespace XFramework.BLL.Services.Concretes
 
         public async Task<ResultViewModel<UserDto>> GetUserById(int id)
         {
-            var user = await _baseRepository.GetAsync(e => e.Id == id);
+            var user = await _userRepository.GetAsync(e => e.Id == id);
             if (user == null)
             {
                 return ResultViewModel<UserDto>.Failure("Kullanıcı bulunamadı", null, 404);
@@ -40,7 +52,7 @@ namespace XFramework.BLL.Services.Concretes
 
         public async Task<ResultViewModel<List<UserDto>>> GetUsers()
         {
-            var users = await _baseRepository.GetAllAsync();
+            var users = await _userRepository.GetAllAsync();
 
             if (!users.Any())
             {
@@ -52,5 +64,52 @@ namespace XFramework.BLL.Services.Concretes
             return ResultViewModel<List<UserDto>>.Success(userDtos, "Kullanıcılar", 200);
         }
 
+        public async Task<ResultViewModel<UserAddDto>> AddUser(UserAddDto userAddDto)
+        {
+            var validationResult = _userAddDtoValidator.Validate(userAddDto);
+            if (!validationResult.IsValid)
+            {
+                return ResultViewModel<UserAddDto>.Failure("Lütfen girdiğiniz bilgileri kontrol edin.", validationResult.Errors.Select(e => e.ErrorMessage).ToList(), 400);
+            }
+            var userEntity = _mapper.Map<User>(userAddDto);
+            userEntity.Password = _hashingHelper.HashPassword(userEntity.Password);
+            _userRepository.GetCurrentUser(_currentUserService.GetUserId());
+            await _userRepository.AddAsync(userEntity);
+            return ResultViewModel<UserAddDto>.Success("Kullanıcı Başarıyla Eklendi", 201);
+        }
+
+        public async Task<ResultViewModel<UserUpdateDto>> UpdateUser(UserUpdateDto userUpdateDto)
+        {
+            var validationResult = _userUpdateDtoValidator.Validate(userUpdateDto);
+            if (!validationResult.IsValid)
+            {
+                return ResultViewModel<UserUpdateDto>.Failure("Lütfen Girdiğiniz bilgileri kontrol edin.", validationResult.Errors.Select(e => e.ErrorMessage).ToList());
+            }
+            var userEntity = await _userRepository.GetAsync(u => u.Id == userUpdateDto.Id);
+            if (userEntity == null)
+            {
+                return ResultViewModel<UserUpdateDto>.Failure("Kullanıcı Bulunamadı", null, 404);
+            }
+            _mapper.Map(userUpdateDto, userEntity);
+            if (!string.IsNullOrEmpty(userEntity.Password))
+            {
+                userEntity.Password = _hashingHelper.HashPassword(userUpdateDto.Password);
+            }
+            _userRepository.GetCurrentUser(_currentUserService.GetUserId());
+            await _userRepository.UpdateAsync(userEntity);
+            return ResultViewModel<UserUpdateDto>.Success("Kullanıcı Güncellendi", 200);
+        }
+
+        public async Task<ResultViewModel<string>> DeleteUserById(int userId)
+        {
+            var user = await _userRepository.GetAsync(e => e.Id == userId);
+            if (user == null)
+            {
+                return ResultViewModel<string>.Failure("Kullanıcı bulunamadı.", null, 404);
+            }
+
+            await _userRepository.DeleteAsync(userId);
+            return ResultViewModel<string>.Success("Kullanıcı silindi.", 200);
+        }
     }
 }

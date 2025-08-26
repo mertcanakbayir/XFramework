@@ -20,12 +20,8 @@ namespace XFramework.API.Controllers
         [TypeFilter(typeof(ValidateFilter))]
         public async Task<ResultViewModel<string>> AddPage(PageAddDto pageAddDto)
         {
-            var subClaim = User?.FindFirst(ClaimTypes.NameIdentifier);
-            if (subClaim == null)
-                return ResultViewModel<string>.Failure("User not authorized");
 
-            var userId = int.Parse(subClaim.Value);
-            return await _pageService.AddPage(pageAddDto, userId);
+            return await _pageService.AddPage(pageAddDto);
         }
 
         [HttpGet]

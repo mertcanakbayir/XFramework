@@ -25,34 +25,19 @@ namespace XFramework.API.Controllers
         [HttpPost]
         public async Task<ResultViewModel<string>> AddUserRole(RoleAddDto addRole)
         {
-            var subClaim = User?.FindFirst(ClaimTypes.NameIdentifier);
-            if (subClaim == null)
-                return ResultViewModel<string>.Failure("User not authorized");
-
-            var userId = int.Parse(subClaim.Value);
-            return await _roleService.AddRole(addRole, userId);
+            return await _roleService.AddRole(addRole);
         }
 
         [HttpPost("addPageRole")]
         public async Task<ResultViewModel<string>> AddPageRole(PageRoleAddDto pageRoleAddDto)
         {
-            var subClaim = User?.FindFirst(ClaimTypes.NameIdentifier);
-            if (subClaim == null)
-                return ResultViewModel<string>.Failure("User not authorized");
-
-            var userId = int.Parse(subClaim.Value);
-            return await _roleService.AddPageRole(pageRoleAddDto, userId);
+            return await _roleService.AddPageRole(pageRoleAddDto);
         }
 
         [HttpPost("addEndpointRole")]
         public async Task<ResultViewModel<string>> AddEndpointRole(EndpointRoleAddDto endpointRoleAddDto)
         {
-            var subClaim = User?.FindFirst(ClaimTypes.NameIdentifier);
-            if (subClaim == null)
-                return ResultViewModel<string>.Failure("User not authorized");
-
-            var userId = int.Parse(subClaim.Value);
-            return await _roleService.AddEndpointRole(endpointRoleAddDto, userId);
+            return await _roleService.AddEndpointRole(endpointRoleAddDto);
         }
 
     }

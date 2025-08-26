@@ -14,17 +14,19 @@ namespace XFramework.BLL.Services.Concretes
         private readonly IMapper _mapper;
         private readonly IBaseRepository<User> _userRepository;
         private readonly IValidator<PageAddDto> _pageAddDtoValidator;
+        private readonly CurrentUserService _currentUserService;
         //private readonly IValidator<ForgotPasswordDto> _forgotPasswordDtoValidator;
 
-        public PageService(IBaseRepository<Page> pageRepository, IMapper mapper, IBaseRepository<User> userRepository, IValidator<PageAddDto> pageAddDtoValidator)
+        public PageService(IBaseRepository<Page> pageRepository, IMapper mapper, IBaseRepository<User> userRepository, IValidator<PageAddDto> pageAddDtoValidator, CurrentUserService currentUserService)
         {
             _pageRepository = pageRepository;
             _mapper = mapper;
             _userRepository = userRepository;
             _pageAddDtoValidator = pageAddDtoValidator;
+            _currentUserService = currentUserService;
         }
 
-        public async Task<ResultViewModel<string>> AddPage(PageAddDto pageAddDto, int userId)
+        public async Task<ResultViewModel<string>> AddPage(PageAddDto pageAddDto)
         {
             var validationResult = _pageAddDtoValidator.Validate(pageAddDto);
             if (!validationResult.IsValid)
@@ -33,7 +35,7 @@ namespace XFramework.BLL.Services.Concretes
                 return ResultViewModel<string>.Failure("Lütfen Girdiğiniz bilgileri kontrol edin.", errors, 400);
             }
             var pageEntity = _mapper.Map<Page>(pageAddDto);
-            _pageRepository.GetCurrentUser(userId);
+            _pageRepository.GetCurrentUser(_currentUserService.GetUserId());
             _pageRepository.AddAsync(pageEntity);
             return ResultViewModel<string>.Success("Sayfa Eklendi", 200);
         }
@@ -58,6 +60,7 @@ namespace XFramework.BLL.Services.Concretes
                 return ResultViewModel<string>.Failure("Güncellenecek sayfa bulunamadı", statusCode: 400);
             }
             var pageEntity = _mapper.Map<Page>(pageAddDto);
+            _pageRepository.GetCurrentUser(_currentUserService.GetUserId());
             await _pageRepository.UpdateAsync(pageEntity);
             return ResultViewModel<string>.Success("Sayfa güncellendi", statusCode: 200);
         }

@@ -66,27 +66,25 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero
     };
 });
-//??????
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("CanCreateOrder", policy =>
-      policy.RequireClaim("Permission", "CreateOrder"));
-});
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddAuthorization();
 
 // Add services to the container.
 builder.Services.AddScoped<IHashingHelper, HashingHelper>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenHelper, TokenHelper>();
 builder.Services.AddScoped<RoleAuthorizationService>();
 builder.Services.AddSingleton<ClientIpResolver>();
 builder.Services.AddTransient<MailService>();
 builder.Services.AddScoped<EncryptionHelper>();
-builder.Services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
 builder.Services.AddScoped<RoleService>();
 builder.Services.AddScoped<PageService>();
 builder.Services.AddScoped<EndpointService>();
+builder.Services.AddScoped<CurrentUserService>();
+builder.Services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
 builder.Services.AddSingleton<MailQueueService>(sp =>
 {
     var config = builder.Configuration.GetSection("RabbitMQ");
@@ -155,8 +153,8 @@ app.UseHttpsRedirection();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<LoggingMiddleware>();
 app.UseAuthentication();
-app.UseRateLimiter();
 app.UseAuthorization();
+app.UseRateLimiter();
 app.UseRoleAuthorization();
 
 app.MapControllers();

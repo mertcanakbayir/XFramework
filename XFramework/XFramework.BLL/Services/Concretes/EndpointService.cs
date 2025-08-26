@@ -12,10 +12,12 @@ namespace XFramework.BLL.Services.Concretes
         private readonly IBaseRepository<Endpoint> _endpointRepository;
         private readonly IBaseRepository<User> _userRepository;
         private readonly IMapper _mapper;
-        public EndpointService(IBaseRepository<Endpoint> endpointRepository, IMapper mapper)
+        private readonly CurrentUserService _currentUserService;
+        public EndpointService(IBaseRepository<Endpoint> endpointRepository, IMapper mapper, CurrentUserService currentUserService)
         {
             _endpointRepository = endpointRepository;
             _mapper = mapper;
+            _currentUserService = currentUserService;
         }
 
         public async Task<ResultViewModel<List<EndpointDto>>> GetEndpointsByUser(int userId)
@@ -31,14 +33,12 @@ namespace XFramework.BLL.Services.Concretes
             return ResultViewModel<List<EndpointDto>>.Success(endpointsDto, "Kullanıcının yetkili olduğu endpointler:", 200);
         }
 
-        public async Task<ResultViewModel<string>> AddEndpoint(EndpointAddDto endpointAddDto, int userId)
+        public async Task<ResultViewModel<string>> AddEndpoint(EndpointAddDto endpointAddDto)
         {
             var endpointEntity = _mapper.Map<Endpoint>(endpointAddDto);
-            _endpointRepository.GetCurrentUser(userId);
+            _endpointRepository.GetCurrentUser(_currentUserService.GetUserId());
             await _endpointRepository.AddAsync(endpointEntity);
             return ResultViewModel<string>.Success("Endpoint eklendi", 200);
-
-
         }
     }
 }
