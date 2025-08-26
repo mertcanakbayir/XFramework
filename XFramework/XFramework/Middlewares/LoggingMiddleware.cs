@@ -18,7 +18,7 @@ namespace XFramework.API.Middlewares
 
             var userId = context.User?.Identity?.IsAuthenticated == true ? context.User.FindFirst(ClaimTypes.NameIdentifier).Value ?? "Bilinmiyor" : "Anonim";
 
-            var actionName = context.GetEndpoint().DisplayName ?? "Bilinmeyen Action";
+            var actionName = context.GetEndpoint()?.DisplayName ?? "Bilinmeyen Action";
 
             LogContext.PushProperty("UserId", userId);
             LogContext.PushProperty("Action", actionName);

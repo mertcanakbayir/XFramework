@@ -99,12 +99,13 @@ namespace XFramework.DAL.Concrete
         {
             var entry = _xfmContext.Entry(entity);
             var id = entry.Property("Id").CurrentValue;
-            var existingEntity = await _xfmContext.Set<TEntity>().FindAsync(id);
+            var existingEntity = await _xfmContext.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == (int)_xfmContext.Entry(entity).Property("Id").CurrentValue);
+
 
             if (existingEntity == null)
                 throw new KeyNotFoundException("Güncellenecek nesne veritabanında bulunamadı.");
 
-            var revisionProperty = _xfmContext.Entry(existingEntity).Properties.FirstOrDefault(p => p.Metadata.Name == "Revision");
+            var revisionProperty = _xfmContext.Entry(existingEntity).Property("Revision");
             if (revisionProperty != null)
             {
                 var currentRevision = Convert.ToInt32(revisionProperty.CurrentValue);
@@ -118,7 +119,8 @@ namespace XFramework.DAL.Concrete
 
                 _xfmContext.Entry(entity).Property("Revision").CurrentValue = currentRevision += 1;
             }
-            _xfmContext.Entry(existingEntity).CurrentValues.SetValues(entity);
+            _xfmContext.Set<TEntity>().Attach(entity);
+            _xfmContext.Entry(entity).State = EntityState.Modified;
             await _xfmContext.SaveChangesAsync();
         }
     }

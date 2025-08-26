@@ -18,7 +18,6 @@ namespace XFramework.BLL.Services.Concretes
         private readonly IHashingHelper _hashService;
         private readonly IBaseRepository<User> _userRepository;
         private readonly IBaseRepository<UserRole> _userRoleRepository;
-        private readonly IUserService _userService;
         private readonly IValidator<RegisterDto> _registerDtoValidator;
         private readonly IValidator<LoginDto> _loginDtoValidator;
         private readonly IValidator<ForgotPasswordDto> _forgotPasswordDtoValidator;
@@ -27,13 +26,12 @@ namespace XFramework.BLL.Services.Concretes
         private readonly IMapper _mapper;
         private readonly MailService _mailService;
 
-        public AuthService(IBaseRepository<User> userRepository, IBaseRepository<UserRole> userRoleRespository, IHashingHelper hashService, IUserService userService, IValidator<LoginDto> loginDtoValidator, IValidator<RegisterDto> registerDtoValidator, ITokenHelper tokenHelper,
+        public AuthService(IBaseRepository<User> userRepository, IBaseRepository<UserRole> userRoleRespository, IHashingHelper hashService, IValidator<LoginDto> loginDtoValidator, IValidator<RegisterDto> registerDtoValidator, ITokenHelper tokenHelper,
             IMapper mapper, MailService mailService, IValidator<ForgotPasswordDto> forgotPasswordDtoValidator, IValidator<ResetPasswordDto> resetPasswordDtoValidator)
         {
             _hashService = hashService;
             _userRepository = userRepository;
             _userRoleRepository = userRoleRespository;
-            _userService = userService;
             _loginDtoValidator = loginDtoValidator;
             _registerDtoValidator = registerDtoValidator;
             _tokenHelper = tokenHelper;

@@ -12,7 +12,7 @@
 
         public bool IsActive { get; set; } = true;
 
-        public int Revision { get; set; } = 1;
+        public int Revision { get; set; } = 0;
 
     }
 }

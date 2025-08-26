@@ -227,7 +227,6 @@ namespace XFramework.DAL
         public int UserId { get; set; }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            //return base.SaveChangesAsync(cancellationToken);
             this.ChangeTracker.DetectChanges();
             var added = this.ChangeTracker.Entries()
                         .Where(t => t.State == EntityState.Added)
@@ -257,12 +256,12 @@ namespace XFramework.DAL
             {
                 if (entity is BaseEntity baseEntity)
                 {
-                    baseEntity.CreatedAt = DateTime.Now;
+                    baseEntity.UpdatedAt = DateTime.Now;
                     baseEntity.CreatedBy = UserId;
                 }
                 if (entity is AuditEntity auditEntity)
                 {
-                    auditEntity.CreatedAt = DateTime.Now;
+                    auditEntity.UpdatedAt = DateTime.Now;
                     auditEntity.CreatedBy = UserId;
                 }
 

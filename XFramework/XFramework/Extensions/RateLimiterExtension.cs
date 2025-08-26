@@ -51,6 +51,14 @@ namespace XFramework.API.Extensions
                     var ipResolver = context.HttpContext.RequestServices.GetRequiredService<ClientIpResolver>();
                     var ipAddress = ipResolver.GetClientIp(context.HttpContext);
                     var userId = context.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "anonymous";
+                    var actionName = context.HttpContext.GetEndpoint()?.DisplayName ?? "Bilinmeyen Action";
+
+                    Serilog.Context.LogContext.PushProperty("UserId", userId);
+                    Serilog.Context.LogContext.PushProperty("Action", actionName);
+                    Serilog.Context.LogContext.PushProperty("IPAddress", ipAddress);
+                    {
+                        Serilog.Log.Warning("Rate limit ihlali: {UserId} / {IPAddress} / Action: {Action}", userId, ipAddress, actionName);
+                    }
 
                     string message = userId == "anonymous"
                         ? $"Aynı IP ({ipAddress}) üzerinden çok fazla istek yapıldı. Lütfen daha sonra deneyin."
