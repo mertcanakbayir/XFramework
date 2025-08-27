@@ -78,20 +78,20 @@ namespace XFramework.BLL.Services.Concretes
             return ResultViewModel<UserAddDto>.Success("Kullanıcı Başarıyla Eklendi", 201);
         }
 
-        public async Task<ResultViewModel<UserUpdateDto>> UpdateUser(UserUpdateDto userUpdateDto)
+        public async Task<ResultViewModel<UserUpdateDto>> UpdateUser(UserUpdateDto userUpdateDto, int id)
         {
             var validationResult = _userUpdateDtoValidator.Validate(userUpdateDto);
             if (!validationResult.IsValid)
             {
                 return ResultViewModel<UserUpdateDto>.Failure("Lütfen Girdiğiniz bilgileri kontrol edin.", validationResult.Errors.Select(e => e.ErrorMessage).ToList());
             }
-            var userEntity = await _userRepository.GetAsync(u => u.Id == userUpdateDto.Id);
+            var userEntity = await _userRepository.GetAsync(u => u.Id == id);
             if (userEntity == null)
             {
                 return ResultViewModel<UserUpdateDto>.Failure("Kullanıcı Bulunamadı", null, 404);
             }
             _mapper.Map(userUpdateDto, userEntity);
-            if (!string.IsNullOrEmpty(userEntity.Password))
+            if (!string.IsNullOrEmpty(userUpdateDto.Password))
             {
                 userEntity.Password = _hashingHelper.HashPassword(userUpdateDto.Password);
             }
