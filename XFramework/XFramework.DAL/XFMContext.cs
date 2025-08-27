@@ -203,6 +203,15 @@ namespace XFramework.DAL
                     Key = "IsQueue",
                     Value = "false",
                     IsActive = true
+                },
+                new SystemSettingDetail
+                {
+                    Id = 10,
+                    SystemSettingId = 4,
+                    Key = "IsEnabled",
+                    Type = SystemSettingType.Bool,
+                    Value = "true",
+                    IsActive = true
                 }
                             );
 

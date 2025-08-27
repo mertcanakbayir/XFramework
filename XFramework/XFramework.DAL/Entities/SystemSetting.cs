@@ -8,7 +8,5 @@ namespace XFramework.DAL.Entities
         public string Description { get; set; }
 
         public ICollection<SystemSettingDetail> SystemSettingDetails { get; set; }
-
-
     }
 }
