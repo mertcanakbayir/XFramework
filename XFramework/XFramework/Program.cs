@@ -84,6 +84,8 @@ builder.Services.AddScoped<RoleService>();
 builder.Services.AddScoped<PageService>();
 builder.Services.AddScoped<EndpointService>();
 builder.Services.AddScoped<CurrentUserService>();
+builder.Services.AddScoped<SystemSettingService>();
+builder.Services.AddScoped<SystemSettingDetailService>();
 builder.Services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
 builder.Services.AddSingleton<MailQueueService>(sp =>
 {

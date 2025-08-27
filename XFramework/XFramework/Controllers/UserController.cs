@@ -29,11 +29,11 @@ namespace XFramework.Controllers
             return await _userService.AddUser(userAddDto);
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [TypeFilter(typeof(ValidateFilter))]
-        public async Task<ResultViewModel<UserUpdateDto>> UpdateUser(UserUpdateDto userUpdateDto)
+        public async Task<ResultViewModel<UserUpdateDto>> UpdateUser(UserUpdateDto userUpdateDto, int id)
         {
-            return await _userService.UpdateUser(userUpdateDto);
+            return await _userService.UpdateUser(userUpdateDto, id);
         }
 
         [HttpGet]

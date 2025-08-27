@@ -257,12 +257,12 @@ namespace XFramework.DAL
                 if (entity is BaseEntity baseEntity)
                 {
                     baseEntity.UpdatedAt = DateTime.Now;
-                    baseEntity.CreatedBy = UserId;
+                    baseEntity.UpdatedBy = UserId;
                 }
                 if (entity is AuditEntity auditEntity)
                 {
                     auditEntity.UpdatedAt = DateTime.Now;
-                    auditEntity.CreatedBy = UserId;
+                    auditEntity.UpdatedBy = UserId;
                 }
 
             }
