@@ -2,13 +2,13 @@
 using Dtos;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using XFM.BLL.Utilities.Hashing;
 using XFM.BLL.Utilities.JWT;
-using XFramework.BLL.Result;
 using XFramework.BLL.Services.Abstracts;
-using XFramework.DAL.Abstract;
+using XFramework.BLL.Utilities.Hashing;
 using XFramework.DAL.Entities;
 using XFramework.Dtos;
+using XFramework.Helper.ViewModels;
+using XFramework.Repository.Repositories;
 
 namespace XFramework.BLL.Services.Concretes
 {
@@ -16,8 +16,8 @@ namespace XFramework.BLL.Services.Concretes
     {
 
         private readonly IHashingHelper _hashService;
-        private readonly IBaseRepository<User> _userRepository;
-        private readonly IBaseRepository<UserRole> _userRoleRepository;
+        private readonly BaseRepository<User> _userRepository;
+        private readonly BaseRepository<UserRole> _userRoleRepository;
         private readonly IValidator<RegisterDto> _registerDtoValidator;
         private readonly IValidator<LoginDto> _loginDtoValidator;
         private readonly IValidator<ForgotPasswordDto> _forgotPasswordDtoValidator;
@@ -26,7 +26,7 @@ namespace XFramework.BLL.Services.Concretes
         private readonly IMapper _mapper;
         private readonly MailService _mailService;
 
-        public AuthService(IBaseRepository<User> userRepository, IBaseRepository<UserRole> userRoleRespository, IHashingHelper hashService, IValidator<LoginDto> loginDtoValidator, IValidator<RegisterDto> registerDtoValidator, ITokenHelper tokenHelper,
+        public AuthService(BaseRepository<User> userRepository, BaseRepository<UserRole> userRoleRespository, IHashingHelper hashService, IValidator<LoginDto> loginDtoValidator, IValidator<RegisterDto> registerDtoValidator, ITokenHelper tokenHelper,
             IMapper mapper, MailService mailService, IValidator<ForgotPasswordDto> forgotPasswordDtoValidator, IValidator<ResetPasswordDto> resetPasswordDtoValidator)
         {
             _hashService = hashService;

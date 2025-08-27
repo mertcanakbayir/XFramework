@@ -1,4 +1,4 @@
-﻿namespace XFramework.DAL.Helpers
+﻿namespace XFramework.Helper.Helpers
 {
     public static class EnumConverter
     {
@@ -7,7 +7,7 @@
             foreach (var enumValue in Enum.GetValues(typeof(TEnum)))
             {
                 var shortName = string.Concat(enumValue.ToString().Where(char.IsUpper));
-                if(shortName.Equals(value,StringComparison.OrdinalIgnoreCase))
+                if (shortName.Equals(value, StringComparison.OrdinalIgnoreCase))
                 {
                     return (TEnum)enumValue;
                 }

@@ -7,18 +7,16 @@ using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Sinks.MSSqlServer;
 using XFM.BLL.Mappings;
-using XFM.BLL.Utilities.Hashing;
 using XFM.BLL.Utilities.JWT;
 using XFramework.API.Extensions;
 using XFramework.API.Middlewares;
-using XFramework.API.Services;
 using XFramework.BLL.Services.Abstracts;
 using XFramework.BLL.Services.Concretes;
-using XFramework.BLL.Utilities;
+using XFramework.BLL.Utilities.Hashing;
 using XFramework.BLL.Utilities.ValidationRulers;
 using XFramework.DAL;
-using XFramework.DAL.Abstract;
-using XFramework.DAL.Concrete;
+using XFramework.Helper.Helpers;
+using XFramework.Repository.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,7 +70,7 @@ builder.Services.AddAuthorization();
 
 // Add services to the container.
 builder.Services.AddScoped<IHashingHelper, HashingHelper>();
-builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+builder.Services.AddScoped(typeof(BaseRepository<>));
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenHelper, TokenHelper>();

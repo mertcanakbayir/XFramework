@@ -1,4 +1,6 @@
-﻿namespace XFramework.API.Services
+﻿using Microsoft.AspNetCore.Http;
+
+namespace XFramework.Helper.Helpers
 {
     public class ClientIpResolver
     {

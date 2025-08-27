@@ -1,8 +1,7 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc;
-using XFramework.BLL.Result;
+﻿using Microsoft.AspNetCore.Mvc;
 using XFramework.BLL.Services.Concretes;
 using XFramework.Dtos;
+using XFramework.Helper.ViewModels;
 
 namespace XFramework.API.Controllers
 {

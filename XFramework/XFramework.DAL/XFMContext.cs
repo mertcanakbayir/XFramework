@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XFramework.DAL.Entities;
-using XFramework.DAL.Enums;
+using XFramework.Helper.Enums;
 
 namespace XFramework.DAL
 {
@@ -108,6 +108,12 @@ namespace XFramework.DAL
         Name = "Mail Ayarları",
         Description = "SMTP mail gönderim ayarları",
         IsActive = true
+    },
+    new SystemSetting
+    {
+        Id = 4,
+        Name = "Log Ayarları",
+        Description = "Sistem Log Ayarları"
     }
 );
 
@@ -220,6 +226,8 @@ namespace XFramework.DAL
                 }
 
             );
+
+
         }
 
 

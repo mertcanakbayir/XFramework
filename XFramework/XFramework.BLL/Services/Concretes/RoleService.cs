@@ -1,26 +1,26 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using XFramework.BLL.Result;
-using XFramework.DAL.Abstract;
 using XFramework.DAL.Entities;
 using XFramework.Dtos;
+using XFramework.Helper.ViewModels;
+using XFramework.Repository.Repositories;
 
 namespace XFramework.BLL.Services.Concretes
 {
     public class RoleService
     {
-        private readonly IBaseRepository<Role> _roleRepository;
+        private readonly BaseRepository<Role> _roleRepository;
         private readonly IMapper _mapper;
-        private readonly IBaseRepository<User> _userRepository;
-        private readonly IBaseRepository<PageRole> _pageRoleRepository;
+        private readonly BaseRepository<User> _userRepository;
+        private readonly BaseRepository<PageRole> _pageRoleRepository;
         private readonly IValidator<RoleAddDto> _roleAddDtoValidator;
         private readonly IValidator<PageRoleAddDto> _pageRoleAddDtoValidator;
-        private readonly IBaseRepository<EndpointRole> _endpointRoleRepository;
+        private readonly BaseRepository<EndpointRole> _endpointRoleRepository;
         private readonly RoleAuthorizationService _roleAuthorizationService;
         private readonly CurrentUserService _currentUserService;
-        public RoleService(IBaseRepository<Role> roleRepository, IMapper mapper, IBaseRepository<Page> pageRepository, IBaseRepository<User> userRepository, IBaseRepository<PageRole> pageRoleRepository,
-            IValidator<RoleAddDto> roleAddDtoValidator, IValidator<PageRoleAddDto> pageRoleAddDtoValidator, IBaseRepository<EndpointRole> endpointRoleRepository, RoleAuthorizationService roleAuthorizationService,
+        public RoleService(BaseRepository<Role> roleRepository, IMapper mapper, BaseRepository<Page> pageRepository, BaseRepository<User> userRepository, BaseRepository<PageRole> pageRoleRepository,
+            IValidator<RoleAddDto> roleAddDtoValidator, IValidator<PageRoleAddDto> pageRoleAddDtoValidator, BaseRepository<EndpointRole> endpointRoleRepository, RoleAuthorizationService roleAuthorizationService,
             CurrentUserService currentUserService)
         {
             _roleRepository = roleRepository;

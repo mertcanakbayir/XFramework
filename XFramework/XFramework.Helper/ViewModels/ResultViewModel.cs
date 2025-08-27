@@ -1,4 +1,4 @@
-﻿namespace XFramework.BLL.Result
+﻿namespace XFramework.Helper.ViewModels
 {
     public class ResultViewModel<T>
     {

@@ -1,11 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace XFM.BLL.Utilities.Hashing
+﻿namespace XFramework.BLL.Utilities.Hashing
 {
     public interface IHashingHelper
     {

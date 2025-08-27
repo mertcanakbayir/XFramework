@@ -1,15 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using XFramework.DAL.Abstract;
 using XFramework.DAL.Entities;
+using XFramework.Repository.Repositories;
 
 namespace XFramework.BLL.Services.Concretes
 {
     public class RoleAuthorizationService
     {
-        private readonly IBaseRepository<User> _userRepository;
+        private readonly BaseRepository<User> _userRepository;
         private readonly IMemoryCache _memoryCache;
-        public RoleAuthorizationService(IMemoryCache memoryCache, IBaseRepository<User> userRepository)
+        public RoleAuthorizationService(IMemoryCache memoryCache, BaseRepository<User> userRepository)
         {
 
             _memoryCache = memoryCache;

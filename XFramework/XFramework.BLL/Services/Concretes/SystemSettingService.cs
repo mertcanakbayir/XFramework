@@ -1,20 +1,20 @@
 ﻿using AutoMapper;
 using FluentValidation;
-using XFramework.BLL.Result;
-using XFramework.DAL.Abstract;
 using XFramework.DAL.Entities;
 using XFramework.Dtos;
+using XFramework.Helper.ViewModels;
+using XFramework.Repository.Repositories;
 
 namespace XFramework.BLL.Services.Concretes
 {
     public class SystemSettingService
     {
-        private readonly IBaseRepository<SystemSetting> _systemSettingRepository;
+        private readonly BaseRepository<SystemSetting> _systemSettingRepository;
         private readonly IMapper _mapper;
         private readonly CurrentUserService _currentUserService;
         private readonly IValidator<SystemSettingDto> _systemSettingDtoValidator;
 
-        public SystemSettingService(IBaseRepository<SystemSetting> systemSettingRepository, IMapper mapper, CurrentUserService currentUserService,
+        public SystemSettingService(BaseRepository<SystemSetting> systemSettingRepository, IMapper mapper, CurrentUserService currentUserService,
             IValidator<SystemSettingDto> systemSettingDtoValidator)
         {
             _systemSettingRepository = systemSettingRepository;

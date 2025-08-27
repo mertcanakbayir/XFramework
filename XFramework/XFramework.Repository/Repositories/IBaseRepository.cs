@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace XFramework.DAL.Abstract
+namespace XFramework.Repository.Repositories
 {
     public interface IBaseRepository<T> where T : class
     {

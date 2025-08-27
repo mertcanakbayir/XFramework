@@ -1,8 +1,8 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using XFramework.BLL.Result;
 using XFramework.BLL.Services.Concretes;
 using XFramework.Dtos;
+using XFramework.Helper.ViewModels;
 
 namespace XFramework.API.Controllers
 {
@@ -26,7 +26,7 @@ namespace XFramework.API.Controllers
         [HttpPost]
         public async Task<ResultViewModel<string>> AddEndpoint(EndpointAddDto endpointAddDto)
         {
-           
+
             return await _endpointService.AddEndpoint(endpointAddDto);
         }
     }

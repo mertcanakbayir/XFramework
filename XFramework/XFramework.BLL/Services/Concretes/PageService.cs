@@ -1,23 +1,23 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using XFramework.BLL.Result;
-using XFramework.DAL.Abstract;
 using XFramework.DAL.Entities;
 using XFramework.Dtos;
+using XFramework.Helper.ViewModels;
+using XFramework.Repository.Repositories;
 
 namespace XFramework.BLL.Services.Concretes
 {
     public class PageService
     {
-        private readonly IBaseRepository<Page> _pageRepository;
+        private readonly BaseRepository<Page> _pageRepository;
         private readonly IMapper _mapper;
-        private readonly IBaseRepository<User> _userRepository;
+        private readonly BaseRepository<User> _userRepository;
         private readonly IValidator<PageAddDto> _pageAddDtoValidator;
         private readonly CurrentUserService _currentUserService;
         //private readonly IValidator<ForgotPasswordDto> _forgotPasswordDtoValidator;
 
-        public PageService(IBaseRepository<Page> pageRepository, IMapper mapper, IBaseRepository<User> userRepository, IValidator<PageAddDto> pageAddDtoValidator, CurrentUserService currentUserService)
+        public PageService(BaseRepository<Page> pageRepository, IMapper mapper, BaseRepository<User> userRepository, IValidator<PageAddDto> pageAddDtoValidator, CurrentUserService currentUserService)
         {
             _pageRepository = pageRepository;
             _mapper = mapper;

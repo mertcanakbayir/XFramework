@@ -1,19 +1,19 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using XFramework.BLL.Result;
-using XFramework.DAL.Abstract;
 using XFramework.DAL.Entities;
 using XFramework.Dtos;
+using XFramework.Helper.ViewModels;
+using XFramework.Repository.Repositories;
 
 namespace XFramework.BLL.Services.Concretes
 {
     public class EndpointService
     {
-        private readonly IBaseRepository<Endpoint> _endpointRepository;
-        private readonly IBaseRepository<User> _userRepository;
+        private readonly BaseRepository<Endpoint> _endpointRepository;
+        private readonly BaseRepository<User> _userRepository;
         private readonly IMapper _mapper;
         private readonly CurrentUserService _currentUserService;
-        public EndpointService(IBaseRepository<Endpoint> endpointRepository, IMapper mapper, CurrentUserService currentUserService)
+        public EndpointService(BaseRepository<Endpoint> endpointRepository, IMapper mapper, CurrentUserService currentUserService)
         {
             _endpointRepository = endpointRepository;
             _mapper = mapper;

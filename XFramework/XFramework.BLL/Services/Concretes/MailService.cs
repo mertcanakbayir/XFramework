@@ -2,13 +2,13 @@
 using MailKit.Net.Smtp;
 using Microsoft.EntityFrameworkCore;
 using MimeKit;
-using XFramework.BLL.Result;
-using XFramework.BLL.Utilities;
 using XFramework.BLL.Utilities.ValidationRulers;
 using XFramework.DAL;
-using XFramework.DAL.Abstract;
 using XFramework.DAL.Entities;
 using XFramework.Dtos;
+using XFramework.Helper.Helpers;
+using XFramework.Helper.ViewModels;
+using XFramework.Repository.Repositories;
 
 namespace XFramework.BLL.Services.Concretes
 {
@@ -16,10 +16,10 @@ namespace XFramework.BLL.Services.Concretes
     {
         private readonly EncryptionHelper _crypto;
         private readonly IMapper _mapper;
-        private readonly IBaseRepository<SystemSetting> _systemSettingRepository;
+        private readonly BaseRepository<SystemSetting> _systemSettingRepository;
         private readonly MailQueueService _MailQueueService;
 
-        public MailService(XFMContext context, EncryptionHelper crypto, IBaseRepository<SystemSetting> systemSettingRepository, IMapper mapper, MailQueueService mailQueueService)
+        public MailService(XFMContext context, EncryptionHelper crypto, BaseRepository<SystemSetting> systemSettingRepository, IMapper mapper, MailQueueService mailQueueService)
         {
             _systemSettingRepository = systemSettingRepository;
             _crypto = crypto;

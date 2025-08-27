@@ -1,18 +1,18 @@
 ﻿using AutoMapper;
-using XFramework.BLL.Result;
-using XFramework.DAL.Abstract;
 using XFramework.DAL.Entities;
 using XFramework.Dtos;
+using XFramework.Helper.ViewModels;
+using XFramework.Repository.Repositories;
 
 namespace XFramework.BLL.Services.Concretes
 {
     public class SystemSettingDetailService
     {
-        private readonly IBaseRepository<SystemSettingDetail> _systemSettingDetailRepository;
+        private readonly BaseRepository<SystemSettingDetail> _systemSettingDetailRepository;
         private readonly IMapper _mapper;
-        private readonly IBaseRepository<User> _userRepository;
+        private readonly BaseRepository<User> _userRepository;
         private readonly CurrentUserService _currentUserService;
-        public SystemSettingDetailService(IBaseRepository<SystemSettingDetail> systemSettingDetailRepository, IMapper mapper, IBaseRepository<User> userRepository, CurrentUserService currentUserService)
+        public SystemSettingDetailService(BaseRepository<SystemSettingDetail> systemSettingDetailRepository, IMapper mapper, BaseRepository<User> userRepository, CurrentUserService currentUserService)
         {
             _systemSettingDetailRepository = systemSettingDetailRepository;
             _mapper = mapper;

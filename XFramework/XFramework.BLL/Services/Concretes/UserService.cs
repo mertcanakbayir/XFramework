@@ -1,23 +1,23 @@
 ﻿using AutoMapper;
 using Dtos;
 using FluentValidation;
-using XFM.BLL.Utilities.Hashing;
-using XFramework.BLL.Result;
-using XFramework.DAL.Abstract;
+using XFramework.BLL.Utilities.Hashing;
 using XFramework.DAL.Entities;
 using XFramework.Dtos;
+using XFramework.Helper.ViewModels;
+using XFramework.Repository.Repositories;
 
 namespace XFramework.BLL.Services.Concretes
 {
     public class UserService
     {
         private readonly IMapper _mapper;
-        private readonly IBaseRepository<User> _userRepository;
+        private readonly BaseRepository<User> _userRepository;
         private readonly IHashingHelper _hashingHelper;
         private readonly IValidator<UserAddDto> _userAddDtoValidator;
         private readonly IValidator<UserUpdateDto> _userUpdateDtoValidator;
         private readonly CurrentUserService _currentUserService;
-        public UserService(IBaseRepository<User> userRepository, IMapper mapper, IHashingHelper hashingHelper,
+        public UserService(BaseRepository<User> userRepository, IMapper mapper, IHashingHelper hashingHelper,
             IValidator<UserAddDto> userAddDtoValidator,
             IValidator<UserUpdateDto> userUpdateDtoValidator, CurrentUserService currentUserService)
         {

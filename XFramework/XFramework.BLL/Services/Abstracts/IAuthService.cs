@@ -1,6 +1,6 @@
 ﻿using Dtos;
-using XFramework.BLL.Result;
 using XFramework.Dtos;
+using XFramework.Helper.ViewModels;
 
 namespace XFramework.BLL.Services.Abstracts
 {

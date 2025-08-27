@@ -1,4 +1,4 @@
-﻿using XFramework.DAL.Enums;
+﻿using XFramework.Helper.Enums;
 
 namespace XFramework.DAL.Entities
 {

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using XFramework.DAL.Enums;
 using XFramework.Dtos;
+using XFramework.Helper.Enums;
 
 namespace XFramework.BLL.Mappings
 {

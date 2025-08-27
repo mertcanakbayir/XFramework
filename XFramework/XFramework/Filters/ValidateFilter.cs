@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using XFramework.BLL.Result;
+using XFramework.Helper.ViewModels;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class ValidateFilter : Attribute, IAsyncActionFilter

@@ -1,9 +1,8 @@
 ﻿using Dtos;
 using Microsoft.AspNetCore.Mvc;
-using XFramework.BLL.Result;
-using XFramework.BLL.Services.Abstracts;
 using XFramework.BLL.Services.Concretes;
 using XFramework.Dtos;
+using XFramework.Helper.ViewModels;
 namespace XFramework.Controllers
 {
     [Route("api/[controller]")]

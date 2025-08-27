@@ -1,4 +1,4 @@
-﻿namespace XFramework.DAL.Enums
+﻿namespace XFramework.Helper.Enums
 {
     public enum MailSettingKeys
     {

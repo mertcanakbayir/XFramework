@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace XFM.BLL.Utilities.Hashing
+namespace XFramework.BLL.Utilities.Hashing
 {
     public class HashingHelper : IHashingHelper
     {

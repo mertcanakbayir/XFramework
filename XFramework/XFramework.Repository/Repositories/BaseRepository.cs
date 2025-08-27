@@ -1,11 +1,11 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using XFramework.DAL.Abstract;
+using XFramework.DAL;
 using XFramework.DAL.Entities;
 
-namespace XFramework.DAL.Concrete
+namespace XFramework.Repository.Repositories
 {
-    public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
+    public class BaseRepository<TEntity> where TEntity : class
     {
         private readonly XFMContext _xfmContext;
         public BaseRepository(XFMContext xfmContext)

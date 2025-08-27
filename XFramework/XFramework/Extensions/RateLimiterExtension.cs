@@ -1,7 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.RateLimiting;
-using XFramework.API.Services;
+using XFramework.Helper.Helpers;
 
 namespace XFramework.API.Extensions
 {
