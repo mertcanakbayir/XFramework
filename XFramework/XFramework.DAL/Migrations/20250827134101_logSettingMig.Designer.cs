@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using XFramework.DAL;
 
@@ -11,9 +12,11 @@ using XFramework.DAL;
 namespace XFramework.DAL.Migrations
 {
     [DbContext(typeof(XFMContext))]
-    partial class XFMContextModelSnapshot : ModelSnapshot
+    [Migration("20250827134101_logSettingMig")]
+    partial class logSettingMig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

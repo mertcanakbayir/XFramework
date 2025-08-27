@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using Serilog.Core;
+using Serilog.Events;
 using Serilog.Sinks.MSSqlServer;
 using XFM.BLL.Mappings;
 using XFM.BLL.Utilities.JWT;
@@ -85,6 +87,7 @@ builder.Services.AddScoped<CurrentUserService>();
 builder.Services.AddScoped<SystemSettingService>();
 builder.Services.AddScoped<SystemSettingDetailService>();
 builder.Services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
+builder.Services.AddScoped<LogSettingsService>();
 builder.Services.AddSingleton<MailQueueService>(sp =>
 {
     var config = builder.Configuration.GetSection("RabbitMQ");
@@ -112,8 +115,11 @@ builder.Services.AddDbContext<XFrameworkLogContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("LogConnection"))
 );
 
+var levelSwitch = new LoggingLevelSwitch(LogEventLevel.Warning);
+builder.Services.AddSingleton(levelSwitch);
+
 Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Warning()
+    .MinimumLevel.ControlledBy(levelSwitch)
     .Enrich.FromLogContext()
     .WriteTo.MSSqlServer(
     connectionString: builder.Configuration.GetConnectionString("LogConnection"),

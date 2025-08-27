@@ -29,7 +29,7 @@ namespace XFramework.API.Middlewares
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Unhandled exception in {ActionName}", context.GetEndpoint()?.DisplayName);
+                Log.Error(ex, $"Unhandled exception in {actionName}");
 
                 context.Response.StatusCode = 500;
                 context.Response.ContentType = "application/json";
