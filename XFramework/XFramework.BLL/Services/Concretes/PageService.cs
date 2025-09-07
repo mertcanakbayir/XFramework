@@ -10,14 +10,14 @@ namespace XFramework.BLL.Services.Concretes
 {
     public class PageService
     {
-        private readonly BaseRepository<Page> _pageRepository;
+        private readonly IBaseRepository<Page> _pageRepository;
         private readonly IMapper _mapper;
-        private readonly BaseRepository<User> _userRepository;
+        private readonly IBaseRepository<User> _userRepository;
         private readonly IValidator<PageAddDto> _pageAddDtoValidator;
         private readonly CurrentUserService _currentUserService;
         //private readonly IValidator<ForgotPasswordDto> _forgotPasswordDtoValidator;
 
-        public PageService(BaseRepository<Page> pageRepository, IMapper mapper, BaseRepository<User> userRepository, IValidator<PageAddDto> pageAddDtoValidator, CurrentUserService currentUserService)
+        public PageService(IBaseRepository<Page> pageRepository, IMapper mapper, IBaseRepository<User> userRepository, IValidator<PageAddDto> pageAddDtoValidator, CurrentUserService currentUserService)
         {
             _pageRepository = pageRepository;
             _mapper = mapper;

@@ -16,8 +16,7 @@ namespace XFramework.BLL.Services.Concretes
     {
 
         private readonly IHashingHelper _hashService;
-        private readonly BaseRepository<User> _userRepository;
-        private readonly BaseRepository<UserRole> _userRoleRepository;
+        private readonly IBaseRepository<User> _userRepository;
         private readonly IValidator<RegisterDto> _registerDtoValidator;
         private readonly IValidator<LoginDto> _loginDtoValidator;
         private readonly IValidator<ForgotPasswordDto> _forgotPasswordDtoValidator;
@@ -25,8 +24,9 @@ namespace XFramework.BLL.Services.Concretes
         private readonly ITokenHelper _tokenHelper;
         private readonly IMapper _mapper;
         private readonly MailService _mailService;
+        private readonly IBaseRepository<UserRole> _userRoleRepository;
 
-        public AuthService(BaseRepository<User> userRepository, BaseRepository<UserRole> userRoleRespository, IHashingHelper hashService, IValidator<LoginDto> loginDtoValidator, IValidator<RegisterDto> registerDtoValidator, ITokenHelper tokenHelper,
+        public AuthService(IBaseRepository<User> userRepository, IBaseRepository<UserRole> userRoleRespository, IHashingHelper hashService, IValidator<LoginDto> loginDtoValidator, IValidator<RegisterDto> registerDtoValidator, ITokenHelper tokenHelper,
             IMapper mapper, MailService mailService, IValidator<ForgotPasswordDto> forgotPasswordDtoValidator, IValidator<ResetPasswordDto> resetPasswordDtoValidator)
         {
             _hashService = hashService;

@@ -12,12 +12,12 @@ namespace XFramework.BLL.Services.Concretes
     public class UserService
     {
         private readonly IMapper _mapper;
-        private readonly BaseRepository<User> _userRepository;
+        private readonly IBaseRepository<User> _userRepository;
         private readonly IHashingHelper _hashingHelper;
         private readonly IValidator<UserAddDto> _userAddDtoValidator;
         private readonly IValidator<UserUpdateDto> _userUpdateDtoValidator;
         private readonly CurrentUserService _currentUserService;
-        public UserService(BaseRepository<User> userRepository, IMapper mapper, IHashingHelper hashingHelper,
+        public UserService(IBaseRepository<User> userRepository, IMapper mapper, IHashingHelper hashingHelper,
             IValidator<UserAddDto> userAddDtoValidator,
             IValidator<UserUpdateDto> userUpdateDtoValidator, CurrentUserService currentUserService)
         {
@@ -50,19 +50,27 @@ namespace XFramework.BLL.Services.Concretes
             return ResultViewModel<UserDto>.Success(userDto, "Başarılı", 200);
         }
 
-        public async Task<ResultViewModel<List<UserDto>>> GetUsers()
+        public async Task<PagedResultViewModel<UserDto>> GetUsers(int pageNumber = 1, int pageSize = 2)
         {
-            var users = await _userRepository.GetAllAsync();
+            var users = await _userRepository.GetAllAsync(pageNumber: pageNumber, pageSize: pageSize);
 
             if (!users.Any())
             {
-                return ResultViewModel<List<UserDto>>.Failure("Kullanıcı bulunamadı", null, 404);
+                return PagedResultViewModel<UserDto>.Failure("Kullanıcı bulunamadı", null, 404);
             }
 
             var userDtos = _mapper.Map<List<UserDto>>(users);
 
-            return ResultViewModel<List<UserDto>>.Success(userDtos, "Kullanıcılar", 200);
+            return PagedResultViewModel<UserDto>.Success(
+           userDtos,
+           totalCount: 9999,
+           pageNumber: pageNumber,
+           pageSize: pageSize,
+           message: "Başarılı",
+           statusCode: 200
+   );
         }
+
 
         public async Task<ResultViewModel<UserAddDto>> AddUser(UserAddDto userAddDto)
         {
