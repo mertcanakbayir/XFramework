@@ -10,8 +10,8 @@ namespace XFramework.BLL.Services.Concretes
     public class LogSettingsService
     {
         private LoggingLevelSwitch _loggingLevelSwitch;
-        private readonly BaseRepository<SystemSettingDetail> _systemSettingDetailRepository;
-        public LogSettingsService(BaseRepository<SystemSettingDetail> systemSettingDetailRepository, LoggingLevelSwitch loggingLevelSwitch)
+        private readonly IBaseRepository<SystemSettingDetail> _systemSettingDetailRepository;
+        public LogSettingsService(IBaseRepository<SystemSettingDetail> systemSettingDetailRepository, LoggingLevelSwitch loggingLevelSwitch)
         {
             _systemSettingDetailRepository = systemSettingDetailRepository;
             _loggingLevelSwitch = loggingLevelSwitch;

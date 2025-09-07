@@ -1,5 +1,4 @@
-﻿using XFramework.DAL.Entities;
-
+﻿
 namespace XFramework.DAL.Entities
 {
     public class User : BaseEntity

@@ -16,10 +16,10 @@ namespace XFramework.BLL.Services.Concretes
     {
         private readonly EncryptionHelper _crypto;
         private readonly IMapper _mapper;
-        private readonly BaseRepository<SystemSetting> _systemSettingRepository;
+        private readonly IBaseRepository<SystemSetting> _systemSettingRepository;
         private readonly MailQueueService _MailQueueService;
 
-        public MailService(XFMContext context, EncryptionHelper crypto, BaseRepository<SystemSetting> systemSettingRepository, IMapper mapper, MailQueueService mailQueueService)
+        public MailService(XFMContext context, EncryptionHelper crypto, IBaseRepository<SystemSetting> systemSettingRepository, IMapper mapper, MailQueueService mailQueueService)
         {
             _systemSettingRepository = systemSettingRepository;
             _crypto = crypto;

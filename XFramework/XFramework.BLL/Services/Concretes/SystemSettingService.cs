@@ -9,12 +9,12 @@ namespace XFramework.BLL.Services.Concretes
 {
     public class SystemSettingService
     {
-        private readonly BaseRepository<SystemSetting> _systemSettingRepository;
+        private readonly IBaseRepository<SystemSetting> _systemSettingRepository;
         private readonly IMapper _mapper;
         private readonly CurrentUserService _currentUserService;
         private readonly IValidator<SystemSettingDto> _systemSettingDtoValidator;
 
-        public SystemSettingService(BaseRepository<SystemSetting> systemSettingRepository, IMapper mapper, CurrentUserService currentUserService,
+        public SystemSettingService(IBaseRepository<SystemSetting> systemSettingRepository, IMapper mapper, CurrentUserService currentUserService,
             IValidator<SystemSettingDto> systemSettingDtoValidator)
         {
             _systemSettingRepository = systemSettingRepository;

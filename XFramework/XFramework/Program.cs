@@ -72,7 +72,7 @@ builder.Services.AddAuthorization();
 
 // Add services to the container.
 builder.Services.AddScoped<IHashingHelper, HashingHelper>();
-builder.Services.AddScoped(typeof(BaseRepository<>));
+builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenHelper, TokenHelper>();

@@ -8,11 +8,11 @@ namespace XFramework.BLL.Services.Concretes
 {
     public class SystemSettingDetailService
     {
-        private readonly BaseRepository<SystemSettingDetail> _systemSettingDetailRepository;
+        private readonly IBaseRepository<SystemSettingDetail> _systemSettingDetailRepository;
         private readonly IMapper _mapper;
-        private readonly BaseRepository<User> _userRepository;
+        private readonly IBaseRepository<User> _userRepository;
         private readonly CurrentUserService _currentUserService;
-        public SystemSettingDetailService(BaseRepository<SystemSettingDetail> systemSettingDetailRepository, IMapper mapper, BaseRepository<User> userRepository, CurrentUserService currentUserService)
+        public SystemSettingDetailService(IBaseRepository<SystemSettingDetail> systemSettingDetailRepository, IMapper mapper, IBaseRepository<User> userRepository, CurrentUserService currentUserService)
         {
             _systemSettingDetailRepository = systemSettingDetailRepository;
             _mapper = mapper;

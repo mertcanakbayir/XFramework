@@ -256,11 +256,6 @@ namespace XFramework.DAL
                     baseEntity.CreatedAt = DateTime.Now;
                     baseEntity.CreatedBy = UserId;
                 }
-                if (entity is AuditEntity auditEntity)
-                {
-                    auditEntity.CreatedAt = DateTime.Now;
-                    auditEntity.CreatedBy = UserId;
-                }
 
             }
 
@@ -276,12 +271,6 @@ namespace XFramework.DAL
                     baseEntity.UpdatedAt = DateTime.Now;
                     baseEntity.UpdatedBy = UserId;
                 }
-                if (entity is AuditEntity auditEntity)
-                {
-                    auditEntity.UpdatedAt = DateTime.Now;
-                    auditEntity.UpdatedBy = UserId;
-                }
-
             }
             return await base.SaveChangesAsync();
         }
