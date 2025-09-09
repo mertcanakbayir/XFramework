@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using XFramework.DAL.Entities;
-using XFramework.Repository.Repositories;
+using XFramework.Repository.Options;
+using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
 {
@@ -24,7 +25,12 @@ namespace XFramework.BLL.Services.Concretes
             {
                 return cachedPages;
             }
-            var user = await _userRepository.GetAsync(e => e.Id == userId, includeFunc: query => query.Include(ur => ur.UserRoles).ThenInclude(r => r.Role).ThenInclude(pr => pr.PageRoles).ThenInclude(p => p.Page));
+            //var user = await _userRepository.GetAsync(e => e.Id == userId, includeFunc: query => query.Include(ur => ur.UserRoles).ThenInclude(r => r.Role).ThenInclude(pr => pr.PageRoles).ThenInclude(p => p.Page));
+            var user = await _userRepository.GetAsync(new BaseRepoOptions<User>
+            {
+                Filter = e => e.Id == userId,
+                IncludeFunc = query => query.Include(ur => ur.UserRoles).ThenInclude(r => r.Role).ThenInclude(pr => pr.PageRoles).ThenInclude(p => p.Page)
+            });
             if (user == null)
             {
                 return new List<string>();
@@ -48,7 +54,13 @@ namespace XFramework.BLL.Services.Concretes
             {
                 return cachedEndpoints;
             }
-            var user = await _userRepository.GetAsync(u => u.Id == userId, includeFunc: query => query.Include(ur => ur.UserRoles).ThenInclude(r => r.Role).ThenInclude(er => er.EndpointRoles).ThenInclude(e => e.Endpoint));
+            //var user = await _userRepository.GetAsync(u => u.Id == userId, includeFunc: query => query.Include(ur => ur.UserRoles).ThenInclude(r => r.Role).ThenInclude(er => er.EndpointRoles).ThenInclude(e => e.Endpoint));
+            var user = await _userRepository.GetAsync(new BaseRepoOptions<User>
+            {
+                Filter = u => u.Id == userId,
+                IncludeFunc = query => query.Include(ur => ur.UserRoles).ThenInclude(r => r.Role).ThenInclude(er => er.EndpointRoles).ThenInclude(e => e.Endpoint)
+
+            });
             if (user == null) { return new List<string>(); }
 
             var userEndpoints = user.UserRoles.SelectMany(ur => ur.Role.EndpointRoles)

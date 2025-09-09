@@ -8,7 +8,8 @@ using XFramework.BLL.Utilities.Hashing;
 using XFramework.DAL.Entities;
 using XFramework.Dtos;
 using XFramework.Helper.ViewModels;
-using XFramework.Repository.Repositories;
+using XFramework.Repository.Options;
+using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
 {
@@ -25,9 +26,10 @@ namespace XFramework.BLL.Services.Concretes
         private readonly IMapper _mapper;
         private readonly MailService _mailService;
         private readonly IBaseRepository<UserRole> _userRoleRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
         public AuthService(IBaseRepository<User> userRepository, IBaseRepository<UserRole> userRoleRespository, IHashingHelper hashService, IValidator<LoginDto> loginDtoValidator, IValidator<RegisterDto> registerDtoValidator, ITokenHelper tokenHelper,
-            IMapper mapper, MailService mailService, IValidator<ForgotPasswordDto> forgotPasswordDtoValidator, IValidator<ResetPasswordDto> resetPasswordDtoValidator)
+            IMapper mapper, MailService mailService, IValidator<ForgotPasswordDto> forgotPasswordDtoValidator, IValidator<ResetPasswordDto> resetPasswordDtoValidator, IUnitOfWork unitOfWork)
         {
             _hashService = hashService;
             _userRepository = userRepository;
@@ -39,6 +41,7 @@ namespace XFramework.BLL.Services.Concretes
             _mailService = mailService;
             _forgotPasswordDtoValidator = forgotPasswordDtoValidator;
             _resetPasswordDtoValidator = resetPasswordDtoValidator;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel<string>> Login(LoginDto loginDto)
@@ -49,7 +52,11 @@ namespace XFramework.BLL.Services.Concretes
                 var errorMessages = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
                 return ResultViewModel<string>.Failure("Lütfen girdiğiniz bilgileri kontrol edin.", errorMessages, 400);
             }
-            var existedUser = await _userRepository.GetAsync(e => e.Email == loginDto.Email, includeFunc: query => query.Include(u => u.UserRoles).ThenInclude(ur => ur.Role));
+            var existedUser = await _userRepository.GetAsync(new BaseRepoOptions<User>
+            {
+                Filter = e => e.Email == loginDto.Email,
+                IncludeFunc = query => query.Include(u => u.UserRoles).ThenInclude(ur => ur.Role)
+            });
             if (existedUser == null)
             {
                 return ResultViewModel<string>.Failure("Lütfen girdiğiniz bilgileri kontrol edin.", null, 401);
@@ -75,7 +82,11 @@ namespace XFramework.BLL.Services.Concretes
                 var errorMessages = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
                 return ResultViewModel<string>.Failure("Lütfen girdiğiniz bilgileri kontrol edin.", errorMessages, 200);
             }
-            var existingUser = await _userRepository.GetAsync(e => e.Email.Trim().ToLower() == registerDto.Email.Trim().ToLower(), asNoTracking: true);
+            var existingUser = await _userRepository.GetAsync(new BaseRepoOptions<User>
+            {
+                Filter = e => e.Email.Trim().ToLower() == registerDto.Email.Trim().ToLower(),
+                AsNoTracking = true
+            });
             if (existingUser != null)
             {
                 return ResultViewModel<string>.Failure("Lütfen benzersiz bir e-posta adresi girin.");
@@ -87,17 +98,21 @@ namespace XFramework.BLL.Services.Concretes
             user.IsActive = true;
             user.CreatedAt = DateTime.Now;
             user.UpdatedAt = DateTime.Now;
-            await _userRepository.AddAsync(user);
 
+            await _unitOfWork.BeginTransactionAsync();
+
+            var userBaseRepo = _unitOfWork.GetRepository<User>();
+            await userBaseRepo.AddAsync(user);
+            await _unitOfWork.SaveChangesAsync();
             var userRole = new UserRole
             {
                 RoleId = 3,
                 UserId = user.Id
             };
-            await _userRoleRepository.AddAsync(userRole);
-
+            var userRoleBaseRepo = _unitOfWork.GetRepository<UserRole>();
+            await userRoleBaseRepo.AddAsync(userRole);
+            await _unitOfWork.CommitTransactionAsync();
             return ResultViewModel<string>.Success("Kullanıcı Başarıyla Kaydedildi.", 201);
-
         }
 
         public async Task<ResultViewModel<string>> ResetPasswordAsync(ResetPasswordDto resetPasswordDto)
@@ -108,7 +123,10 @@ namespace XFramework.BLL.Services.Concretes
                 var errorMessages = resetPasswordDtoValidation.Errors.Select(e => e.ErrorMessage).ToList();
                 return ResultViewModel<string>.Failure("Lütfen girdiğiniz bilgileri kontrol edin.", errorMessages, 400);
             }
-            var user = await _userRepository.GetAsync(u => u.Email == resetPasswordDto.Email);
+            var user = await _userRepository.GetAsync(new BaseRepoOptions<User>
+            {
+                Filter = u => u.Email == resetPasswordDto.Email
+            });
             if (user == null)
             {
                 return ResultViewModel<string>.Failure("Kullanıcı Bulunamadı.", null, 400);
@@ -125,6 +143,7 @@ namespace XFramework.BLL.Services.Concretes
 
             user.Password = hashedPassword;
             await _userRepository.UpdateAsync(user);
+            await _unitOfWork.SaveChangesAsync();
 
             return ResultViewModel<string>.Success("Şifre başarıyla güncellendi.", null, 200);
         }
@@ -137,7 +156,10 @@ namespace XFramework.BLL.Services.Concretes
                 var errorMessages = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
                 return ResultViewModel<PasswordResetTokenDto>.Failure("Lütfen girdiğiniz bilgileri kontrol edin", errorMessages, 400);
             }
-            var user = await _userRepository.GetAsync(u => u.Email == forgotPasswordDto.Email);
+            var user = await _userRepository.GetAsync(new BaseRepoOptions<User>
+            {
+                Filter = u => u.Email == forgotPasswordDto.Email
+            });
             if (user == null)
             {
                 return ResultViewModel<PasswordResetTokenDto>.Failure("Kullanıcı bulunamadı.", null, 400);

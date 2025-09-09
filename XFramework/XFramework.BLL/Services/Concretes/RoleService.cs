@@ -4,7 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using XFramework.DAL.Entities;
 using XFramework.Dtos;
 using XFramework.Helper.ViewModels;
-using XFramework.Repository.Repositories;
+using XFramework.Repository.Options;
+using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
 {
@@ -19,9 +20,10 @@ namespace XFramework.BLL.Services.Concretes
         private readonly CurrentUserService _currentUserService;
         private readonly IBaseRepository<PageRole> _pageRoleRepository;
         private readonly IBaseRepository<EndpointRole> _endpointRoleRepository;
+        private readonly IUnitOfWork _unitOfWork;
         public RoleService(IBaseRepository<Role> roleRepository, IMapper mapper, IBaseRepository<Page> pageRepository, IBaseRepository<User> userRepository, IBaseRepository<PageRole> pageRoleRepository,
             IValidator<RoleAddDto> roleAddDtoValidator, IValidator<PageRoleAddDto> pageRoleAddDtoValidator, IBaseRepository<EndpointRole> endpointRoleRepository, RoleAuthorizationService roleAuthorizationService,
-            CurrentUserService currentUserService)
+            CurrentUserService currentUserService, IUnitOfWork unitOfWork)
         {
             _roleRepository = roleRepository;
             _mapper = mapper;
@@ -32,14 +34,16 @@ namespace XFramework.BLL.Services.Concretes
             _endpointRoleRepository = endpointRoleRepository;
             _roleAuthorizationService = roleAuthorizationService;
             _currentUserService = currentUserService;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel<List<RoleDto>>> GetRolesByUser(int userId)
         {
-            var user = await _userRepository.GetAsync(
-         u => u.Id == userId,
-         includeFunc: i => i.Include(e => e.UserRoles).ThenInclude(r => r.Role)
-            );
+            var user = await _userRepository.GetAsync(new BaseRepoOptions<User>
+            {
+                Filter = u => u.Id == userId,
+                IncludeFunc = i => i.Include(e => e.UserRoles).ThenInclude(r => r.Role)
+            });
             if (user == null || user.UserRoles == null || !user.UserRoles.Any())
             {
                 return ResultViewModel<List<RoleDto>>.Failure("Kullanıcıya henüz rol atanmamış", statusCode: 400);
@@ -58,8 +62,8 @@ namespace XFramework.BLL.Services.Concretes
                 return ResultViewModel<string>.Failure("Rol eklenirken hata", errors, 400);
             }
             var role = _mapper.Map<Role>(roleAddDto);
-            _roleRepository.GetCurrentUser(_currentUserService.GetUserId());
             await _roleRepository.AddAsync(role);
+            await _unitOfWork.SaveChangesAsync();
             return ResultViewModel<string>.Success("Role başarıyla eklendi", 200);
         }
 
@@ -74,7 +78,11 @@ namespace XFramework.BLL.Services.Concretes
             var pageRole = _mapper.Map<PageRole>(pageRoleAddDto);
             _pageRoleRepository.GetCurrentUser(_currentUserService.GetUserId());
             await _pageRoleRepository.AddAsync(pageRole);
-            var usersWithRole = await _userRepository.GetAllAsync(u => u.UserRoles.Any(ur => ur.RoleId == pageRoleAddDto.RoleId));
+            await _unitOfWork.SaveChangesAsync();
+            var usersWithRole = await _userRepository.GetAllAsync(new BaseRepoOptions<User>
+            {
+                Filter = u => u.UserRoles.Any(ur => ur.RoleId == pageRoleAddDto.RoleId)
+            });
             foreach (var user in usersWithRole)
             {
                 _roleAuthorizationService.ClearUserPageCache(user.Id);
@@ -87,7 +95,12 @@ namespace XFramework.BLL.Services.Concretes
             var endpointRole = _mapper.Map<EndpointRole>(endpointRoleAddDto);
             _endpointRoleRepository.GetCurrentUser(_currentUserService.GetUserId());
             await _endpointRoleRepository.AddAsync(endpointRole);
-            var usersWithRole = await _userRepository.GetAllAsync(u => u.UserRoles.Any(ur => ur.RoleId == endpointRoleAddDto.RoleId));
+            await _unitOfWork.SaveChangesAsync();
+            var usersWithRole = await _userRepository.GetAllAsync(
+                new BaseRepoOptions<User>
+                {
+                    Filter = u => u.UserRoles.Any(ur => ur.RoleId == endpointRoleAddDto.RoleId)
+                });
             _endpointRoleRepository.GetCurrentUser(_currentUserService.GetUserId());
             foreach (var user in usersWithRole)
             {

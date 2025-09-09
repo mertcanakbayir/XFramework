@@ -5,7 +5,8 @@ using XFramework.BLL.Utilities.Hashing;
 using XFramework.DAL.Entities;
 using XFramework.Dtos;
 using XFramework.Helper.ViewModels;
-using XFramework.Repository.Repositories;
+using XFramework.Repository.Options;
+using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
 {
@@ -17,9 +18,10 @@ namespace XFramework.BLL.Services.Concretes
         private readonly IValidator<UserAddDto> _userAddDtoValidator;
         private readonly IValidator<UserUpdateDto> _userUpdateDtoValidator;
         private readonly CurrentUserService _currentUserService;
+        private readonly IUnitOfWork _unitOfWork;
         public UserService(IBaseRepository<User> userRepository, IMapper mapper, IHashingHelper hashingHelper,
             IValidator<UserAddDto> userAddDtoValidator,
-            IValidator<UserUpdateDto> userUpdateDtoValidator, CurrentUserService currentUserService)
+            IValidator<UserUpdateDto> userUpdateDtoValidator, CurrentUserService currentUserService, IUnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
             _mapper = mapper;
@@ -27,10 +29,14 @@ namespace XFramework.BLL.Services.Concretes
             _userAddDtoValidator = userAddDtoValidator;
             _userUpdateDtoValidator = userUpdateDtoValidator;
             _currentUserService = currentUserService;
+            _unitOfWork = unitOfWork;
         }
         public async Task<ResultViewModel<UserDto>> GetUserByEmail(string email)
         {
-            var user = await _userRepository.GetAsync(x => x.Email == email);
+            var user = await _userRepository.GetAsync(new BaseRepoOptions<User>
+            {
+                Filter = e => e.Email == email
+            });
             if (user == null)
             {
                 return ResultViewModel<UserDto>.Failure("Kullanıcı bulunamadı", null, 404);
@@ -41,7 +47,10 @@ namespace XFramework.BLL.Services.Concretes
 
         public async Task<ResultViewModel<UserDto>> GetUserById(int id)
         {
-            var user = await _userRepository.GetAsync(e => e.Id == id);
+            var user = await _userRepository.GetAsync(new BaseRepoOptions<User>
+            {
+                Filter = e => e.Id == id
+            });
             if (user == null)
             {
                 return ResultViewModel<UserDto>.Failure("Kullanıcı bulunamadı", null, 404);
@@ -52,7 +61,11 @@ namespace XFramework.BLL.Services.Concretes
 
         public async Task<PagedResultViewModel<UserDto>> GetUsers(int pageNumber = 1, int pageSize = 2)
         {
-            var users = await _userRepository.GetAllAsync(pageNumber: pageNumber, pageSize: pageSize);
+            var users = await _userRepository.GetAllAsync(new BaseRepoOptions<User>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            });
 
             if (!users.Any())
             {
@@ -83,6 +96,7 @@ namespace XFramework.BLL.Services.Concretes
             userEntity.Password = _hashingHelper.HashPassword(userEntity.Password);
             _userRepository.GetCurrentUser(_currentUserService.GetUserId());
             await _userRepository.AddAsync(userEntity);
+            await _unitOfWork.SaveChangesAsync();
             return ResultViewModel<UserAddDto>.Success("Kullanıcı Başarıyla Eklendi", 201);
         }
 
@@ -93,7 +107,7 @@ namespace XFramework.BLL.Services.Concretes
             {
                 return ResultViewModel<UserUpdateDto>.Failure("Lütfen Girdiğiniz bilgileri kontrol edin.", validationResult.Errors.Select(e => e.ErrorMessage).ToList());
             }
-            var userEntity = await _userRepository.GetAsync(u => u.Id == id);
+            var userEntity = await _userRepository.GetAsync(new BaseRepoOptions<User> { Filter = e => e.Id == id });
             if (userEntity == null)
             {
                 return ResultViewModel<UserUpdateDto>.Failure("Kullanıcı Bulunamadı", null, 404);
@@ -110,13 +124,14 @@ namespace XFramework.BLL.Services.Concretes
 
         public async Task<ResultViewModel<string>> DeleteUserById(int userId)
         {
-            var user = await _userRepository.GetAsync(e => e.Id == userId);
+            var user = await _userRepository.GetAsync(new BaseRepoOptions<User> { Filter = e => e.Id == userId });
             if (user == null)
             {
                 return ResultViewModel<string>.Failure("Kullanıcı bulunamadı.", null, 404);
             }
 
             await _userRepository.DeleteAsync(userId);
+            await _unitOfWork.SaveChangesAsync();
             return ResultViewModel<string>.Success("Kullanıcı silindi.", 200);
         }
     }

@@ -18,7 +18,8 @@ using XFramework.BLL.Utilities.Hashing;
 using XFramework.BLL.Utilities.ValidationRulers;
 using XFramework.DAL;
 using XFramework.Helper.Helpers;
-using XFramework.Repository.Repositories;
+using XFramework.Repository.Repositories.Abstract;
+using XFramework.Repository.Repositories.Concrete;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -88,6 +89,7 @@ builder.Services.AddScoped<SystemSettingService>();
 builder.Services.AddScoped<SystemSettingDetailService>();
 builder.Services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
 builder.Services.AddScoped<LogSettingsService>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddSingleton<MailQueueService>(sp =>
 {
     var config = builder.Configuration.GetSection("RabbitMQ");

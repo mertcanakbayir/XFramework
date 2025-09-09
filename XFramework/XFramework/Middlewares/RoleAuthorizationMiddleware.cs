@@ -17,8 +17,7 @@ namespace XFramework.API.Middlewares
         {
             var path = context.Request.Path.Value?.ToLower();
             if (path.Contains("/auth/login") || path.Contains("/auth/register")
-                || path.Contains("/auth/forgot-password") || path.Contains("/auth/reset-password") || path.Contains("/api/test")
-                || path.Contains("api/page"))
+                || path.Contains("/auth/forgot-password") || path.Contains("/auth/reset-password") || path.Contains("/api/test"))
             {
                 await _next(context);
                 return;

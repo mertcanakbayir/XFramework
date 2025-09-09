@@ -255,19 +255,29 @@ namespace XFramework.DAL
                 {
                     baseEntity.CreatedAt = DateTime.Now;
                     baseEntity.CreatedBy = UserId;
+
+                    baseEntity.UpdatedAt = DateTime.Now;
+                    baseEntity.UpdatedBy = UserId;
                 }
 
             }
 
             var modified = this.ChangeTracker.Entries()
-                .Where(t => t.State == EntityState.Modified)
-                .Select(t => t.Entity)
-                .ToArray();
+                           .Where(t => t.State == EntityState.Modified)
+                           .ToArray();
 
-            foreach (var entity in modified)
+            foreach (var entry in modified)
             {
-                if (entity is BaseEntity baseEntity)
+                if (entry.Entity is BaseEntity baseEntity)
                 {
+                    var originalIsActive = entry.OriginalValues.GetValue<bool>(nameof(BaseEntity.IsActive));
+                    var currentIsActive = baseEntity.IsActive;
+
+                    if (originalIsActive != currentIsActive)
+                    {
+                        baseEntity.DeletedAt = DateTime.Now;
+                        baseEntity.DeletedBy = UserId;
+                    }
                     baseEntity.UpdatedAt = DateTime.Now;
                     baseEntity.UpdatedBy = UserId;
                 }

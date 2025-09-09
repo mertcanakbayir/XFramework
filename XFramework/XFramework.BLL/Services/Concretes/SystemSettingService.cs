@@ -3,7 +3,8 @@ using FluentValidation;
 using XFramework.DAL.Entities;
 using XFramework.Dtos;
 using XFramework.Helper.ViewModels;
-using XFramework.Repository.Repositories;
+using XFramework.Repository.Options;
+using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
 {
@@ -13,14 +14,15 @@ namespace XFramework.BLL.Services.Concretes
         private readonly IMapper _mapper;
         private readonly CurrentUserService _currentUserService;
         private readonly IValidator<SystemSettingDto> _systemSettingDtoValidator;
-
+        private readonly IUnitOfWork _unitOfWork;
         public SystemSettingService(IBaseRepository<SystemSetting> systemSettingRepository, IMapper mapper, CurrentUserService currentUserService,
-            IValidator<SystemSettingDto> systemSettingDtoValidator)
+            IValidator<SystemSettingDto> systemSettingDtoValidator, IUnitOfWork unitOfWork)
         {
             _systemSettingRepository = systemSettingRepository;
             _mapper = mapper;
             _currentUserService = currentUserService;
             _systemSettingDtoValidator = systemSettingDtoValidator;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel<List<SystemSettingDto>>> GetSystemSettings()
@@ -36,7 +38,10 @@ namespace XFramework.BLL.Services.Concretes
 
         public async Task<ResultViewModel<SystemSettingDto>> GetSystemSettingById(int systemSettingId)
         {
-            var systemSetting = await _systemSettingRepository.GetAsync(e => e.Id == systemSettingId);
+            var systemSetting = await _systemSettingRepository.GetAsync(new Repository.Options.BaseRepoOptions<SystemSetting>
+            {
+                Filter = e => e.Id == systemSettingId
+            });
             if (systemSetting == null)
             {
                 return ResultViewModel<SystemSettingDto>.Failure("Sistem Ayarı Bulunamadı.", null, 200);
@@ -52,7 +57,7 @@ namespace XFramework.BLL.Services.Concretes
             {
                 return ResultViewModel<SystemSettingDto>.Failure("Girdiğiniz bilgileri kontrol edin.", validationResult.Errors.Select(e => e.ErrorMessage).ToList(), 400);
             }
-            var systemSettingEntity = await _systemSettingRepository.GetAsync(e => e.Id == id);
+            var systemSettingEntity = await _systemSettingRepository.GetAsync(new BaseRepoOptions<SystemSetting> { Filter = e => e.Id == id });
             if (systemSettingEntity == null)
             {
                 return ResultViewModel<SystemSettingDto>.Failure("Sistem ayarı bulunamadı.", null, 404);
@@ -61,6 +66,7 @@ namespace XFramework.BLL.Services.Concretes
             _mapper.Map(systemSettingDto, systemSettingEntity);
             _systemSettingRepository.GetCurrentUser(_currentUserService.GetUserId());
             await _systemSettingRepository.UpdateAsync(systemSettingEntity);
+            _unitOfWork.SaveChangesAsync();
             return ResultViewModel<SystemSettingDto>.Success("Sistem Ayarı Güncellendi");
         }
     }
