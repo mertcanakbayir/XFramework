@@ -15,32 +15,24 @@ public class ValidateFilter : Attribute, IAsyncActionFilter
     {
         var executedContext = await next();
 
-        if (executedContext.Result is ObjectResult objectResult)
+        if (executedContext.Result is ObjectResult { Value: ResultViewModel<object> result })
         {
-            var resultType = objectResult.Value?.GetType();
-            if (resultType != null &&
-                resultType.IsGenericType &&
-                resultType.GetGenericTypeDefinition() == typeof(ResultViewModel<>))
+            if (!result.IsSuccess)
             {
-                var isSuccess = (bool)resultType.GetProperty("IsSuccess").GetValue(objectResult.Value);
-                var statusCode = (int?)resultType.GetProperty("StatusCode")?.GetValue(objectResult.Value) ?? 500;
-                var message = resultType.GetProperty("Message")?.GetValue(objectResult.Value).ToString();
-                if (!isSuccess)
+                var statusCode = result.StatusCode;
+                var message = result.Message;
+
+                _logger.LogWarning(
+                         "Action {ActionName} returned validation/business error. StatusCode {StatusCode}, Message:{Message}, Response: {@Response}",
+                    context.ActionDescriptor.DisplayName,
+                    statusCode,
+                    message,
+                    result);
+
+                executedContext.Result = new ObjectResult(result)
                 {
-                    _logger.LogWarning(
-                        "Action {ActionName} returned validation/business error. StatusCode {StatusCode}, Message:{Message}, Response: {@Response}",
-                        context.ActionDescriptor.DisplayName,
-                        statusCode,
-                        message,
-                        objectResult.Value
-                        );
-
-                    executedContext.Result = new ObjectResult(objectResult.Value)
-                    {
-                        StatusCode = statusCode
-                    };
-                }
-
+                    StatusCode = statusCode
+                };
             }
         }
     }

@@ -37,7 +37,7 @@
             };
         }
         public static ResultViewModel<T> Failure(string message,
-            List<string> errors = null, int statusCode = 200)
+            List<string> errors = null, int statusCode = 400)
         {
             return new ResultViewModel<T>
             {

@@ -23,7 +23,6 @@ namespace XFramework.BLL.Services.Concretes
 
         public async Task<ResultViewModel<List<SystemSettingDetailDto>>> GetSystemSettingDetails(int systemSettingId)
         {
-            //var systemSettingDetailEntity = await _systemSettingDetailRepository.GetAllAsync(e => e.SystemSettingId == systemSettingId);
             var systemSettingDetailEntity = await _systemSettingDetailRepository.GetAllAsync(new BaseRepoOptions<SystemSettingDetail>
             {
 
@@ -38,7 +37,6 @@ namespace XFramework.BLL.Services.Concretes
 
         public async Task<ResultViewModel<SystemSettingDetailDto>> GetSystemSettingDetailByDetailId(int systemSettingId, int systemSettingDetailId)
         {
-            //var systemSettingDetailEntity = await _systemSettingDetailRepository.GetAsync(e => e.SystemSettingId == systemSettingId && e.Id == systemSettingDetailId);
             var systemSettingDetailEntity = await _systemSettingDetailRepository.GetAsync(new BaseRepoOptions<SystemSettingDetail>
             {
                 Filter = e => e.SystemSettingId == systemSettingId && e.Id == systemSettingDetailId,
@@ -53,7 +51,6 @@ namespace XFramework.BLL.Services.Concretes
 
         public async Task<ResultViewModel<string>> UpdateSystemSettingDetail(SystemSettingDetailDto systemSettingDetailDto, int id)
         {
-            //var systemSettingDetailEntity = await _systemSettingDetailRepository.GetAsync(e => e.SystemSettingId == systemSettingDetailDto.SystemSettingId && e.Id == id);
             var systemSettingDetailEntity = await _systemSettingDetailRepository.GetAsync(new BaseRepoOptions<SystemSettingDetail>
             {
                 Filter = e => e.SystemSettingId == systemSettingDetailDto.SystemSettingId && e.Id == id
