@@ -1,9 +1,8 @@
 ﻿using System.Linq.Expressions;
-using XFramework.DAL.Entities;
 
 namespace XFramework.Repository.Options
 {
-    public class BaseRepoOptions<TEntity> where TEntity : BaseEntity
+    public class BaseRepoOptions<TEntity> where TEntity : class
     {
         public Expression<Func<TEntity, bool>> Filter { get; set; }
         public bool IncludeInactive { get; set; } = false;
@@ -13,5 +12,6 @@ namespace XFramework.Repository.Options
         public int? PageSize { get; set; }
         public Expression<Func<TEntity, DateOnly>> OrderBy { get; set; }
         public bool OrderByDescending { get; set; } = false;
+        public int? TotalCount { get; internal set; }
     }
 }

@@ -72,38 +72,11 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthorization();
 
 // Add services to the container.
-builder.Services.AddScoped<IHashingHelper, HashingHelper>();
-builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<ITokenHelper, TokenHelper>();
-builder.Services.AddScoped<RoleAuthorizationService>();
-builder.Services.AddSingleton<ClientIpResolver>();
-builder.Services.AddTransient<MailService>();
-builder.Services.AddScoped<EncryptionHelper>();
-builder.Services.AddScoped<RoleService>();
-builder.Services.AddScoped<CurrentUserProvider>();
-builder.Services.AddScoped<PageService>();
-builder.Services.AddScoped<EndpointService>();
-builder.Services.AddScoped<SystemSettingService>();
-builder.Services.AddScoped<SystemSettingDetailService>();
+builder.Services.AddBusinessServices(builder.Configuration);
+
 builder.Services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
-builder.Services.AddScoped<LogSettingsService>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddSingleton<MailQueueService>(sp =>
-{
-    var config = builder.Configuration.GetSection("RabbitMQ");
-
-    var host = config["hostname"];
-    var user = config["username"];
-    var pass = config["password"];
-
-    return new MailQueueService(host, user, pass);
-});
-builder.Services.AddMemoryCache();
-
 builder.Services.AddAutoMapper(typeof(UserProfile).Assembly);
-
+builder.Services.AddMemoryCache();
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

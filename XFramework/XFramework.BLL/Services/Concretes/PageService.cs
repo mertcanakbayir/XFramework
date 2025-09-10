@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using XFramework.BLL.Services.Abstracts;
 using XFramework.DAL.Entities;
 using XFramework.Dtos;
 using XFramework.Helper.ViewModels;

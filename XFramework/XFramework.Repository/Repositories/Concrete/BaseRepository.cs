@@ -50,7 +50,6 @@ namespace XFramework.Repository.Repositories.Concrete
             }
             _xfmContext.UpdateRange(entities);
         }
-
         public async Task<List<TEntity>> GetAllAsync(BaseRepoOptions<TEntity>? options = null)
         {
             var query = _xfmContext.Set<TEntity>().AsQueryable();
@@ -71,7 +70,6 @@ namespace XFramework.Repository.Repositories.Concrete
             {
                 query = query.Where(options.Filter);
             }
-            var totalCount = await query.CountAsync();
             if (options.OrderBy != null)
             {
                 query = options.OrderByDescending ? query.OrderByDescending(options.OrderBy) : query.OrderBy(options.OrderBy);
@@ -83,6 +81,8 @@ namespace XFramework.Repository.Repositories.Concrete
 
             if (options.PageNumber.HasValue && options.PageSize.HasValue)
             {
+                var totalCount = await query.CountAsync();
+                options.TotalCount = totalCount;
                 query = query.Skip((options.PageNumber.Value - 1) * options.PageSize.Value).Take(options.PageSize.Value);
             }
             if (options.AsNoTracking)
