@@ -12,15 +12,13 @@ namespace XFramework.BLL.Services.Concretes
     {
         private readonly IBaseRepository<SystemSetting> _systemSettingRepository;
         private readonly IMapper _mapper;
-        private readonly CurrentUserService _currentUserService;
         private readonly IValidator<SystemSettingDto> _systemSettingDtoValidator;
         private readonly IUnitOfWork _unitOfWork;
-        public SystemSettingService(IBaseRepository<SystemSetting> systemSettingRepository, IMapper mapper, CurrentUserService currentUserService,
+        public SystemSettingService(IBaseRepository<SystemSetting> systemSettingRepository, IMapper mapper,
             IValidator<SystemSettingDto> systemSettingDtoValidator, IUnitOfWork unitOfWork)
         {
             _systemSettingRepository = systemSettingRepository;
             _mapper = mapper;
-            _currentUserService = currentUserService;
             _systemSettingDtoValidator = systemSettingDtoValidator;
             _unitOfWork = unitOfWork;
         }
@@ -64,7 +62,6 @@ namespace XFramework.BLL.Services.Concretes
             }
 
             _mapper.Map(systemSettingDto, systemSettingEntity);
-            _systemSettingRepository.GetCurrentUser(_currentUserService.GetUserId());
             await _systemSettingRepository.UpdateAsync(systemSettingEntity);
             _unitOfWork.SaveChangesAsync();
             return ResultViewModel<SystemSettingDto>.Success("Sistem Ayarı Güncellendi");

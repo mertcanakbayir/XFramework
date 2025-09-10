@@ -120,11 +120,6 @@ namespace XFramework.Repository.Repositories.Concrete
             return await query.FirstOrDefaultAsync();
         }
 
-        public void GetCurrentUser(int userId)
-        {
-            _xfmContext.UserId = userId;
-        }
-
         public async Task UpdateAsync(TEntity entity)
         {
             var existingEntity = await _xfmContext.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(e => e.Id == entity.Id);

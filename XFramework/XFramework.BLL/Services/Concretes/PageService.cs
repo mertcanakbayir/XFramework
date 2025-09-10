@@ -15,17 +15,15 @@ namespace XFramework.BLL.Services.Concretes
         private readonly IMapper _mapper;
         private readonly IBaseRepository<User> _userRepository;
         private readonly IValidator<PageAddDto> _pageAddDtoValidator;
-        private readonly CurrentUserService _currentUserService;
         //private readonly IValidator<ForgotPasswordDto> _forgotPasswordDtoValidator;
         private readonly IUnitOfWork _unitOfWork;
 
-        public PageService(IBaseRepository<Page> pageRepository, IMapper mapper, IBaseRepository<User> userRepository, IValidator<PageAddDto> pageAddDtoValidator, CurrentUserService currentUserService, IUnitOfWork unitOfWork)
+        public PageService(IBaseRepository<Page> pageRepository, IMapper mapper, IBaseRepository<User> userRepository, IValidator<PageAddDto> pageAddDtoValidator, IUnitOfWork unitOfWork)
         {
             _pageRepository = pageRepository;
             _mapper = mapper;
             _userRepository = userRepository;
             _pageAddDtoValidator = pageAddDtoValidator;
-            _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
         }
 
@@ -70,7 +68,6 @@ namespace XFramework.BLL.Services.Concretes
                 return ResultViewModel<string>.Failure("Güncellenecek sayfa bulunamadı", statusCode: 400);
             }
             var pageEntity = _mapper.Map<Page>(pageAddDto);
-            _pageRepository.GetCurrentUser(_currentUserService.GetUserId());
             await _pageRepository.UpdateAsync(pageEntity);
             await _unitOfWork.SaveChangesAsync();
             return ResultViewModel<string>.Success("Sayfa güncellendi", statusCode: 200);

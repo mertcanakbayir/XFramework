@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using XFramework.DAL.Entities;
+﻿using XFramework.DAL.Entities;
 using XFramework.Repository.Options;
 
 namespace XFramework.Repository.Repositories.Abstract
@@ -14,8 +13,6 @@ namespace XFramework.Repository.Repositories.Abstract
 
         Task<List<T>> GetAllAsync(BaseRepoOptions<T>? options = null);
         Task<T> GetAsync(BaseRepoOptions<T>? options);
-
-        void GetCurrentUser(int userId);
 
         Task AddRangeAsync(IEnumerable<T> entities);
 

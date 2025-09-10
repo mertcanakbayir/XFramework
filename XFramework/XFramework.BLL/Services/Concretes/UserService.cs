@@ -17,18 +17,16 @@ namespace XFramework.BLL.Services.Concretes
         private readonly IHashingHelper _hashingHelper;
         private readonly IValidator<UserAddDto> _userAddDtoValidator;
         private readonly IValidator<UserUpdateDto> _userUpdateDtoValidator;
-        private readonly CurrentUserService _currentUserService;
         private readonly IUnitOfWork _unitOfWork;
         public UserService(IBaseRepository<User> userRepository, IMapper mapper, IHashingHelper hashingHelper,
             IValidator<UserAddDto> userAddDtoValidator,
-            IValidator<UserUpdateDto> userUpdateDtoValidator, CurrentUserService currentUserService, IUnitOfWork unitOfWork)
+            IValidator<UserUpdateDto> userUpdateDtoValidator, IUnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _hashingHelper = hashingHelper;
             _userAddDtoValidator = userAddDtoValidator;
             _userUpdateDtoValidator = userUpdateDtoValidator;
-            _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
         }
         public async Task<ResultViewModel<UserDto>> GetUserByEmail(string email)
@@ -94,7 +92,6 @@ namespace XFramework.BLL.Services.Concretes
             }
             var userEntity = _mapper.Map<User>(userAddDto);
             userEntity.Password = _hashingHelper.HashPassword(userEntity.Password);
-            _userRepository.GetCurrentUser(_currentUserService.GetUserId());
             await _userRepository.AddAsync(userEntity);
             await _unitOfWork.SaveChangesAsync();
             return ResultViewModel<UserAddDto>.Success("Kullanıcı Başarıyla Eklendi", 201);
@@ -117,7 +114,6 @@ namespace XFramework.BLL.Services.Concretes
             {
                 userEntity.Password = _hashingHelper.HashPassword(userUpdateDto.Password);
             }
-            _userRepository.GetCurrentUser(_currentUserService.GetUserId());
             await _userRepository.UpdateAsync(userEntity);
             return ResultViewModel<UserUpdateDto>.Success("Kullanıcı Güncellendi", 200);
         }

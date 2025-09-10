@@ -12,15 +12,12 @@ namespace XFramework.BLL.Services.Concretes
         private readonly IBaseRepository<SystemSettingDetail> _systemSettingDetailRepository;
         private readonly IMapper _mapper;
         private readonly IBaseRepository<User> _userRepository;
-        private readonly CurrentUserService _currentUserService;
         private readonly IUnitOfWork _unitOfWork;
-        public SystemSettingDetailService(IBaseRepository<SystemSettingDetail> systemSettingDetailRepository, IMapper mapper, IBaseRepository<User> userRepository, CurrentUserService currentUserService,
-            IUnitOfWork unitOfWork)
+        public SystemSettingDetailService(IBaseRepository<SystemSettingDetail> systemSettingDetailRepository, IMapper mapper, IBaseRepository<User> userRepository, IUnitOfWork unitOfWork)
         {
             _systemSettingDetailRepository = systemSettingDetailRepository;
             _mapper = mapper;
             _userRepository = userRepository;
-            _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
         }
 
@@ -66,7 +63,6 @@ namespace XFramework.BLL.Services.Concretes
                 return ResultViewModel<string>.Failure("Sistem Ayar Detayı Bulunamadı", null, 404);
             }
             _mapper.Map(systemSettingDetailDto, systemSettingDetailEntity);
-            _userRepository.GetCurrentUser(_currentUserService.GetUserId());
             await _systemSettingDetailRepository.UpdateAsync(systemSettingDetailEntity);
             await _unitOfWork.SaveChangesAsync();
             return ResultViewModel<string>.Success("Sistem Ayar Detayı güncellendi", 200);

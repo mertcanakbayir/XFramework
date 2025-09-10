@@ -12,13 +12,11 @@ namespace XFramework.BLL.Services.Concretes
         private readonly IBaseRepository<Endpoint> _endpointRepository;
         private readonly IBaseRepository<User> _userRepository;
         private readonly IMapper _mapper;
-        private readonly CurrentUserService _currentUserService;
         private readonly IUnitOfWork _unitOfWork;
-        public EndpointService(IBaseRepository<Endpoint> endpointRepository, IMapper mapper, CurrentUserService currentUserService, IUnitOfWork unitOfWork)
+        public EndpointService(IBaseRepository<Endpoint> endpointRepository, IMapper mapper, IUnitOfWork unitOfWork)
         {
             _endpointRepository = endpointRepository;
             _mapper = mapper;
-            _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
         }
 

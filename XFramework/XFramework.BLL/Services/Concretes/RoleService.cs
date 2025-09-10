@@ -17,13 +17,11 @@ namespace XFramework.BLL.Services.Concretes
         private readonly IValidator<RoleAddDto> _roleAddDtoValidator;
         private readonly IValidator<PageRoleAddDto> _pageRoleAddDtoValidator;
         private readonly RoleAuthorizationService _roleAuthorizationService;
-        private readonly CurrentUserService _currentUserService;
         private readonly IBaseRepository<PageRole> _pageRoleRepository;
         private readonly IBaseRepository<EndpointRole> _endpointRoleRepository;
         private readonly IUnitOfWork _unitOfWork;
         public RoleService(IBaseRepository<Role> roleRepository, IMapper mapper, IBaseRepository<Page> pageRepository, IBaseRepository<User> userRepository, IBaseRepository<PageRole> pageRoleRepository,
-            IValidator<RoleAddDto> roleAddDtoValidator, IValidator<PageRoleAddDto> pageRoleAddDtoValidator, IBaseRepository<EndpointRole> endpointRoleRepository, RoleAuthorizationService roleAuthorizationService,
-            CurrentUserService currentUserService, IUnitOfWork unitOfWork)
+            IValidator<RoleAddDto> roleAddDtoValidator, IValidator<PageRoleAddDto> pageRoleAddDtoValidator, IBaseRepository<EndpointRole> endpointRoleRepository, RoleAuthorizationService roleAuthorizationService, IUnitOfWork unitOfWork)
         {
             _roleRepository = roleRepository;
             _mapper = mapper;
@@ -33,7 +31,6 @@ namespace XFramework.BLL.Services.Concretes
             _pageRoleAddDtoValidator = pageRoleAddDtoValidator;
             _endpointRoleRepository = endpointRoleRepository;
             _roleAuthorizationService = roleAuthorizationService;
-            _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
         }
 
@@ -76,7 +73,6 @@ namespace XFramework.BLL.Services.Concretes
                 return ResultViewModel<string>.Failure("Rol eklenirken hata", errors, 400);
             }
             var pageRole = _mapper.Map<PageRole>(pageRoleAddDto);
-            _pageRoleRepository.GetCurrentUser(_currentUserService.GetUserId());
             await _pageRoleRepository.AddAsync(pageRole);
             await _unitOfWork.SaveChangesAsync();
             var usersWithRole = await _userRepository.GetAllAsync(new BaseRepoOptions<User>
@@ -93,7 +89,6 @@ namespace XFramework.BLL.Services.Concretes
         public async Task<ResultViewModel<string>> AddEndpointRole(EndpointRoleAddDto endpointRoleAddDto)
         {
             var endpointRole = _mapper.Map<EndpointRole>(endpointRoleAddDto);
-            _endpointRoleRepository.GetCurrentUser(_currentUserService.GetUserId());
             await _endpointRoleRepository.AddAsync(endpointRole);
             await _unitOfWork.SaveChangesAsync();
             var usersWithRole = await _userRepository.GetAllAsync(
@@ -101,7 +96,6 @@ namespace XFramework.BLL.Services.Concretes
                 {
                     Filter = u => u.UserRoles.Any(ur => ur.RoleId == endpointRoleAddDto.RoleId)
                 });
-            _endpointRoleRepository.GetCurrentUser(_currentUserService.GetUserId());
             foreach (var user in usersWithRole)
             {
                 _roleAuthorizationService.ClearUserEndpointCache(user.Id);
