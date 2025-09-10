@@ -1,14 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XFramework.DAL.Entities;
 using XFramework.Helper.Enums;
+using XFramework.Helper.Helpers;
 
 namespace XFramework.DAL
 {
     public class XFMContext : DbContext
     {
-
-        public XFMContext(DbContextOptions<XFMContext> options)
-       : base(options) { }
+        private readonly CurrentUserProvider _currentUserProvider;
+        public XFMContext(DbContextOptions<XFMContext> options, CurrentUserProvider currentUserProvider)
+       : base(options)
+        {
+            _currentUserProvider = currentUserProvider;
+        }
 
         public DbSet<User> Users { get; set; }
 
@@ -239,11 +243,9 @@ namespace XFramework.DAL
 
         }
 
-
-
-        public int UserId { get; set; }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
+            int userId = _currentUserProvider.GetUserId();
             this.ChangeTracker.DetectChanges();
             var added = this.ChangeTracker.Entries()
                         .Where(t => t.State == EntityState.Added)
@@ -254,22 +256,32 @@ namespace XFramework.DAL
                 if (entity is BaseEntity baseEntity)
                 {
                     baseEntity.CreatedAt = DateTime.Now;
-                    baseEntity.CreatedBy = UserId;
+                    baseEntity.CreatedBy = userId;
+
+                    baseEntity.UpdatedAt = DateTime.Now;
+                    baseEntity.UpdatedBy = userId;
                 }
 
             }
 
             var modified = this.ChangeTracker.Entries()
-                .Where(t => t.State == EntityState.Modified)
-                .Select(t => t.Entity)
-                .ToArray();
+                           .Where(t => t.State == EntityState.Modified)
+                           .ToArray();
 
-            foreach (var entity in modified)
+            foreach (var entry in modified)
             {
-                if (entity is BaseEntity baseEntity)
+                if (entry.Entity is BaseEntity baseEntity)
                 {
+                    var originalIsActive = entry.OriginalValues.GetValue<bool>(nameof(BaseEntity.IsActive));
+                    var currentIsActive = baseEntity.IsActive;
+
+                    if (originalIsActive != currentIsActive)
+                    {
+                        baseEntity.DeletedAt = DateTime.Now;
+                        baseEntity.DeletedBy = userId;
+                    }
                     baseEntity.UpdatedAt = DateTime.Now;
-                    baseEntity.UpdatedBy = UserId;
+                    baseEntity.UpdatedBy = userId;
                 }
             }
             return await base.SaveChangesAsync();

@@ -8,7 +8,8 @@ using XFramework.DAL.Entities;
 using XFramework.Dtos;
 using XFramework.Helper.Helpers;
 using XFramework.Helper.ViewModels;
-using XFramework.Repository.Repositories;
+using XFramework.Repository.Options;
+using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
 {
@@ -29,7 +30,11 @@ namespace XFramework.BLL.Services.Concretes
 
         public async Task<ResultViewModel<string>> SendEmailAsync(string to, string subject, string body, int settingId)
         {
-            var mailSettings = await _systemSettingRepository.GetAsync(e => e.Id == settingId, includeFunc: query => query.Include(e => e.SystemSettingDetails));
+            var mailSettings = await _systemSettingRepository.GetAsync(new BaseRepoOptions<SystemSetting>
+            {
+                Filter = e => e.Id == settingId,
+                IncludeFunc = query => query.Include(e => e.SystemSettingDetails)
+            });
             if (mailSettings == null)
                 throw new Exception("Mail ayarları bulunamadı");
 

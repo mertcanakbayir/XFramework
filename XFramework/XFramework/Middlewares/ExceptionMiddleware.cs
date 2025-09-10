@@ -1,5 +1,6 @@
 ﻿using Serilog;
 using Serilog.Context;
+using XFramework.Helper.ViewModels;
 
 namespace XFramework.API.Middlewares
 {
@@ -33,12 +34,14 @@ namespace XFramework.API.Middlewares
 
                 context.Response.StatusCode = 500;
                 context.Response.ContentType = "application/json";
-                await context.Response.WriteAsJsonAsync(new
+                var result = ex switch
                 {
-                    IsSuccess = false,
-                    StatusCode = 500,
-                    Message = "Internal server error"
-                });
+                    KeyNotFoundException => ResultViewModel<object>.Failure("Not Found."),
+                    UnauthorizedAccessException => ResultViewModel<object>.Failure("Forbidden"),
+                    _ => ResultViewModel<object>.Failure("Internal Server Error")
+                };
+
+                await context.Response.WriteAsJsonAsync(result);
             }
 
         }

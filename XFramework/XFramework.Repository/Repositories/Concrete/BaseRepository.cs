@@ -1,10 +1,10 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using XFramework.DAL;
 using XFramework.DAL.Entities;
+using XFramework.Repository.Options;
+using XFramework.Repository.Repositories.Abstract;
 
-namespace XFramework.Repository.Repositories
+namespace XFramework.Repository.Repositories.Concrete
 {
     public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : BaseEntity
     {
@@ -15,21 +15,12 @@ namespace XFramework.Repository.Repositories
         }
         public async Task AddAsync(TEntity entity)
         {
-            try
-            {
-                await _xfmContext.AddAsync(entity);
-                await _xfmContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("AddAsync sırasında hata oluştu.", ex);
-            }
+            await _xfmContext.AddAsync(entity);
         }
 
         public async Task AddRangeAsync(IEnumerable<TEntity> entities)
         {
             await _xfmContext.AddRangeAsync(entities);
-            await _xfmContext.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
@@ -43,7 +34,6 @@ namespace XFramework.Repository.Repositories
             {
                 baseEntity.IsActive = false;
                 _xfmContext.Update(ent);
-                await _xfmContext.SaveChangesAsync();
             }
         }
 
@@ -59,47 +49,43 @@ namespace XFramework.Repository.Repositories
                 entity.IsActive = false;
             }
             _xfmContext.UpdateRange(entities);
-            await _xfmContext.SaveChangesAsync();
         }
 
-        public async Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> filter = null,
-            bool includeInactive = false, bool asNoTracking = false,
-            Func<IQueryable<TEntity>, IQueryable<TEntity>> includeFunc = null,
-            int? pageNumber = null,
-            int? pageSize = null,
-            Expression<Func<TEntity, object>> orderBy = null,
-            bool orderByDescending = false)
+        public async Task<List<TEntity>> GetAllAsync(BaseRepoOptions<TEntity>? options = null)
         {
             var query = _xfmContext.Set<TEntity>().AsQueryable();
-
-            if (!includeInactive)
+            if (options == null)
+            {
+                options = new BaseRepoOptions<TEntity>();
+            }
+            if (!options.IncludeInactive)
             {
                 query = query.Where(e => e.IsActive);
             }
 
-            if (includeFunc != null)
+            if (options.IncludeFunc != null)
             {
-                query = includeFunc(query);
+                query = options.IncludeFunc(query);
             }
-            if (filter != null)
+            if (options.Filter != null)
             {
-                query = query.Where(filter);
+                query = query.Where(options.Filter);
             }
             var totalCount = await query.CountAsync();
-            if (orderBy != null)
+            if (options.OrderBy != null)
             {
-                query = orderByDescending ? query.OrderByDescending(orderBy) : query.OrderBy(orderBy);
+                query = options.OrderByDescending ? query.OrderByDescending(options.OrderBy) : query.OrderBy(options.OrderBy);
             }
-            else if (pageNumber.HasValue && pageSize.HasValue)
+            else if (options.PageNumber.HasValue && options.PageSize.HasValue)
             {
                 query = query.OrderBy(e => e.Id);
             }
 
-            if (pageNumber.HasValue && pageSize.HasValue)
+            if (options.PageNumber.HasValue && options.PageSize.HasValue)
             {
-                query = query.Skip((pageNumber.Value - 1) * pageSize.Value).Take(pageSize.Value);
+                query = query.Skip((options.PageNumber.Value - 1) * options.PageSize.Value).Take(options.PageSize.Value);
             }
-            if (asNoTracking)
+            if (options.AsNoTracking)
             {
                 query = query.AsNoTracking();
             }
@@ -107,33 +93,31 @@ namespace XFramework.Repository.Repositories
             return await query.ToListAsync();
         }
 
-        public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> filter = null, bool includeInactive = false, bool asNoTracking = false, Func<IQueryable<TEntity>, IQueryable<TEntity>> includeFunc = null)
+        public async Task<TEntity> GetAsync(BaseRepoOptions<TEntity>? options)
         {
 
             var query = _xfmContext.Set<TEntity>().AsQueryable();
-
-            if (!includeInactive)
+            if (options == null)
+            {
+                options = new BaseRepoOptions<TEntity>();
+            }
+            if (!options.IncludeInactive)
             {
                 query = query.Where(e => e.IsActive);
             }
-            if (includeFunc != null)
+            if (options.IncludeFunc != null)
             {
-                query = includeFunc(query);
+                query = options.IncludeFunc(query);
             }
-            if (filter != null)
+            if (options.Filter != null)
             {
-                query = query.Where(filter);
+                query = query.Where(options.Filter);
             }
-            if (asNoTracking)
+            if (options.AsNoTracking)
             {
                 query = query.AsNoTracking();
             }
             return await query.FirstOrDefaultAsync();
-        }
-
-        public void GetCurrentUser(int userId)
-        {
-            _xfmContext.UserId = userId;
         }
 
         public async Task UpdateAsync(TEntity entity)
@@ -158,7 +142,6 @@ namespace XFramework.Repository.Repositories
             }
             _xfmContext.Set<TEntity>().Attach(entity);
             _xfmContext.Entry(entity).State = EntityState.Modified;
-            await _xfmContext.SaveChangesAsync();
         }
     }
 }
