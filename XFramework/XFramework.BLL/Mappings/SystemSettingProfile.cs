@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using XFramework.DAL.Entities;
-using XFramework.Dtos;
+using XFramework.Dtos.SystemSetting;
 
 namespace XFramework.BLL.Mappings
 {

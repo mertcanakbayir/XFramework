@@ -59,7 +59,7 @@ namespace XFramework.BLL.Services.Concretes
 
         public async Task<PagedResultViewModel<UserDto>> GetUsers(int pageNumber = 1, int pageSize = 2)
         {
-            var users = await _userRepository.GetAllAsync(new BaseRepoOptions<User>
+            var users = await _userRepository.GetAllAsync<UserDto>(new BaseRepoOptions<User>
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize

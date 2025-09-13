@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using XFramework.BLL.Services.Abstracts;
 using XFramework.BLL.Services.Concretes;
-using XFramework.Dtos;
+using XFramework.Dtos.Page;
 using XFramework.Helper.ViewModels;
 
 namespace XFramework.API.Controllers
@@ -20,26 +21,34 @@ namespace XFramework.API.Controllers
         public async Task<ResultViewModel<string>> AddPage(PageAddDto pageAddDto)
         {
 
-            return await _pageService.AddPage(pageAddDto);
+            return await _pageService.AddAsync(pageAddDto);
         }
 
         [HttpGet]
         [TypeFilter(typeof(ValidateFilter))]
         public async Task<ResultViewModel<List<PageDto>>> GetPagesByUser(int userId)
         {
-            return await _pageService.GetPagesByUser(userId);
+            return await _pageService.GetAllAsync();
         }
+
+        [HttpGet("parent")]
+        [TypeFilter(typeof(ValidateFilter))]
+        public async Task<ResultViewModel<List<PageDto>>> GetByParentId(int parentId)
+        {
+            return await _pageService.GetAllAsync(e => e.ParentId == parentId);
+        }
+
 
         [HttpGet("all")]
         public async Task<ResultViewModel<List<PageDto>>> GetPages()
         {
-            return await _pageService.GetAllPages();
+            return await _pageService.GetAllAsync();
         }
 
         [HttpPut]
-        public async Task<ResultViewModel<string>> UpdatePage(PageAddDto pageAddDto)
+        public async Task<ResultViewModel<string>> UpdatePage(int id, PageUpdateDto pageUpdateDto)
         {
-            return await _pageService.UpdatePage(pageAddDto);
+            return await _pageService.UpdateAsync(id, pageUpdateDto);
         }
 
     }

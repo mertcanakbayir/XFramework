@@ -3,7 +3,7 @@ using XFramework.Dtos;
 
 namespace XFramework.BLL.Utilities.ValidationRulers
 {
-    public class PageRoleAddDtoValidator:AbstractValidator<PageRoleAddDto>
+    public class PageRoleAddDtoValidator : AbstractValidator<PageRoleAddDto>
     {
         public PageRoleAddDtoValidator()
         {

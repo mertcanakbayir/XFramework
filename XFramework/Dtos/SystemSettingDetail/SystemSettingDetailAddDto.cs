@@ -1,13 +1,9 @@
-﻿namespace XFramework.Dtos
+﻿namespace XFramework.Dtos.SystemSettingDetail
 {
-    public class SystemSettingDetailDto
+    public class SystemSettingDetailAddDto
     {
-        public int SystemSettingId { get; set; }
-
         public string Key { get; set; }
-
         public string Value { get; set; }
-
         public string Type { get; set; }
     }
 }

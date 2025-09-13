@@ -1,23 +1,19 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using XFramework.DAL.Entities;
-using XFramework.Dtos;
+using XFramework.Dtos.Endpoint;
 using XFramework.Helper.ViewModels;
 using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
 {
-    public class EndpointService
+    public class EndpointService : BaseService<Endpoint, EndpointDto, EndpointAddDto, EndpontUpdateDto>
     {
-        private readonly IBaseRepository<Endpoint> _endpointRepository;
         private readonly IBaseRepository<User> _userRepository;
-        private readonly IMapper _mapper;
-        private readonly IUnitOfWork _unitOfWork;
-        public EndpointService(IBaseRepository<Endpoint> endpointRepository, IMapper mapper, IUnitOfWork unitOfWork)
+        public EndpointService(IValidator<EndpointAddDto> addDtoValidator, IMapper mapper, IBaseRepository<Endpoint> baseRepository, IUnitOfWork unitOfWork, IValidator<EndpontUpdateDto> updateDtoValidator, IBaseRepository<User> userRepository) : base(addDtoValidator, mapper, baseRepository, unitOfWork, updateDtoValidator)
         {
-            _endpointRepository = endpointRepository;
-            _mapper = mapper;
-            _unitOfWork = unitOfWork;
+            _userRepository = userRepository;
         }
 
         public async Task<ResultViewModel<List<EndpointDto>>> GetEndpointsByUser(int userId)
@@ -35,14 +31,6 @@ namespace XFramework.BLL.Services.Concretes
             var endpoints = userEndpoints.UserRoles.Select(ur => ur.Role).SelectMany(er => er.EndpointRoles).Select(p => p.Endpoint);
             var endpointsDto = _mapper.Map<List<EndpointDto>>(endpoints);
             return ResultViewModel<List<EndpointDto>>.Success(endpointsDto, "Kullanıcının yetkili olduğu endpointler:", 200);
-        }
-
-        public async Task<ResultViewModel<string>> AddEndpoint(EndpointAddDto endpointAddDto)
-        {
-            var endpointEntity = _mapper.Map<Endpoint>(endpointAddDto);
-            await _endpointRepository.AddAsync(endpointEntity);
-            await _unitOfWork.SaveChangesAsync();
-            return ResultViewModel<string>.Success("Endpoint eklendi", 200);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using AutoMapper;
+using AutoMapper.Extensions.ExpressionMapping;
 using FluentValidation;
 using XFramework.BLL.Services.Abstracts;
 using XFramework.DAL.Entities;
@@ -9,25 +10,25 @@ using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
 {
-    public class BaseService<TEntity, TDto, TAddDto, TUpdateDto> : IBaseService<TDto, TAddDto, TUpdateDto, TEntity>
+    public class BaseService<TEntity, TDto, TAddDto, TUpdateDto> : IBaseService<TDto, TAddDto, TUpdateDto>
         where TAddDto : class
         where TUpdateDto : class
         where TDto : class
         where TEntity : BaseEntity
     {
         private readonly IValidator<TAddDto> _addDtoValidator;
-        private readonly IValidator<List<TAddDto>> _rangeAddDtoValidator;
-        private readonly IMapper _mapper;
+        protected readonly IMapper _mapper;
         private readonly IBaseRepository<TEntity> _baseRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        protected readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<TUpdateDto> _updateDtoValidator;
-        public BaseService(IValidator<TAddDto> addDtoValidator, IMapper mapper, IBaseRepository<TEntity> baseRepository, IValidator<List<TAddDto>> rangeAddDtoValidator, IUnitOfWork unitOfWork)
+        public BaseService(IValidator<TAddDto> addDtoValidator, IMapper mapper, IBaseRepository<TEntity> baseRepository, IUnitOfWork unitOfWork,
+            IValidator<TUpdateDto> updateDtoValidator)
         {
             _addDtoValidator = addDtoValidator;
             _mapper = mapper;
             _baseRepository = baseRepository;
-            _rangeAddDtoValidator = rangeAddDtoValidator;
             _unitOfWork = unitOfWork;
+            _updateDtoValidator = updateDtoValidator;
         }
         public async Task<ResultViewModel<string>> AddAsync(TAddDto dto)
         {
@@ -44,10 +45,13 @@ namespace XFramework.BLL.Services.Concretes
 
         public async Task<ResultViewModel<string>> AddRangeAsync(List<TAddDto> dtos)
         {
-            var validationResult = _rangeAddDtoValidator.Validate(dtos);
-            if (!validationResult.IsValid)
+            foreach (var dto in dtos)
             {
-                return ResultViewModel<string>.Failure("Please check credentials", errors: validationResult.Errors.Select(e => e.ErrorMessage).ToList());
+                var validationResult = _addDtoValidator.Validate(dto);
+                if (!validationResult.IsValid)
+                {
+                    return ResultViewModel<string>.Failure("Please check credentials", errors: validationResult.Errors.Select(e => e.ErrorMessage).ToList());
+                }
             }
             var entites = _mapper.Map<List<TEntity>>(dtos);
             await _baseRepository.AddRangeAsync(entites);
@@ -72,7 +76,7 @@ namespace XFramework.BLL.Services.Concretes
 
         public async Task<ResultViewModel<string>> DeleteRangeAsync(List<int> ids)
         {
-            var entities = await _baseRepository.GetAllAsync(new BaseRepoOptions<TEntity>
+            var entities = await _baseRepository.GetAllAsync<TDto>(new BaseRepoOptions<TEntity>
             {
                 Filter = e => ids.Contains(e.Id)
             });
@@ -85,28 +89,36 @@ namespace XFramework.BLL.Services.Concretes
             return ResultViewModel<string>.Success(message: "Records deleted succesfully");
         }
 
-        public async Task<ResultViewModel<List<TDto>>> GetAllAsync(Expression<Func<TEntity, bool>>? filter = null)
+        public async Task<ResultViewModel<List<TDto>>> GetAllAsync(Expression<Func<TDto, bool>>? filter = null)
         {
-            var entities = await _baseRepository.GetAllAsync(
+            Expression<Func<TEntity, bool>>? entityFilter = null;
+            if (filter != null)
+            {
+                entityFilter = _mapper.MapExpression<Expression<Func<TEntity, bool>>>(filter);
+            }
+            var dtos = await _baseRepository.GetAllAsync<TDto>(
                 new BaseRepoOptions<TEntity>
                 {
-                    Filter = filter,
+                    Filter = entityFilter,
                     AsNoTracking = true
                 });
-            if (entities == null)
+            if (dtos == null)
             {
                 return ResultViewModel<List<TDto>>.Failure("No records found");
             }
-
-            var dtos = _mapper.Map<List<TDto>>(entities);
             return ResultViewModel<List<TDto>>.Success(dtos, "Records:");
         }
 
-        public async Task<ResultViewModel<TDto>> GetAsync(Expression<Func<TEntity, bool>>? filter = null)
+        public async Task<ResultViewModel<TDto>> GetAsync(Expression<Func<TDto, bool>>? filter = null)
         {
+            Expression<Func<TEntity, bool>>? entityFilter = null;
+            if (filter != null)
+            {
+                entityFilter = _mapper.MapExpression<Expression<Func<TEntity, bool>>>(filter);
+            }
             var options = new BaseRepoOptions<TEntity>
             {
-                Filter = filter,
+                Filter = entityFilter,
                 AsNoTracking = true
             };
             var entity = await _baseRepository.GetAsync(options);
@@ -115,34 +127,24 @@ namespace XFramework.BLL.Services.Concretes
                 return ResultViewModel<TDto>.Failure("No records found");
             }
             var dto = _mapper.Map<TDto>(entity);
-            return ResultViewModel<TDto>.Success("Records:");
+            return ResultViewModel<TDto>.Success("Record:");
         }
-
-        public async Task<ResultViewModel<TDto>> GetByIdAsync(int id)
+        public async Task<PagedResultViewModel<TDto>> GetPagedAsync(Expression<Func<TDto, bool>>? filter = null, int? pageNumber = 1, int? pageSize = 10)
         {
-            var entity = await _baseRepository.GetAsync(new BaseRepoOptions<TEntity>
+            Expression<Func<TEntity, bool>>? entityFilter = null;
+            if (filter != null)
             {
-                Filter = e => id == e.Id,
-                AsNoTracking = true
-            });
-            if (entity == null)
-                return ResultViewModel<TDto>.Failure("Not Found");
-
-            var dto = _mapper.Map<TDto>(entity);
-            return ResultViewModel<TDto>.Success(dto, "Success");
-        }
-
-        public async Task<PagedResultViewModel<TDto>> GetPagedAsync(Expression<Func<TEntity, bool>>? filter = null, int? pageNumber = 1, int? pageSize = 10)
-        {
+                entityFilter = _mapper.MapExpression<Expression<Func<TEntity, bool>>>(filter);
+            }
             var options = new BaseRepoOptions<TEntity>
             {
-                Filter = filter,
+                Filter = entityFilter,
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 AsNoTracking = true
             };
 
-            var entities = await _baseRepository.GetAllAsync(options);
+            var entities = await _baseRepository.GetAllAsync<TDto>(options);
             int totalCount = options.TotalCount ?? 0;
 
             var dtos = _mapper.Map<List<TDto>>(entities);
@@ -155,15 +157,23 @@ namespace XFramework.BLL.Services.Concretes
             };
         }
 
-        public async Task<ResultViewModel<string>> UpdateAsync(TUpdateDto dto)
+        public async Task<ResultViewModel<string>> UpdateAsync(int id, TUpdateDto dto)
         {
             var validationResult = _updateDtoValidator.Validate(dto);
             if (!validationResult.IsValid)
             {
                 return ResultViewModel<string>.Failure("Check Credentials", errors: validationResult.Errors.Select(e => e.ErrorMessage).ToList());
             }
-            var entity = _mapper.Map<TEntity>(dto);
-            await _baseRepository.UpdateAsync(entity);
+            var existing = await _baseRepository.GetAsync(new BaseRepoOptions<TEntity>
+            {
+                Filter = e => e.Id == id
+            });
+            if (existing == null)
+            {
+                return ResultViewModel<string>.Failure("Not Found", errors: new List<string> { $"Record with {id} does not exist." });
+            }
+            _mapper.Map(dto, existing);
+            await _baseRepository.UpdateAsync(existing);
             await _unitOfWork.SaveChangesAsync();
             return ResultViewModel<string>.Success(message: "Updated Succesfully");
         }

@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
-using XFramework.Dtos;
+using XFramework.Dtos.SystemSettingDetail;
 
 namespace XFramework.BLL.Utilities.ValidationRulers
 {
-    public class SystemSettingDetailDtoValidator : AbstractValidator<SystemSettingDetailDto>
+    public class SystemSettingDetailUpdateDtoValidator : AbstractValidator<SystemSettingDetailUpdateDto>
     {
-        public SystemSettingDetailDtoValidator()
+        public SystemSettingDetailUpdateDtoValidator()
         {
             RuleFor(e => e.Key).NotEmpty().WithMessage("Sistem Detay Anahtarı Boş Olamaz");
             RuleFor(e => e.Value).NotEmpty().WithMessage("Sistem Detay Değeri Boş Olamaz");

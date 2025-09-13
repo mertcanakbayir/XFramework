@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using XFramework.DAL;
 using XFramework.DAL.Entities;
 using XFramework.Repository.Options;
@@ -9,9 +11,11 @@ namespace XFramework.Repository.Repositories.Concrete
     public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : BaseEntity
     {
         private readonly XFMContext _xfmContext;
-        public BaseRepository(XFMContext xfmContext)
+        private readonly IMapper _mapper;
+        public BaseRepository(XFMContext xfmContext, IMapper mapper)
         {
             _xfmContext = xfmContext;
+            _mapper = mapper;
         }
         public async Task AddAsync(TEntity entity)
         {
@@ -50,7 +54,7 @@ namespace XFramework.Repository.Repositories.Concrete
             }
             _xfmContext.UpdateRange(entities);
         }
-        public async Task<List<TEntity>> GetAllAsync(BaseRepoOptions<TEntity>? options = null)
+        public async Task<List<TDto>> GetAllAsync<TDto>(BaseRepoOptions<TEntity>? options = null)
         {
             var query = _xfmContext.Set<TEntity>().AsQueryable();
             if (options == null)
@@ -90,7 +94,7 @@ namespace XFramework.Repository.Repositories.Concrete
                 query = query.AsNoTracking();
             }
 
-            return await query.ToListAsync();
+            return await query.ProjectTo<TDto>(_mapper.ConfigurationProvider).ToListAsync();
         }
 
         public async Task<TEntity> GetAsync(BaseRepoOptions<TEntity>? options)
@@ -131,7 +135,6 @@ namespace XFramework.Repository.Repositories.Concrete
             {
                 var currentRevision = Convert.ToInt32(existingEntity.Revision);
                 var incomingRevision = Convert.ToInt32(entity.Revision);
-
 
                 if (currentRevision != incomingRevision)
                 {

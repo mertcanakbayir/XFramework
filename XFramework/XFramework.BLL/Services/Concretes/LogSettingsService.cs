@@ -36,7 +36,5 @@ namespace XFramework.BLL.Services.Concretes
                : LogEventLevel.Fatal + 1;
             return "başarılı";
         }
-
-
     }
 }

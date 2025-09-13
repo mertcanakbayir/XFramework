@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using XFramework.BLL.Services.Concretes;
-using XFramework.Dtos;
+using XFramework.Dtos.SystemSetting;
 using XFramework.Helper.ViewModels;
 
 namespace XFramework.API.Controllers
@@ -17,19 +17,19 @@ namespace XFramework.API.Controllers
         [HttpGet("all")]
         public async Task<ResultViewModel<List<SystemSettingDto>>> SystemSettings()
         {
-            return await _systemSettingService.GetSystemSettings();
+            return await _systemSettingService.GetAllAsync();
         }
 
         [HttpGet]
         public async Task<ResultViewModel<SystemSettingDto>> GetSystemSettingById(int systemSettingId)
         {
-            return await _systemSettingService.GetSystemSettingById(systemSettingId);
+            return await _systemSettingService.GetAsync(e => e.Id == systemSettingId);
         }
 
         [HttpPut("{id}")]
-        public async Task<ResultViewModel<SystemSettingDto>> UpdateSystemSetting(int id, SystemSettingDto systemSettingDto)
+        public async Task<ResultViewModel<string>> UpdateSystemSetting(int id, SystemSettingUpdateDto systemSettingUpdateDto)
         {
-            return await _systemSettingService.UpdateSystemSetting(systemSettingDto, id);
+            return await _systemSettingService.UpdateAsync(id, systemSettingUpdateDto);
         }
     }
 }

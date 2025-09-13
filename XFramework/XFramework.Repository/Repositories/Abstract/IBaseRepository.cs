@@ -11,7 +11,8 @@ namespace XFramework.Repository.Repositories.Abstract
 
         Task DeleteAsync(int id);
 
-        Task<List<T>> GetAllAsync(BaseRepoOptions<T>? options = null);
+        Task<List<TDto>> GetAllAsync<TDto>(BaseRepoOptions<T>? options = null);
+
         Task<T> GetAsync(BaseRepoOptions<T>? options);
 
         Task AddRangeAsync(IEnumerable<T> entities);

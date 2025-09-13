@@ -1,4 +1,4 @@
-﻿namespace XFramework.Dtos
+﻿namespace XFramework.Dtos.Role
 {
     public class RoleAddDto
     {

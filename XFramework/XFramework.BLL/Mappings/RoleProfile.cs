@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using XFramework.DAL.Entities;
 using XFramework.Dtos;
+using XFramework.Dtos.Role;
 
 namespace XFramework.BLL.Mappings
 {
@@ -11,11 +12,6 @@ namespace XFramework.BLL.Mappings
             CreateMap<Role, RoleDto>();
 
             CreateMap<RoleAddDto, Role>();
-
-            CreateMap<PageRoleAddDto, PageRole>();
-            CreateMap<PageRole, PageRoleAddDto>();
-
-            CreateMap<EndpointRoleAddDto, EndpointRole>();
         }
     }
 }

@@ -16,7 +16,7 @@ if (entity != null)
     dtoGenerator.Generate(entity, dtoOutput);
     Console.WriteLine($"{entityName} için DTO oluşturuldu!");
     mapperGenerator.Generate(new[] { entity }, mapperOutput);
-    Console.WriteLine(dtoOutput);
+    Console.WriteLine($"DTO Output Path: {dtoOutput}");
 }
 else
 {

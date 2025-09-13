@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using XFramework.DAL.Entities;
-using XFramework.Dtos;
+using XFramework.Dtos.Page;
 
 namespace XFramework.BLL.Mappings
 {
@@ -8,11 +8,11 @@ namespace XFramework.BLL.Mappings
     {
         public PageProfile()
         {
-            CreateMap<Page, PageDto>();
-            CreateMap<PageDto, Page>();
+            CreateMap<Page, PageDto>().ReverseMap();
 
-            CreateMap<PageAddDto, Page>();
-            CreateMap<Page, PageAddDto>();
+            CreateMap<PageAddDto, Page>().ReverseMap();
+
+            CreateMap<PageUpdateDto, Page>().ReverseMap();
         }
     }
 }

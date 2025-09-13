@@ -1,4 +1,4 @@
-﻿namespace XFramework.Dtos
+﻿namespace XFramework.Dtos.SystemSetting
 {
     public class SystemSettingDto
     {
@@ -6,7 +6,5 @@
         public string Name { get; set; }
 
         public string Description { get; set; }
-
-        public int Revision { get; set; }
     }
 }

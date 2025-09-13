@@ -63,8 +63,7 @@ namespace XFramework.Repository.Repositories.Concrete
             if (_repositories.ContainsKey(typeof(T)))
                 return (IBaseRepository<T>)_repositories[typeof(T)];
 
-            var repository = _serviceProvider.GetService<IBaseRepository<T>>()
-                ?? new BaseRepository<T>(_context);
+            var repository = _serviceProvider.GetService<IBaseRepository<T>>();
 
             _repositories.Add(typeof(T), repository);
             return repository;

@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using XFramework.BLL.Services.Concretes;
-using XFramework.Dtos;
+using XFramework.Dtos.Endpoint;
 using XFramework.Helper.ViewModels;
 
 namespace XFramework.API.Controllers
@@ -27,7 +27,7 @@ namespace XFramework.API.Controllers
         public async Task<ResultViewModel<string>> AddEndpoint(EndpointAddDto endpointAddDto)
         {
 
-            return await _endpointService.AddEndpoint(endpointAddDto);
+            return await _endpointService.AddAsync(endpointAddDto);
         }
     }
 }

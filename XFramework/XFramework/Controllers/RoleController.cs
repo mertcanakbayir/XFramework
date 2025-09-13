@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using XFramework.BLL.Services.Concretes;
 using XFramework.Dtos;
+using XFramework.Dtos.EndpointRole;
+using XFramework.Dtos.Role;
 using XFramework.Helper.ViewModels;
 
 namespace XFramework.API.Controllers
@@ -24,7 +26,7 @@ namespace XFramework.API.Controllers
         [HttpPost]
         public async Task<ResultViewModel<string>> AddUserRole(RoleAddDto addRole)
         {
-            return await _roleService.AddRole(addRole);
+            return await _roleService.AddAsync(addRole);
         }
 
         [HttpPost("addPageRole")]
@@ -32,7 +34,6 @@ namespace XFramework.API.Controllers
         {
             return await _roleService.AddPageRole(pageRoleAddDto);
         }
-
         [HttpPost("addEndpointRole")]
         public async Task<ResultViewModel<string>> AddEndpointRole(EndpointRoleAddDto endpointRoleAddDto)
         {
