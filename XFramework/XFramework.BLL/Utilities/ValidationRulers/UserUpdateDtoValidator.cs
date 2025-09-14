@@ -7,10 +7,13 @@ namespace XFramework.BLL.Utilities.ValidationRulers
     {
         public UserUpdateDtoValidator()
         {
-            RuleFor(e => e.Email).NotEmpty().WithMessage("Mail adresi boş olamaz.").EmailAddress().WithMessage("Email adresi formatını lütfen kontrol edin.");
+            RuleFor(e => e.Email)
+                .NotEmpty().WithMessage("Email address cannot be empty.")
+                .EmailAddress().WithMessage("Please check the email address format.");
 
-            RuleFor(e => e.Password).NotEmpty().WithMessage("Şifre boş olamaz.").MinimumLength(6).WithMessage("Şifre en az altı karakter olmalı.");
-
+            RuleFor(e => e.Password)
+                .NotEmpty().WithMessage("Password cannot be empty.")
+                .MinimumLength(6).WithMessage("Password must be at least six characters long.");
         }
     }
 }

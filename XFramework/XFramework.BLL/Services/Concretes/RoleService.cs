@@ -41,7 +41,7 @@ namespace XFramework.BLL.Services.Concretes
             }
             var roles = user.UserRoles.Select(e => e.Role).ToList();
             var userRolesDto = _mapper.Map<List<RoleDto>>(roles);
-            return ResultViewModel<List<RoleDto>>.Success(userRolesDto, "Kullanıcı Rolleri:", 200);
+            return ResultViewModel<List<RoleDto>>.Success(userRolesDto, "User roles:", 200);
         }
         public async Task<ResultViewModel<string>> AddPageRole(PageRoleAddDto pageRoleAddDto)
         {
@@ -63,7 +63,7 @@ namespace XFramework.BLL.Services.Concretes
             {
                 _roleAuthorizationService.ClearUserPageCache(user.Id);
             }
-            return ResultViewModel<string>.Success("Başarılı", "Kullanıcı Sayfa Yetkisi başarıyla eklendi.", 200);
+            return ResultViewModel<string>.Success("User page permission added succesfully.", 200);
         }
         public async Task<ResultViewModel<string>> AddEndpointRole(EndpointRoleAddDto endpointRoleAddDto)
         {
@@ -80,7 +80,7 @@ namespace XFramework.BLL.Services.Concretes
             {
                 _roleAuthorizationService.ClearUserEndpointCache(user.Id);
             }
-            return ResultViewModel<string>.Success("Endpoint yetkisi başarıyla eklendi.", 200);
+            return ResultViewModel<string>.Success("User endpoint permission added succesfully.", 200);
         }
     }
 }

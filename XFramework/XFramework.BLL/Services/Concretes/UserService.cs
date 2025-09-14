@@ -24,13 +24,13 @@ namespace XFramework.BLL.Services.Concretes
             var validationResult = _addDtoValidator.Validate(userAddDto);
             if (!validationResult.IsValid)
             {
-                return ResultViewModel<UserAddDto>.Failure("Lütfen girdiğiniz bilgileri kontrol edin.", validationResult.Errors.Select(e => e.ErrorMessage).ToList(), 400);
+                return ResultViewModel<UserAddDto>.Failure("Please check credentials.", validationResult.Errors.Select(e => e.ErrorMessage).ToList(), 400);
             }
             var userEntity = _mapper.Map<User>(userAddDto);
             userEntity.Password = _hashingHelper.HashPassword(userEntity.Password);
             await _baseRepository.AddAsync(userEntity);
             await _unitOfWork.SaveChangesAsync();
-            return ResultViewModel<UserAddDto>.Success("Kullanıcı Başarıyla Eklendi", 201);
+            return ResultViewModel<UserAddDto>.Success("User added succesfully", 201);
         }
 
         public async Task<ResultViewModel<UserUpdateDto>> UpdateUser(UserUpdateDto userUpdateDto, int id)
@@ -38,12 +38,12 @@ namespace XFramework.BLL.Services.Concretes
             var validationResult = _updateDtoValidator.Validate(userUpdateDto);
             if (!validationResult.IsValid)
             {
-                return ResultViewModel<UserUpdateDto>.Failure("Lütfen Girdiğiniz bilgileri kontrol edin.", validationResult.Errors.Select(e => e.ErrorMessage).ToList());
+                return ResultViewModel<UserUpdateDto>.Failure("Please check credentials.", validationResult.Errors.Select(e => e.ErrorMessage).ToList());
             }
             var userEntity = await _baseRepository.GetAsync(new BaseRepoOptions<User> { Filter = e => e.Id == id });
             if (userEntity == null)
             {
-                return ResultViewModel<UserUpdateDto>.Failure("Kullanıcı Bulunamadı", null, 404);
+                return ResultViewModel<UserUpdateDto>.Failure("User not found.", null, 404);
             }
             _mapper.Map(userUpdateDto, userEntity);
             if (!string.IsNullOrEmpty(userUpdateDto.Password))
@@ -51,7 +51,7 @@ namespace XFramework.BLL.Services.Concretes
                 userEntity.Password = _hashingHelper.HashPassword(userUpdateDto.Password);
             }
             await _baseRepository.UpdateAsync(userEntity);
-            return ResultViewModel<UserUpdateDto>.Success("Kullanıcı Güncellendi", 200);
+            return ResultViewModel<UserUpdateDto>.Success("User updated succesfully", 200);
         }
 
     }

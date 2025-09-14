@@ -7,9 +7,9 @@ namespace XFramework.BLL.Utilities.ValidationRulers
     {
         public PageRoleAddDtoValidator()
         {
-            RuleFor(x => x.PageId).NotEmpty().WithMessage("Sayfa ID girilimelidir.");
+            RuleFor(x => x.PageId).NotEmpty().WithMessage("Page ID is required.");
 
-            RuleFor(x => x.RoleId).NotEmpty().WithMessage("Rol ID girilmelidir.");
+            RuleFor(x => x.RoleId).NotEmpty().WithMessage("Role ID is required.");
         }
     }
 }

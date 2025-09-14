@@ -7,7 +7,9 @@ namespace XFramework.BLL.Utilities.ValidationRulers
     {
         public RoleAddDtoValidator()
         {
-            RuleFor(e => e.Name).NotEmpty().WithMessage("Eklenecek rol adı boş olamaz.");
+            RuleFor(e => e.Name)
+                .NotEmpty().WithMessage("Role name to be added cannot be empty.");
+
         }
     }
 }
