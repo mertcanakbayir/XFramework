@@ -9,9 +9,9 @@ namespace XFramework.BLL.Mappings
     {
         public RoleProfile()
         {
-            CreateMap<Role, RoleDto>();
+            CreateMap<Role, RoleDto>().ReverseMap();
 
-            CreateMap<RoleAddDto, Role>();
+            CreateMap<RoleAddDto, Role>().ReverseMap();
         }
     }
 }
