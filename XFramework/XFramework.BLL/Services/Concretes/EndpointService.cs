@@ -26,11 +26,11 @@ namespace XFramework.BLL.Services.Concretes
             });
             if (userEndpoints == null)
             {
-                return ResultViewModel<List<EndpointDto>>.Failure("Kullanıcıya henüz endpoint yetkisi atanmamış", statusCode: 400);
+                return ResultViewModel<List<EndpointDto>>.Failure("No endpoint permissions assigned to this user.", statusCode: 400);
             }
             var endpoints = userEndpoints.UserRoles.Select(ur => ur.Role).SelectMany(er => er.EndpointRoles).Select(p => p.Endpoint);
             var endpointsDto = _mapper.Map<List<EndpointDto>>(endpoints);
-            return ResultViewModel<List<EndpointDto>>.Success(endpointsDto, "Kullanıcının yetkili olduğu endpointler:", 200);
+            return ResultViewModel<List<EndpointDto>>.Success(endpointsDto, "Endpoints that user has access:", 200);
         }
     }
 }

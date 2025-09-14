@@ -25,7 +25,6 @@ namespace XFramework.BLL.Services.Concretes
             {
                 return cachedPages;
             }
-            //var user = await _userRepository.GetAsync(e => e.Id == userId, includeFunc: query => query.Include(ur => ur.UserRoles).ThenInclude(r => r.Role).ThenInclude(pr => pr.PageRoles).ThenInclude(p => p.Page));
             var user = await _userRepository.GetAsync(new BaseRepoOptions<User>
             {
                 Filter = e => e.Id == userId,

@@ -6,13 +6,13 @@ using XFramework.Dtos.PageRole;
 namespace XFramework.BLL.Mappings
 {
 
-public class PageRoleProfile : Profile
-{
-     public PageRoleProfile()
+    public class PageRoleProfile : Profile
     {
-CreateMap<PageRole, PageRoleDto>().ReverseMap();
-CreateMap<PageRole, PageRoleAddDto>().ReverseMap();
-CreateMap<PageRole, PageRoleUpdateDto>().ReverseMap();
+        public PageRoleProfile()
+        {
+            CreateMap<PageRole, PageRoleDto>().ReverseMap();
+            CreateMap<PageRoleAddDto, PageRole>().ReverseMap();
+            CreateMap<PageRoleUpdateDto, PageRole>().ReverseMap();
+        }
     }
-}
 }

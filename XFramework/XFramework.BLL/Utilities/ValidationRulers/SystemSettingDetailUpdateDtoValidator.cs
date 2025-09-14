@@ -7,9 +7,15 @@ namespace XFramework.BLL.Utilities.ValidationRulers
     {
         public SystemSettingDetailUpdateDtoValidator()
         {
-            RuleFor(e => e.Key).NotEmpty().WithMessage("Sistem Detay Anahtarı Boş Olamaz");
-            RuleFor(e => e.Value).NotEmpty().WithMessage("Sistem Detay Değeri Boş Olamaz");
-            RuleFor(e => e.Type).NotEmpty().WithMessage("Sistem Detay Tip Değeri Boş Olamaz");
+            RuleFor(e => e.Key)
+                .NotEmpty().WithMessage("System detail key cannot be empty.");
+
+            RuleFor(e => e.Value)
+                .NotEmpty().WithMessage("System detail value cannot be empty.");
+
+            RuleFor(e => e.Type)
+                .NotEmpty().WithMessage("System detail type cannot be empty.");
+
         }
     }
 }

@@ -36,7 +36,7 @@ namespace XFramework.BLL.Services.Concretes
                 IncludeFunc = query => query.Include(e => e.SystemSettingDetails)
             });
             if (mailSettings == null)
-                throw new Exception("Mail ayarları bulunamadı");
+                throw new Exception("Mail settings not found.");
 
             var details = mailSettings.SystemSettingDetails.ToDictionary(d => d.Key, d => d.Value);
             var dto = _mapper.Map<MailSettingDto>(details);
@@ -46,7 +46,7 @@ namespace XFramework.BLL.Services.Concretes
             if (!validationResult.IsValid)
             {
                 var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
-                return ResultViewModel<string>.Failure("Mail ayarları doğrulama hatası!", errors, 400);
+                return ResultViewModel<string>.Failure("Mail setting validation error!", errors, 400);
             }
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(dto.SenderEmail, dto.SenderEmail));
@@ -60,27 +60,24 @@ namespace XFramework.BLL.Services.Concretes
             //await client.AuthenticateAsync(settings.SmtpUser, password);
             await client.SendAsync(message);
             await client.DisconnectAsync(true);
-            return ResultViewModel<string>.Success("Mail başarıyla gönderildi.", 200);
+            return ResultViewModel<string>.Success("Mail sended succesfully.", 200);
         }
 
         public async Task<ResultViewModel<string>> SendEmailAsync(string to, string subject, string body, int settingId, bool isQueue)
         {
             if (!isQueue)
-                throw new ArgumentException("isQueue true olmalı, SMTP için diğer overload kullanın.");
+                throw new ArgumentException("isQueue must be true; use the other overload for SMTP.");
 
             try
             {
                 await _MailQueueService.EnqueueMailAsync(to, subject, body);
-                return ResultViewModel<string>.Success("Mail RabbitMQ kuyruğuna eklendi.", 200);
+                return ResultViewModel<string>.Success("Mail added to RabbitMQ queue successfully.", 200);
             }
             catch (Exception ex)
             {
                 return ResultViewModel<string>.Failure(
-                    "Mail RabbitMQ kuyruğuna eklenirken hata oluştu: " + ex.Message, null, 500);
+                    "An error occurred while adding mail to the RabbitMQ queue:" + ex.Message, null, 500);
             }
         }
-
-
-
     }
 }

@@ -7,9 +7,13 @@ namespace XFramework.BLL.Utilities.ValidationRulers
     {
         public ResetPasswordDtoValidator()
         {
-            RuleFor(e => e.Email).NotEmpty().WithMessage("E-Mail boş olamaz.").EmailAddress().WithMessage("Mail adresi formatı doğru olmalıdır.");
+            RuleFor(e => e.Email)
+                .NotEmpty().WithMessage("Email cannot be empty.")
+                .EmailAddress().WithMessage("Email format must be valid.");
 
-            RuleFor(e => e.NewPassword).Equal(x => x.ConfirmPassword).WithMessage("Şifreler uyuşmalı");
+            RuleFor(e => e.NewPassword)
+                .Equal(x => x.ConfirmPassword).WithMessage("Passwords must match.");
+
         }
     }
 }

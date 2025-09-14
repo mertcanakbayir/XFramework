@@ -16,11 +16,11 @@ namespace XFramework.BLL.Services.Concretes
         where TDto : class
         where TEntity : BaseEntity
     {
-        private readonly IValidator<TAddDto> _addDtoValidator;
+        protected readonly IValidator<TAddDto> _addDtoValidator;
         protected readonly IMapper _mapper;
-        private readonly IBaseRepository<TEntity> _baseRepository;
+        protected readonly IBaseRepository<TEntity> _baseRepository;
         protected readonly IUnitOfWork _unitOfWork;
-        private readonly IValidator<TUpdateDto> _updateDtoValidator;
+        protected readonly IValidator<TUpdateDto> _updateDtoValidator;
         public BaseService(IValidator<TAddDto> addDtoValidator, IMapper mapper, IBaseRepository<TEntity> baseRepository, IUnitOfWork unitOfWork,
             IValidator<TUpdateDto> updateDtoValidator)
         {

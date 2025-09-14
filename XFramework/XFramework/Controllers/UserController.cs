@@ -19,7 +19,7 @@ namespace XFramework.Controllers
         [TypeFilter(typeof(ValidateFilter))]
         public async Task<PagedResultViewModel<UserDto>> GetAllUsers()
         {
-            return await _userService.GetUsers();
+            return await _userService.GetPagedAsync();
         }
 
         [HttpPost]
@@ -40,14 +40,14 @@ namespace XFramework.Controllers
         [TypeFilter(typeof(ValidateFilter))]
         public async Task<ResultViewModel<UserDto>> GetUserById(int userId)
         {
-            return await _userService.GetUserById(userId);
+            return await _userService.GetAsync(e => e.Id == userId);
         }
 
         [HttpDelete]
         [TypeFilter(typeof(ValidateFilter))]
         public async Task<ResultViewModel<string>> DeleteUserById(int userId)
         {
-            return await _userService.DeleteUserById(userId);
+            return await _userService.DeleteAsync(userId);
         }
     }
 }

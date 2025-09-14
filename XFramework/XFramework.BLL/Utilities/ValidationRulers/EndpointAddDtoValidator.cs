@@ -7,7 +7,7 @@ namespace XFramework.BLL.Utilities.ValidationRulers
     {
         public EndpointAddDtoValidator()
         {
-            RuleFor(e => e.HttpMethod).NotEmpty().WithMessage("Http method can not be null");
+            RuleFor(e => e.HttpMethod).NotEmpty().WithMessage("Http method is required.");
         }
     }
 }

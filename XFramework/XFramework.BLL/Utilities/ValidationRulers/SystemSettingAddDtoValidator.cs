@@ -7,8 +7,12 @@ namespace XFramework.BLL.Utilities.ValidationRulers
     {
         public SystemSettingAddDtoValidator()
         {
-            RuleFor(e => e.Name).NotEmpty().WithMessage("Sistem ayarı ismi girmek zorunludur.");
-            RuleFor(e => e.Description).NotEmpty().WithMessage("Sistem ayarı açıklaması zorunludur");
+            RuleFor(e => e.Name)
+                .NotEmpty().WithMessage("System setting name is required.");
+
+            RuleFor(e => e.Description)
+                .NotEmpty().WithMessage("System setting description is required.");
+
         }
     }
 }
