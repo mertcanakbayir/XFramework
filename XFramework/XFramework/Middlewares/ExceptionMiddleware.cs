@@ -15,10 +15,10 @@ namespace XFramework.API.Middlewares
 
         public async Task Invoke(HttpContext context)
         {
-            var ipAddress = context.Connection.RemoteIpAddress?.ToString() ?? "Bilinmiyor";
+            var ipAddress = context.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
 
-            var userId = context.User?.Identity.IsAuthenticated == true ? context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value : "Anonim";
-            var actionName = context.GetEndpoint()?.DisplayName ?? "Bilinmeyen Action";
+            var userId = context.User?.Identity.IsAuthenticated == true ? context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value : "Anonymous";
+            var actionName = context.GetEndpoint()?.DisplayName ?? "Unknown Action";
 
             LogContext.PushProperty("UserId", userId);
             LogContext.PushProperty("IPAddress", ipAddress);

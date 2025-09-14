@@ -3,16 +3,15 @@ using System.Text;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 using Serilog.Sinks.MSSqlServer;
-using XFM.BLL.Mappings;
 using XFM.BLL.Utilities.JWT;
 using XFramework.API.Extensions;
 using XFramework.API.Middlewares;
+using XFramework.BLL.Mappings;
 using XFramework.BLL.Utilities.ValidationRulers;
 using XFramework.DAL;
 
@@ -71,7 +70,7 @@ builder.Services.AddBusinessServices(builder.Configuration);
 builder.Services.AddValidatorsFromAssemblyContaining<PageAddDtoValidator>();
 builder.Services.AddValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
 
-builder.Services.AddAutoMapper(cfg => { }, typeof(UserProfile).Assembly);
+builder.Services.AddAutoMapper(cfg => { }, typeof(PageRoleProfile).Assembly);
 builder.Services.AddMemoryCache();
 builder.Services.AddControllers();
 

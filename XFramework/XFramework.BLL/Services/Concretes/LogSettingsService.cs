@@ -25,7 +25,7 @@ namespace XFramework.BLL.Services.Concretes
             });
             if (logSetting == null)
             {
-                return "hata";
+                return "Log Setting Switch Error";
             }
 
             logSetting.Value = isEnabled.ToString().ToLower();
@@ -34,7 +34,7 @@ namespace XFramework.BLL.Services.Concretes
             _loggingLevelSwitch.MinimumLevel = isEnabled
                ? LogEventLevel.Warning
                : LogEventLevel.Fatal + 1;
-            return "başarılı";
+            return "Log Setting Switch Success";
         }
     }
 }

@@ -2,14 +2,13 @@
 using XFramework.BLL.Services.Abstracts;
 using XFramework.BLL.Services.Concretes;
 using XFramework.BLL.Utilities.Hashing;
-using XFramework.Dtos;
 using XFramework.Helper.Helpers;
 using XFramework.Repository.Repositories.Abstract;
 using XFramework.Repository.Repositories.Concrete;
 
 namespace XFramework.API.Extensions
 {
-    public static class ServiceRegisterExtensions
+    public static class ServiceRegisterExtension
     {
         public static IServiceCollection AddBusinessServices(this IServiceCollection services, IConfiguration configuration)
         {

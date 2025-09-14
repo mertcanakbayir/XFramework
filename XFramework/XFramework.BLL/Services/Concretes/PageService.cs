@@ -35,7 +35,7 @@ namespace XFramework.BLL.Services.Concretes
                 .Distinct()
                 .ToList();
             var pagesDto = _mapper.Map<List<PageDto>>(pages);
-            return ResultViewModel<List<PageDto>>.Success(pagesDto, "Kullanıcının erişebildiği sayfalar:");
+            return ResultViewModel<List<PageDto>>.Success(pagesDto, "Pages the user have permission:");
         }
     }
 }

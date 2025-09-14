@@ -32,7 +32,7 @@ namespace XFramework.Repository.Repositories.Concrete
             var ent = await _xfmContext.FindAsync<TEntity>(id);
             if (ent == null)
             {
-                throw new KeyNotFoundException("Kayıt Bulunamadı.");
+                throw new KeyNotFoundException("Record not found.");
             }
             if (ent is BaseEntity baseEntity)
             {
@@ -46,7 +46,7 @@ namespace XFramework.Repository.Repositories.Concrete
             var entities = await _xfmContext.Set<TEntity>().Where(e => ids.Contains(e.Id)).ToListAsync();
             if (entities == null)
             {
-                throw new KeyNotFoundException("Kayıtlar Bulunamadı.");
+                throw new KeyNotFoundException("Records not found.");
             }
             foreach (var entity in entities)
             {
@@ -129,7 +129,7 @@ namespace XFramework.Repository.Repositories.Concrete
             var existingEntity = await _xfmContext.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(e => e.Id == entity.Id);
 
             if (existingEntity == null)
-                throw new KeyNotFoundException("Güncellenecek nesne veritabanında bulunamadı.");
+                throw new KeyNotFoundException("Entity not found in the database.");
 
             if (entity.Revision != null)
             {
@@ -138,7 +138,7 @@ namespace XFramework.Repository.Repositories.Concrete
 
                 if (currentRevision != incomingRevision)
                 {
-                    throw new InvalidOperationException("Kayıt başka kullanıcı tarafından güncellenmiş.");
+                    throw new InvalidOperationException("Record updated by another user.");
                 }
 
                 entity.Revision = currentRevision += 1;

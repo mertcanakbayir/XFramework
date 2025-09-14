@@ -7,7 +7,7 @@ namespace XFramework.BLL.Utilities.ValidationRulers
     {
         public PageAddDtoValidator()
         {
-            RuleFor(x => x.PageUrl).NotEmpty().WithMessage("Sayfa Adresi boş olamaz").Must(url => url.StartsWith('/')).WithMessage("Sayfa adresi '/' ile başlamalıdır.");
+            RuleFor(x => x.PageUrl).NotEmpty().WithMessage("Page address is required.").Must(url => url.StartsWith('/')).WithMessage("Page address must start with '/'.");
         }
     }
 }

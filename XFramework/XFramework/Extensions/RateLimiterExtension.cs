@@ -50,19 +50,19 @@ namespace XFramework.API.Extensions
                 {
                     var ipResolver = context.HttpContext.RequestServices.GetRequiredService<ClientIpResolver>();
                     var ipAddress = ipResolver.GetClientIp(context.HttpContext);
-                    var userId = context.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "anonymous";
-                    var actionName = context.HttpContext.GetEndpoint()?.DisplayName ?? "Bilinmeyen Action";
+                    var userId = context.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "Anonymous";
+                    var actionName = context.HttpContext.GetEndpoint()?.DisplayName ?? "Unknown Action";
 
                     Serilog.Context.LogContext.PushProperty("UserId", userId);
                     Serilog.Context.LogContext.PushProperty("Action", actionName);
                     Serilog.Context.LogContext.PushProperty("IPAddress", ipAddress);
                     {
-                        Serilog.Log.Warning("Rate limit ihlali: {UserId} / {IPAddress} / Action: {Action}", userId, ipAddress, actionName);
+                        Serilog.Log.Warning("Rate limit abuse: {UserId} / {IPAddress} / Action: {Action}", userId, ipAddress, actionName);
                     }
 
                     string message = userId == "anonymous"
-                        ? $"Aynı IP ({ipAddress}) üzerinden çok fazla istek yapıldı. Lütfen daha sonra deneyin."
-                        : $"Kullanıcı ({userId}) üzerinden çok fazla istek yapıldı. Lütfen daha sonra deneyin.";
+                        ? $"Too many requests from IP:({ipAddress}). Please try again later."
+                        : $"Too many requests from ({userId}). Please try again later.";
 
                     context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
                     await context.HttpContext.Response.WriteAsync(message, token);
