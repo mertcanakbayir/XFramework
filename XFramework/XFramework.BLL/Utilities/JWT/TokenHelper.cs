@@ -5,6 +5,7 @@ using Dtos;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using XFramework.Dtos;
+using XFramework.Dtos.User;
 
 namespace XFM.BLL.Utilities.JWT
 {

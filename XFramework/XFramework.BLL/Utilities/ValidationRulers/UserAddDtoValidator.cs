@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using XFramework.Dtos;
+using XFramework.Dtos.User;
 
 namespace XFramework.BLL.Utilities.ValidationRulers
 {

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using XFramework.BLL.Services.Concretes;
 using XFramework.Dtos;
+using XFramework.Dtos.User;
 using XFramework.Helper.ViewModels;
 namespace XFramework.Controllers
 {

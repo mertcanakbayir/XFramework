@@ -7,6 +7,7 @@ using XFramework.BLL.Services.Abstracts;
 using XFramework.BLL.Utilities.Hashing;
 using XFramework.DAL.Entities;
 using XFramework.Dtos;
+using XFramework.Dtos.User;
 using XFramework.Helper.ViewModels;
 using XFramework.Repository.Options;
 using XFramework.Repository.Repositories.Abstract;

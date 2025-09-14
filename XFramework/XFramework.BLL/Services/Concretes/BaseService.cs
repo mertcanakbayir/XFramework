@@ -45,6 +45,10 @@ namespace XFramework.BLL.Services.Concretes
 
         public async Task<ResultViewModel<string>> AddRangeAsync(List<TAddDto> dtos)
         {
+            if (dtos == null || !dtos.Any())
+            {
+                return ResultViewModel<string>.Failure("No data provided");
+            }
             foreach (var dto in dtos)
             {
                 var validationResult = _addDtoValidator.Validate(dto);
@@ -61,6 +65,10 @@ namespace XFramework.BLL.Services.Concretes
 
         public async Task<ResultViewModel<string>> DeleteAsync(int id)
         {
+            if (id <= 0)
+            {
+                return ResultViewModel<string>.Failure("Invalid id provided", errors: new List<string> { "Id must be greater than 0" });
+            }
             var entity = await _baseRepository.GetAsync(new BaseRepoOptions<TEntity>
             {
                 Filter = e => e.Id == id
@@ -76,6 +84,10 @@ namespace XFramework.BLL.Services.Concretes
 
         public async Task<ResultViewModel<string>> DeleteRangeAsync(List<int> ids)
         {
+            if (ids == null || !ids.Any())
+            {
+                return ResultViewModel<string>.Failure("No ids provided");
+            }
             var entities = await _baseRepository.GetAllAsync<TDto>(new BaseRepoOptions<TEntity>
             {
                 Filter = e => ids.Contains(e.Id)
@@ -159,6 +171,11 @@ namespace XFramework.BLL.Services.Concretes
 
         public async Task<ResultViewModel<string>> UpdateAsync(int id, TUpdateDto dto)
         {
+            if (id <= 0)
+            {
+                return ResultViewModel<string>.Failure("Invalid id provided",
+                    errors: new List<string> { "Id must be greater than 0" });
+            }
             var validationResult = _updateDtoValidator.Validate(dto);
             if (!validationResult.IsValid)
             {

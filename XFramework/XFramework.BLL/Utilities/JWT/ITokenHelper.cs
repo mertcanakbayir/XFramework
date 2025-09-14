@@ -1,5 +1,6 @@
 ﻿using Dtos;
 using XFramework.Dtos;
+using XFramework.Dtos.User;
 
 namespace XFM.BLL.Utilities.JWT
 {
