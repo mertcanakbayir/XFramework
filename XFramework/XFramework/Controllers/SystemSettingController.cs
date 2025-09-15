@@ -17,7 +17,7 @@ namespace XFramework.API.Controllers
         [HttpGet("all")]
         public async Task<ResultViewModel<List<SystemSettingDto>>> SystemSettings()
         {
-            return await _systemSettingService.GetAllAsync();
+            return await _systemSettingService.GetPagedAsync();
         }
 
         [HttpGet]

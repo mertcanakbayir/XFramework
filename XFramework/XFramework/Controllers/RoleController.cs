@@ -29,17 +29,5 @@ namespace XFramework.API.Controllers
         {
             return await _roleService.AddAsync(addRole);
         }
-
-        [HttpPost("addPageRole")]
-        public async Task<ResultViewModel<string>> AddPageRole(PageRoleAddDto pageRoleAddDto)
-        {
-            return await _roleService.AddPageRole(pageRoleAddDto);
-        }
-        [HttpPost("addEndpointRole")]
-        public async Task<ResultViewModel<string>> AddEndpointRole(EndpointRoleAddDto endpointRoleAddDto)
-        {
-            return await _roleService.AddEndpointRole(endpointRoleAddDto);
-        }
-
     }
 }

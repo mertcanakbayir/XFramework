@@ -23,7 +23,6 @@ namespace XFramework.DAL.Configurations
                      v => EnumConverter.CharToEnum<SystemSettingType>(v)
                  )
                  .HasMaxLength(6);
-
         }
     }
 }

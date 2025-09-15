@@ -6,7 +6,6 @@ using XFramework.DAL.Entities;
 using XFramework.Dtos.EndpointRole;
 using XFramework.Dtos.PageRole;
 using XFramework.Dtos.Role;
-using XFramework.Dtos.User;
 using XFramework.Helper.ViewModels;
 using XFramework.Repository.Options;
 using XFramework.Repository.Repositories.Abstract;
@@ -19,13 +18,17 @@ namespace XFramework.BLL.Services.Concretes
         private readonly RoleAuthorizationService _roleAuthorizationService;
         private readonly IBaseRepository<PageRole> _pageRoleRepository;
         private readonly IBaseRepository<EndpointRole> _endpointRoleRepository;
+        private readonly IValidator<PageRoleAddDto> _pageRoleAddDtoValidator;
+        private readonly IValidator<EndpointRoleAddDto> _endpointRoleAddDtoValidator;
         public RoleService(IValidator<RoleAddDto> addDtoValidator, IMapper mapper, IBaseRepository<Role> baseRepository, IUnitOfWork unitOfWork, IValidator<RoleUpdateDto> updateDtoValidator, IBaseRepository<User> userRepository, RoleAuthorizationService roleAuthorizationService,
-            IBaseRepository<EndpointRole> endpointRoleRepository, IBaseRepository<PageRole> pageRoleRepository) : base(addDtoValidator, mapper, baseRepository, unitOfWork, updateDtoValidator)
+            IBaseRepository<EndpointRole> endpointRoleRepository, IBaseRepository<PageRole> pageRoleRepository, IValidator<PageRoleAddDto> pageRoleAddDtoValidator, IValidator<EndpointRoleAddDto> endpointRoleAddDtoValidator) : base(addDtoValidator, mapper, baseRepository, unitOfWork, updateDtoValidator)
         {
             _userRepository = userRepository;
             _roleAuthorizationService = roleAuthorizationService;
             _pageRoleRepository = pageRoleRepository;
             _endpointRoleRepository = endpointRoleRepository;
+            _pageRoleAddDtoValidator = pageRoleAddDtoValidator;
+            _endpointRoleAddDtoValidator = endpointRoleAddDtoValidator;
         }
 
         public async Task<ResultViewModel<List<RoleDto>>> GetRolesByUser(int userId)
@@ -37,51 +40,11 @@ namespace XFramework.BLL.Services.Concretes
             });
             if (user == null || user.UserRoles == null || !user.UserRoles.Any())
             {
-                return ResultViewModel<List<RoleDto>>.Failure("Kullanıcıya henüz rol atanmamış", statusCode: 400);
+                return ResultViewModel<List<RoleDto>>.Failure("User has no roles", statusCode: 400);
             }
             var roles = user.UserRoles.Select(e => e.Role).ToList();
             var userRolesDto = _mapper.Map<List<RoleDto>>(roles);
             return ResultViewModel<List<RoleDto>>.Success(userRolesDto, "User roles:", 200);
-        }
-        //TODO: ENDPOINT ROLE & PAGE ROLE VALIDATIONS
-        public async Task<ResultViewModel<string>> AddPageRole(PageRoleAddDto pageRoleAddDto)
-        {
-            //var validationResult = _pageRoleAddDtoValidator.Validate(pageRoleAddDto);
-            //if (!validationResult.IsValid)
-            //{
-            //    var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
-            //    return ResultViewModel<string>.Failure("Rol eklenirken hata", errors, 400);
-            //}
-            var pageRole = _mapper.Map<PageRole>(pageRoleAddDto);
-            await _pageRoleRepository.AddAsync(pageRole);
-            await _unitOfWork.SaveChangesAsync();
-            var usersWithPageRole = await _userRepository.GetAllAsync<UserDto>(new BaseRepoOptions<User>
-            {
-                Filter = q => q.UserRoles.Any(r => r.RoleId == pageRoleAddDto.RoleId),
-                IncludeFunc = query => query.Include(u => u.UserRoles)
-            });
-            foreach (var user in usersWithPageRole)
-            {
-                _roleAuthorizationService.ClearUserPageCache(user.Id);
-            }
-            return ResultViewModel<string>.Success("User page permission added succesfully.", 200);
-        }
-        public async Task<ResultViewModel<string>> AddEndpointRole(EndpointRoleAddDto endpointRoleAddDto)
-        {
-            var endpointRole = _mapper.Map<EndpointRole>(endpointRoleAddDto);
-            await _endpointRoleRepository.AddAsync(endpointRole);
-            await _unitOfWork.SaveChangesAsync();
-            var usersWithEndpointRole = await _userRepository.GetAllAsync<UserDto>(
-                new BaseRepoOptions<User>
-                {
-                    Filter = u => u.UserRoles.Any(ur => ur.RoleId == endpointRoleAddDto.RoleId),
-                    IncludeFunc = query => query.Include(u => u.UserRoles)
-                });
-            foreach (var user in usersWithEndpointRole)
-            {
-                _roleAuthorizationService.ClearUserEndpointCache(user.Id);
-            }
-            return ResultViewModel<string>.Success("User endpoint permission added succesfully.", 200);
         }
     }
 }

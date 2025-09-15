@@ -12,7 +12,6 @@ namespace XFramework.DAL
         {
             _currentUserProvider = currentUserProvider;
         }
-
         public DbSet<User> Users { get; set; }
 
         public DbSet<Role> Roles { get; set; }
