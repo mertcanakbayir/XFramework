@@ -1,12 +1,13 @@
 ﻿using Serilog.Core;
 using Serilog.Events;
+using XFramework.BLL.Services.Abstracts;
 using XFramework.DAL.Entities;
 using XFramework.Repository.Options;
 using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
 {
-    public class LogSettingsService
+    public class LogSettingsService : IRegister
     {
         private LoggingLevelSwitch _loggingLevelSwitch;
         private readonly IBaseRepository<SystemSettingDetail> _systemSettingDetailRepository;

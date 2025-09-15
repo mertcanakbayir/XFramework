@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using XFramework.BLL.Services.Abstracts;
 using XFramework.BLL.Utilities.Hashing;
 using XFramework.DAL.Entities;
 using XFramework.Dtos.User;
@@ -9,7 +10,7 @@ using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
 {
-    public class UserService : BaseService<User, UserDto, UserAddDto, UserUpdateDto>
+    public class UserService : BaseService<User, UserDto, UserAddDto, UserUpdateDto>, IRegister
     {
 
         private readonly IHashingHelper _hashingHelper;

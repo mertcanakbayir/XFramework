@@ -8,6 +8,10 @@ namespace XFramework.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<EndpointRole> builder)
         {
+            //builder.HasKey(er => er.Id);
+            //builder.HasIndex(er => new { er.RoleId, er.EndpointId })
+            //    .IsUnique();
+
             builder.HasKey(er => new {er.RoleId,er.EndpointId });
 
             builder.HasOne(er => er.Endpoint)

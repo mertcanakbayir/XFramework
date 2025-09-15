@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using Dtos;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using XFramework.BLL.Services.Abstracts;
 using XFramework.DAL.Entities;
-using XFramework.Dtos;
 using XFramework.Dtos.EndpointRole;
 using XFramework.Dtos.PageRole;
 using XFramework.Dtos.Role;
@@ -14,7 +13,7 @@ using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
 {
-    public class RoleService : BaseService<Role, RoleDto, RoleAddDto, RoleUpdateDto>
+    public class RoleService : BaseService<Role, RoleDto, RoleAddDto, RoleUpdateDto>, IRegister
     {
         private readonly IBaseRepository<User> _userRepository;
         private readonly RoleAuthorizationService _roleAuthorizationService;
@@ -44,6 +43,7 @@ namespace XFramework.BLL.Services.Concretes
             var userRolesDto = _mapper.Map<List<RoleDto>>(roles);
             return ResultViewModel<List<RoleDto>>.Success(userRolesDto, "User roles:", 200);
         }
+        //TODO: ENDPOINT ROLE & PAGE ROLE VALIDATIONS
         public async Task<ResultViewModel<string>> AddPageRole(PageRoleAddDto pageRoleAddDto)
         {
             //var validationResult = _pageRoleAddDtoValidator.Validate(pageRoleAddDto);
