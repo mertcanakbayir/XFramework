@@ -8,9 +8,8 @@ namespace XFramework.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<UserRole> builder)
         {
-            //builder.HasKey(ur => ur.Id);
-            //builder.HasIndex(ur => new { ur.UserId, ur.RoleId }).IsUnique();
-            builder.HasKey(ur => new { ur.UserId, ur.RoleId });
+            builder.HasKey(ur => ur.Id);
+            builder.HasIndex(ur => new { ur.UserId, ur.RoleId }).IsUnique();
 
             builder.HasOne(ur => ur.User).WithMany(u => u.UserRoles).HasForeignKey(ur => ur.UserId);
 

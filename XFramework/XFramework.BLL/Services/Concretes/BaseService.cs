@@ -139,7 +139,7 @@ namespace XFramework.BLL.Services.Concretes
                 return ResultViewModel<TDto>.Failure("No records found");
             }
             var dto = _mapper.Map<TDto>(entity);
-            return ResultViewModel<TDto>.Success("Record:");
+            return ResultViewModel<TDto>.Success(dto,"Record:");
         }
         public async Task<PagedResultViewModel<TDto>> GetPagedAsync(Expression<Func<TDto, bool>>? filter = null, int? pageNumber = 1, int? pageSize = 10)
         {

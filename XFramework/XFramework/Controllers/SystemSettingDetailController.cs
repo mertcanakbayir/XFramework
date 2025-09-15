@@ -16,7 +16,6 @@ namespace XFramework.API.Controllers
             _systemSettingDetailService = systemSettingDetailService;
         }
 
-        [HttpGet("all")]
         public async Task<ResultViewModel<List<SystemSettingDetailDto>>> GetSystemSettingDetailById(int systemSettingDetailId)
         {
             return await _systemSettingDetailService.GetAllAsync(e => e.Id == systemSettingDetailId);
