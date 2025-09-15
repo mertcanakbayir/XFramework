@@ -1,6 +1,6 @@
 ﻿using Dtos;
 using Microsoft.AspNetCore.Mvc;
-using XFramework.BLL.Services.Abstracts;
+using XFramework.BLL.Services.Concretes;
 using XFramework.Dtos;
 using XFramework.Helper.ViewModels;
 
@@ -10,8 +10,8 @@ namespace XFramework.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthService _authService;
-        public AuthController(IAuthService authService)
+        private readonly AuthService _authService;
+        public AuthController(AuthService authService)
         {
             _authService = authService;
         }

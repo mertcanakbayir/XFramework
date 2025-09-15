@@ -41,7 +41,7 @@ namespace XFramework.API.Controllers
         [HttpGet("all")]
         public async Task<ResultViewModel<List<PageDto>>> GetPages()
         {
-            return await _pageService.GetAllAsync();
+            return await _pageService.GetPagedAsync();
         }
 
         [HttpPut]

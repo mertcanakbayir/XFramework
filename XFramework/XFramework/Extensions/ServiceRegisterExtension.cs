@@ -1,4 +1,5 @@
-﻿using XFM.BLL.Utilities.JWT;
+﻿using System.Reflection;
+using XFM.BLL.Utilities.JWT;
 using XFramework.BLL.Services.Abstracts;
 using XFramework.BLL.Services.Concretes;
 using XFramework.BLL.Utilities.Hashing;
@@ -12,21 +13,14 @@ namespace XFramework.API.Extensions
     {
         public static IServiceCollection AddBusinessServices(this IServiceCollection services, IConfiguration configuration)
         {
+            var bllAssembly = typeof(UserService).Assembly;
+
             // Repositories
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             // Business Services
-
-            services.AddScoped<UserService>();
-            services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<RoleService>();
-            services.AddScoped<EndpointService>();
-            services.AddScoped<SystemSettingService>();
-            services.AddScoped<SystemSettingDetailService>();
-            services.AddScoped<LogSettingsService>();
-            services.AddScoped<RoleAuthorizationService>();
-            services.AddScoped<PageService>();
+            RegisterServices(services, bllAssembly);
 
             // Utilities and Helpers
             services.AddScoped<IHashingHelper, HashingHelper>();
@@ -46,6 +40,16 @@ namespace XFramework.API.Extensions
                 return new MailQueueService(host, user, pass);
             });
             return services;
+        }
+
+        private static void RegisterServices(IServiceCollection services, Assembly assembly)
+        {
+            var types = assembly.GetTypes().Where(t => t.IsClass && !t.IsAbstract && typeof(IRegister).IsAssignableFrom(t));
+            foreach (var type in types)
+            {
+                services.AddScoped(type);
+            }
+
         }
     }
 }

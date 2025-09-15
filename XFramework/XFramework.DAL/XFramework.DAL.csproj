@@ -23,4 +23,8 @@
     <ProjectReference Include="..\XFramework.Helper\XFramework.Helper.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

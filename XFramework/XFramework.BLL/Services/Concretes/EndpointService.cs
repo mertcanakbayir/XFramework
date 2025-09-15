@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using XFramework.BLL.Services.Abstracts;
 using XFramework.DAL.Entities;
 using XFramework.Dtos.Endpoint;
 using XFramework.Helper.ViewModels;
@@ -8,7 +9,7 @@ using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
 {
-    public class EndpointService : BaseService<Endpoint, EndpointDto, EndpointAddDto, EndpontUpdateDto>
+    public class EndpointService : BaseService<Endpoint, EndpointDto, EndpointAddDto, EndpontUpdateDto>, IRegister
     {
         private readonly IBaseRepository<User> _userRepository;
         public EndpointService(IValidator<EndpointAddDto> addDtoValidator, IMapper mapper, IBaseRepository<Endpoint> baseRepository, IUnitOfWork unitOfWork, IValidator<EndpontUpdateDto> updateDtoValidator, IBaseRepository<User> userRepository) : base(addDtoValidator, mapper, baseRepository, unitOfWork, updateDtoValidator)

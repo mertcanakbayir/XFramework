@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using XFramework.BLL.Services.Abstracts;
 using XFramework.DAL.Entities;
 using XFramework.Repository.Options;
 using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
 {
-    public class RoleAuthorizationService
+    public class RoleAuthorizationService : IRegister
     {
         private readonly IBaseRepository<User> _userRepository;
         private readonly IMemoryCache _memoryCache;
@@ -53,7 +54,6 @@ namespace XFramework.BLL.Services.Concretes
             {
                 return cachedEndpoints;
             }
-            //var user = await _userRepository.GetAsync(u => u.Id == userId, includeFunc: query => query.Include(ur => ur.UserRoles).ThenInclude(r => r.Role).ThenInclude(er => er.EndpointRoles).ThenInclude(e => e.Endpoint));
             var user = await _userRepository.GetAsync(new BaseRepoOptions<User>
             {
                 Filter = u => u.Id == userId,
