@@ -1,4 +1,4 @@
-﻿namespace DtoMapperGenerator
+﻿namespace XFramework.Generator
 {
     public class MapperGenerator
     {
@@ -13,7 +13,7 @@
                 var tAddDtoMapping = string.Join(Environment.NewLine, entities.Select(e => $"CreateMap<{e.Name}, {e.Name}AddDto>().ReverseMap();"));
                 var tUpdateDtoMapping = string.Join(Environment.NewLine, entities.Select(e => $"CreateMap<{e.Name}, {e.Name}UpdateDto>().ReverseMap();"));
 
-                var profile = $@"
+                var validation = $@"
 using AutoMapper;
 using XFramework.DAL.Entities;
 using XFramework.Dtos.{e.Name};
@@ -32,7 +32,7 @@ public class {e.Name}Profile : Profile
 }}
 }}
 ";
-                File.WriteAllText(Path.Combine(outputPath, $"{e.Name}Profile.cs"), profile);
+                File.WriteAllText(Path.Combine(outputPath, $"{e.Name}Profile.cs"), validation);
             }
 
         }

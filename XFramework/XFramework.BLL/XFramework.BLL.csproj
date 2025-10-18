@@ -37,6 +37,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Dtos\XFramework.Dtos.csproj" />
 		<ProjectReference Include="..\XFramework.DAL\XFramework.DAL.csproj" />
+		<ProjectReference Include="..\XFramework.Dtos\XFramework.Dtos.csproj" />
 		<ProjectReference Include="..\XFramework.Repository\XFramework.Repository.csproj" />
 	</ItemGroup>
 
