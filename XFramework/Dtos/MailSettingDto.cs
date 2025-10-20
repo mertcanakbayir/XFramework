@@ -8,7 +8,6 @@
         public string EncryptedPassword { get; set; } = string.Empty;
         public bool EnableSsl { get; set; } = false;
         public string SenderEmail { get; set; } = string.Empty;
-
         public bool IsSmtp { get; set; } = true;
     }
 }

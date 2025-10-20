@@ -1,4 +1,4 @@
-ï»¿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using XFramework.DAL.Entities;
 using XFramework.Helper.Enums;
 using XFramework.Helper.Helpers;
@@ -14,19 +14,16 @@ namespace XFramework.DAL
             _currentUserProvider = currentUserProvider;
         }
 
+        // Built-in framework entities
         public DbSet<User> Users { get; set; }
-
         public DbSet<Role> Roles { get; set; }
-
         public DbSet<Endpoint> Endpoints { get; set; }
-
         public DbSet<EndpointRole> EndpointRoles { get; set; }
-
         public DbSet<PageRole> PageRoles { get; set; }
-
         public DbSet<UserRole> UserRoles { get; set; }
-
         public DbSet<Page> Pages { get; set; }
+
+        //Generated entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -96,28 +93,28 @@ namespace XFramework.DAL
     {
         Id = 1,
         Name = "Ayar 1",
-        Description = "Ayar denemesi iÃ§in aÃ§Ä±klama 1",
+        Description = "Ayar denemesi için açýklama 1",
         IsActive = true
     },
     new SystemSetting
     {
         Id = 2,
         Name = "Ayar 2",
-        Description = "Ayar denemesi iÃ§in aÃ§Ä±klama 2",
+        Description = "Ayar denemesi için açýklama 2",
         IsActive = true
     },
     new SystemSetting
     {
         Id = 3,
-        Name = "Mail AyarlarÄ±",
-        Description = "SMTP mail gÃ¶nderim ayarlarÄ±",
+        Name = "Mail Ayarlarý",
+        Description = "SMTP mail gönderim ayarlarý",
         IsActive = true
     },
     new SystemSetting
     {
         Id = 4,
-        Name = "Log AyarlarÄ±",
-        Description = "Sistem Log AyarlarÄ±"
+        Name = "Log Ayarlarý",
+        Description = "Sistem Log Ayarlarý"
     }
 );
 
