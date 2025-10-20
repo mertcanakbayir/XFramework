@@ -8,7 +8,8 @@ namespace XFramework.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<PageRole> builder)
         {
-            builder.HasKey(pr => new {pr.PageId, pr.RoleId});
+            builder.HasKey(pr => pr.Id);
+            builder.HasIndex(pr => new { pr.PageId, pr.RoleId }).IsUnique();
 
             builder.HasOne(pr => pr.Page)
                 .WithMany(p => p.PageRoles)

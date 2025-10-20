@@ -14,7 +14,7 @@ using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
 {
-    public class AuthService : IAuthService
+    public class AuthService : IRegister
     {
 
         private readonly IHashingHelper _hashService;

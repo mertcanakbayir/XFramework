@@ -1,5 +1,6 @@
 
 using AutoMapper;
+using Dtos;
 using XFramework.DAL.Entities;
 using XFramework.Dtos.User;
 
@@ -13,18 +14,8 @@ namespace XFramework.BLL.Mappings
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<User, UserAddDto>().ReverseMap();
             CreateMap<User, UserUpdateDto>().ReverseMap();
+            CreateMap<RegisterDto, User>().ReverseMap();
 
-            CreateMap<User, UserDto>();
-
-            CreateMap<RegisterDto, User>()
-             .ForMember(dest => dest.Password, opt => opt.Ignore())
-             .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
-             .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
-             .ForMember(dest => dest.IsActive, opt => opt.Ignore());
-
-            CreateMap<UserAddDto, User>();
-
-            CreateMap<UserUpdateDto, User>();
         }
     }
 }

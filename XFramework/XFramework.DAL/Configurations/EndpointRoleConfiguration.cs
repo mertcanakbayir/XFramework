@@ -8,14 +8,16 @@ namespace XFramework.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<EndpointRole> builder)
         {
-            builder.HasKey(er => new {er.RoleId,er.EndpointId });
+            builder.HasKey(er => er.Id);
+            builder.HasIndex(er => new { er.RoleId, er.EndpointId })
+                .IsUnique();
 
             builder.HasOne(er => er.Endpoint)
                .WithMany(e => e.EndpointRoles)
                .HasForeignKey(e => e.EndpointId);
 
             builder.HasOne(er => er.Role)
-               .WithMany(r=>r.EndpointRoles)
+               .WithMany(r => r.EndpointRoles)
                .HasForeignKey(er => er.RoleId);
         }
     }

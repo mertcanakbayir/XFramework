@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using XFramework.BLL.Services.Abstracts;
 using XFramework.DAL.Entities;
 using XFramework.Dtos.Page;
 using XFramework.Helper.ViewModels;
@@ -9,7 +10,7 @@ using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
 {
-    public class PageService : BaseService<Page, PageDto, PageAddDto, PageUpdateDto>
+    public class PageService : BaseService<Page, PageDto, PageAddDto, PageUpdateDto>, IRegister
     {
         private readonly IBaseRepository<User> _userRepository;
 
