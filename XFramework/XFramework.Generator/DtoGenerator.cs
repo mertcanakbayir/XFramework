@@ -1,15 +1,14 @@
 ﻿using System.Reflection;
 
-namespace DtoMapperGenerator
+namespace XFramework.Generator
 {
     public class DtoGenerator
     {
-
         private readonly HashSet<string> _auditFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
           "CreatedAt","CreatedBy","UpdatedAt","UpdatedBy","IsActive","DeletedBy","DeletedAt","Revision"
         };
-        public void Generate(Type entity, string outputPath)
+        public IEnumerable<string> Generate(Type entity, string outputPath)
         {
             var folderPath = Path.Combine(outputPath, entity.Name);
 
@@ -24,16 +23,20 @@ namespace DtoMapperGenerator
             .Where(p => p.PropertyType.Namespace != "XFramework.DAL.Entities")
             .ToList();
 
+            var dtos = new List<string>();
 
             var commonProps = props.Where(p => !_auditFields.Contains(p.Name)).ToList();
-
+            dtos.Add(entity.Name + "Dto");
             WriteDto(folderPath, entity.Name + "Dto", commonProps, entity.Name);
 
             var addProps = commonProps
               .Where(p => !string.Equals(p.Name, "Id", StringComparison.OrdinalIgnoreCase))
               .ToList();
+            dtos.Add(entity.Name + "AddDto");
             WriteDto(folderPath, entity.Name + "AddDto", addProps, entity.Name);
-            var updateProps = commonProps.ToList();
+
+            var updateProps = commonProps.Where(p => !string.Equals(p.Name, "Id", StringComparison.OrdinalIgnoreCase)).ToList();
+
             var revisionProperty = entity.GetProperties()
                 .FirstOrDefault(p => string.Equals(p.Name, "Revision", StringComparison.OrdinalIgnoreCase));
 
@@ -41,12 +44,10 @@ namespace DtoMapperGenerator
             {
                 updateProps.Add(revisionProperty);
             }
+            dtos.Add(entity.Name + "UpdateDto");
             WriteDto(folderPath, entity.Name + "UpdateDto", updateProps, entity.Name);
-
+            return dtos;
         }
-
-
-
         private void WriteDto(string folderPath, string dtoName, List<PropertyInfo> props, string entityName)
         {
             var properties = string.Join(Environment.NewLine,
@@ -61,6 +62,7 @@ namespace XFramework.Dtos.{entityName}
     }}
 }}";
             File.WriteAllText(Path.Combine(folderPath, $"{dtoName}.cs"), dto);
+
         }
 
         private string GetTypeName(Type type)
@@ -79,4 +81,3 @@ namespace XFramework.Dtos.{entityName}
         }
     }
 }
-
