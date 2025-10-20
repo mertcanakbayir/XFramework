@@ -8,7 +8,7 @@ namespace XFramework.DAL
     {
         private readonly CurrentUserProvider _currentUserProvider;
         public XFMContext(DbContextOptions<XFMContext> options, CurrentUserProvider currentUserProvider)
-       : base(options)
+        : base(options)
         {
             _currentUserProvider = currentUserProvider;
         }
