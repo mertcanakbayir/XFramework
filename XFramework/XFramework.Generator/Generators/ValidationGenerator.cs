@@ -1,10 +1,11 @@
-﻿namespace XFramework.Generator
+﻿namespace XFramework.Generator.Generators
 {
     public class ValidationGenerator
     {
         public void Generate(Type entity, IEnumerable<string> dtoNames, string outputPath)
         {
-            Directory.CreateDirectory(outputPath);
+            var entityFolderPath = Path.Combine(outputPath, entity.Name);
+            Directory.CreateDirectory(entityFolderPath);
 
             foreach (var dtoName in dtoNames)
             {
@@ -29,8 +30,11 @@ namespace XFramework.BLL.Utilities.ValidationRulers
     }}
 }}
 ";
-                    var filePath = Path.Combine(outputPath, $"{dtoName}Validator.cs");
+
+                    var filePath = Path.Combine(entityFolderPath, $"{dtoName}Validator.cs");
                     File.WriteAllText(filePath, validator);
+                    Console.WriteLine($"✓ {dtoName}Validator created: {entity.Name}/{dtoName}Validator.cs");
+
                 }
             }
         }

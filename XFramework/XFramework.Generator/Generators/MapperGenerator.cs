@@ -1,4 +1,4 @@
-﻿namespace XFramework.Generator
+﻿namespace XFramework.Generator.Generators
 {
     public class MapperGenerator
     {
@@ -33,6 +33,7 @@ public class {e.Name}Profile : Profile
 }}
 ";
                 File.WriteAllText(Path.Combine(outputPath, $"{e.Name}Profile.cs"), validation);
+                Console.WriteLine($"✓ Mapper created.");
             }
 
         }

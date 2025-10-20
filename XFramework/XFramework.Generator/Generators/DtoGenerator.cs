@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace XFramework.Generator
+namespace XFramework.Generator.Generators
 {
     public class DtoGenerator
     {

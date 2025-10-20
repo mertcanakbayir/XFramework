@@ -1,4 +1,4 @@
-﻿namespace XFramework.Generator
+﻿namespace XFramework.Generator.Generators
 {
     public class ControllerGenerator
     {
@@ -32,20 +32,26 @@ namespace XFramework.API.Controllers
             return await _{entity.Name}Service.AddAsync({entity.Name}AddDto);
         }}
 
-        [HttpGet(""all"")]
-        [TypeFilter(typeof(ValidateFilter))]
+        [HttpGet]
         public async Task<ResultViewModel<List<{entity.Name}Dto>>> Get{entity.Name}s()
         {{
             return await _{entity.Name}Service.GetPagedAsync();
         }}
 
-        [HttpPut]
+        [HttpGet(""{{id}}"")]
+        public async Task<ResultViewModel<{entity.Name}Dto>> GetById(int id)
+        {{
+            return await _{entity.Name}Service.GetAsync(id);
+        }}
+        [HttpPut(""{{id}}"")]
+        [TypeFilter(typeof(ValidateFilter))]
         public async Task<ResultViewModel<string>> Update{entity.Name}(int id, {entity.Name}UpdateDto {entity.Name}UpdateDto)
         {{
             return await _{entity.Name}Service.UpdateAsync(id, {entity.Name}UpdateDto);
         }}
 
-        [HttpDelete]
+        [HttpDelete(""{{id}}"")]
+        [TypeFilter(typeof(ValidateFilter))]
         public async Task<ResultViewModel<string>> Delete{entity.Name}(int id)
         {{
             return await _{entity.Name}Service.DeleteAsync(id);
@@ -54,7 +60,7 @@ namespace XFramework.API.Controllers
 }}
 ";
             File.WriteAllText(Path.Combine(outputPath, $"{entity.Name}Controller.cs"), controller);
-
+            Console.WriteLine($"✓ {entity.Name}Controller created.");
         }
     }
 }

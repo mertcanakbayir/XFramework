@@ -1,6 +1,6 @@
 ﻿using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace XFramework.Generator
+namespace XFramework.Generator.Generators
 {
     public class ServiceGenerator
     {
@@ -31,6 +31,7 @@ namespace XFramework.BLL.Services.Concretes
 }}
 ";
                 File.WriteAllText(Path.Combine(outputPath, $"{entity.Name}Service.cs"), service);
+                Console.WriteLine($"✓ {entity.Name}Service created.");
             }
         }
     }

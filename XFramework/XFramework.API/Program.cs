@@ -16,14 +16,15 @@ using XFramework.BLL.Utilities.ValidationRulers;
 using XFramework.DAL;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? new[] { "http://localhost:4200" };
+var allowCredentials = builder.Configuration.GetValue<bool>("Cors:AllowCredentials", false);
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularClient",
         policy =>
         {
-            policy.WithOrigins("http://localhost:4200")
+            policy.WithOrigins(allowedOrigins)
                   .AllowAnyHeader()
                   .AllowAnyMethod()
                   .AllowCredentials();

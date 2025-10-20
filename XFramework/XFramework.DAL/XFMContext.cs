@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using XFramework.DAL.Entities;
 using XFramework.Helper.Helpers;
 
@@ -8,23 +8,21 @@ namespace XFramework.DAL
     {
         private readonly CurrentUserProvider _currentUserProvider;
         public XFMContext(DbContextOptions<XFMContext> options, CurrentUserProvider currentUserProvider)
-       : base(options)
+        : base(options)
         {
             _currentUserProvider = currentUserProvider;
         }
+
+        // Built-in framework entities
         public DbSet<User> Users { get; set; }
-
         public DbSet<Role> Roles { get; set; }
-
         public DbSet<Endpoint> Endpoints { get; set; }
-
         public DbSet<EndpointRole> EndpointRoles { get; set; }
-
         public DbSet<PageRole> PageRoles { get; set; }
-
         public DbSet<UserRole> UserRoles { get; set; }
-
         public DbSet<Page> Pages { get; set; }
+
+        //Generated entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
