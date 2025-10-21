@@ -1,15 +1,9 @@
 ﻿using AutoMapper;
 using MailKit.Net.Smtp;
-using Microsoft.EntityFrameworkCore;
 using MimeKit;
-using XFramework.BLL.Utilities.ValidationRulers;
 using XFramework.DAL;
-using XFramework.DAL.Entities;
-using XFramework.Dtos;
 using XFramework.Helper.Helpers;
 using XFramework.Helper.ViewModels;
-using XFramework.Repository.Options;
-using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
 {
@@ -17,46 +11,32 @@ namespace XFramework.BLL.Services.Concretes
     {
         private readonly EncryptionHelper _crypto;
         private readonly IMapper _mapper;
-        private readonly IBaseRepository<SystemSetting> _systemSettingRepository;
         private readonly MailQueueService _MailQueueService;
+        private readonly SystemSettingDetailService _systemSettingDetailService;
 
-        public MailService(XFMContext context, EncryptionHelper crypto, IBaseRepository<SystemSetting> systemSettingRepository, IMapper mapper, MailQueueService mailQueueService)
+        public MailService(XFMContext context, EncryptionHelper crypto, IMapper mapper, MailQueueService mailQueueService, SystemSettingDetailService systemSettingDetailService)
         {
-            _systemSettingRepository = systemSettingRepository;
             _crypto = crypto;
             _mapper = mapper;
             _MailQueueService = mailQueueService;
+            _systemSettingDetailService = systemSettingDetailService;
         }
 
         public async Task<ResultViewModel<string>> SendEmailAsync(string to, string subject, string body, int settingId)
         {
-            var mailSettings = await _systemSettingRepository.GetAsync(new BaseRepoOptions<SystemSetting>
-            {
-                Filter = e => e.Id == settingId,
-                IncludeFunc = query => query.Include(e => e.SystemSettingDetails)
-            });
+            var mailSettings = await _systemSettingDetailService.GetMailOptionsAsync(settingId);
             if (mailSettings == null)
                 throw new Exception("Mail settings not found.");
 
-            var details = mailSettings.SystemSettingDetails.ToDictionary(d => d.Key, d => d.Value);
-            var dto = _mapper.Map<MailSettingDto>(details);
-            var validator = new MailSettingsDtoValidator();
-            var validationResult = validator.Validate(dto);
-
-            if (!validationResult.IsValid)
-            {
-                var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
-                return ResultViewModel<string>.Failure("Mail setting validation error!", errors, 400);
-            }
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress(dto.SenderEmail, dto.SenderEmail));
+            message.From.Add(new MailboxAddress(mailSettings.SenderEmail, mailSettings.SenderEmail));
             message.To.Add(MailboxAddress.Parse(to));
             message.Subject = subject;
 
             message.Body = new TextPart("html") { Text = body };
 
             using var client = new SmtpClient();
-            await client.ConnectAsync(dto.SmtpHost, dto.SmtpPort, dto.EnableSsl);
+            await client.ConnectAsync(mailSettings.SmtpHost, mailSettings.SmtpPort, mailSettings.EnableSsl);
             //await client.AuthenticateAsync(settings.SmtpUser, password);
             await client.SendAsync(message);
             await client.DisconnectAsync(true);
