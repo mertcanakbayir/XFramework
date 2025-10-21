@@ -8,11 +8,11 @@ using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 using Serilog.Sinks.MSSqlServer;
-using XFM.BLL.Utilities.JWT;
 using XFramework.API.Extensions;
 using XFramework.API.Middlewares;
 using XFramework.BLL.Mappings;
 using XFramework.BLL.Utilities.ValidationRulers;
+using XFramework.Configuration;
 using XFramework.DAL;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,16 +31,9 @@ builder.Services.AddCors(options =>
         });
 });
 
-var jwtSettings = new JwtSettings();
-
-builder.Services.Configure<JwtSettings>(options =>
-{
-    options.Key = jwtSettings.Key;
-    options.Issuer = jwtSettings.Issuer;
-    options.Audience = jwtSettings.Audience;
-    options.ExpiresInMinutes = jwtSettings.ExpiresInMinutes;
-});
-
+var jwtSection = builder.Configuration.GetSection("Jwt");
+var jwtOptions = jwtSection.Get<JwtOptions>();
+builder.Services.Configure<JwtOptions>(jwtSection);
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -56,9 +49,9 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtSettings.Issuer,
-        ValidAudience = jwtSettings.Audience,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
+        ValidIssuer = jwtOptions.Issuer,
+        ValidAudience = jwtOptions.Audience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key ?? "")),
         ClockSkew = TimeSpan.Zero
     };
 });
@@ -115,6 +108,8 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 builder.Services.AddCustomRateLimiter();
 builder.Host.UseSerilog();
+
+builder.Services.Configure<CacheOptions>(builder.Configuration.GetSection("Cache"));
 
 var app = builder.Build();
 

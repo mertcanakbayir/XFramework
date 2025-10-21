@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using XFramework.BLL.Services.Abstracts;
+using XFramework.Configuration;
 using XFramework.DAL.Entities;
 using XFramework.Repository.Options;
 using XFramework.Repository.Repositories.Abstract;
@@ -11,11 +13,13 @@ namespace XFramework.BLL.Services.Concretes
     {
         private readonly IBaseRepository<User> _userRepository;
         private readonly IMemoryCache _memoryCache;
-        public RoleAuthorizationService(IMemoryCache memoryCache, IBaseRepository<User> userRepository)
+        private readonly CacheOptions _cacheOptions;
+        public RoleAuthorizationService(IMemoryCache memoryCache, IBaseRepository<User> userRepository, IOptions<CacheOptions> cacheOptions)
         {
 
             _memoryCache = memoryCache;
             _userRepository = userRepository;
+            _cacheOptions = cacheOptions.Value;
         }
 
         private async Task<List<string>> GetAllPagesByUser(int userId)
@@ -41,7 +45,7 @@ namespace XFramework.BLL.Services.Concretes
                 .ToList();
             _memoryCache.Set(cacheKey, userPages, new MemoryCacheEntryOptions
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(_cacheOptions.UserPageCacheMinutes)
             });
             return userPages;
         }
@@ -67,7 +71,7 @@ namespace XFramework.BLL.Services.Concretes
 
             _memoryCache.Set(cacheKey, userEndpoints, new MemoryCacheEntryOptions
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(_cacheOptions.UserEndpointCacheMinutes)
             });
 
             return userEndpoints;

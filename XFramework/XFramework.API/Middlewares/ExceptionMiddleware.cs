@@ -36,10 +36,15 @@ namespace XFramework.API.Middlewares
                 context.Response.ContentType = "application/json";
                 var result = ex switch
                 {
-                    KeyNotFoundException => ResultViewModel<object>.Failure("Not Found."),
-                    UnauthorizedAccessException => ResultViewModel<object>.Failure("Forbidden"),
-                    _ => ResultViewModel<object>.Failure("Internal Server Error")
+                    KeyNotFoundException => ResultViewModel<object>.Failure("Not Found.", null, 404),
+                    UnauthorizedAccessException => ResultViewModel<object>.Failure("Forbidden", null, 403),
+                    _ => ResultViewModel<object>.Failure("Internal Server Error", null, 500)
                 };
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = result.StatusCode;
+
+                result.Errors ??= new List<string>();
+                result.Errors.Add($"TraceId: {context.TraceIdentifier}");
 
                 await context.Response.WriteAsJsonAsync(result);
             }

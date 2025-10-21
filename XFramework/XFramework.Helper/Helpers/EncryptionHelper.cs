@@ -1,5 +1,7 @@
 ﻿using System.Security.Cryptography;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using XFramework.Configuration;
 
 namespace XFramework.Helper.Helpers
 {
@@ -8,10 +10,11 @@ namespace XFramework.Helper.Helpers
         private readonly byte[] _key;
         private readonly byte[] _iv;
 
-        public EncryptionHelper(IConfiguration config)
-        {   //Key ve iv db'deki settingsten ?????
-            _key = Convert.FromBase64String(config["Encryption:Key"]);
-            _iv = Convert.FromBase64String(config["Encryption:IV"]);
+        public EncryptionHelper(IOptions<EncryptionOptions> options)
+        {
+            var config = options.Value;
+            _key = Convert.FromBase64String(config.Key);
+            _iv = Convert.FromBase64String(config.IV);
         }
 
         public string Encrypt(string plainText)
@@ -20,7 +23,7 @@ namespace XFramework.Helper.Helpers
             aes.Key = _key;
             aes.IV = _iv;
             using var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
-            // plaintext->sw ile byte dizisine ->cryptostream ile aes şifrelenir ve memorystream'e aktarılır-> memorystream ile ram'de saklanır
+
             using var ms = new MemoryStream();
             using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
             using (var sw = new StreamWriter(cs)) { sw.Write(plainText); }
