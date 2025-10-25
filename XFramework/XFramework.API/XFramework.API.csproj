@@ -17,12 +17,11 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.8" />
 		<PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
 		<PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0" />
-		<PackageReference Include="Serilog.Sinks.MSSqlServer" Version="8.2.2" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\XFramework.BLL\XFramework.BLL.csproj" />
+		<ProjectReference Include="..\XFramework.Extensions\XFramework.Extensions.csproj" />
 	</ItemGroup>
 
 </Project>

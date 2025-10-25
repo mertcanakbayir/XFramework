@@ -1,9 +1,12 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using XFramework.Helper.Helpers;
 
-namespace XFramework.API.Extensions
+namespace XFramework.Extensions.Extensions
 {
     public static class RateLimiterExtension
     {

@@ -1,8 +1,9 @@
-﻿using Serilog;
+﻿using Microsoft.AspNetCore.Http;
+using Serilog;
 using Serilog.Context;
 using XFramework.Helper.ViewModels;
 
-namespace XFramework.API.Middlewares
+namespace XFramework.Extensions.Middlewares
 {
     public class ExceptionMiddleware
     {

@@ -1,4 +1,6 @@
 ﻿using System.Reflection;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using XFM.BLL.Utilities.JWT;
 using XFramework.BLL.Services.Abstracts;
 using XFramework.BLL.Services.Concretes;
@@ -7,7 +9,7 @@ using XFramework.Helper.Helpers;
 using XFramework.Repository.Repositories.Abstract;
 using XFramework.Repository.Repositories.Concrete;
 
-namespace XFramework.API.Extensions
+namespace XFramework.Extensions.Extensions
 {
     public static class ServiceRegisterExtension
     {
