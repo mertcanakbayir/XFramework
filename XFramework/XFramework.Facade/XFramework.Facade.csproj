@@ -1,20 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\XFramework.API\XFramework.API.csproj" />
-    <ProjectReference Include="..\XFramework.BLL\XFramework.BLL.csproj" />
-    <ProjectReference Include="..\XFramework.Configuration\XFramework.Configuration.csproj" />
-    <ProjectReference Include="..\XFramework.DAL\XFramework.DAL.csproj" />
-    <ProjectReference Include="..\XFramework.Dtos\XFramework.Dtos.csproj" />
-    <ProjectReference Include="..\XFramework.Generator\XFramework.Generator.csproj" />
-    <ProjectReference Include="..\XFramework.Helper\XFramework.Helper.csproj" />
-    <ProjectReference Include="..\XFramework.Repository\XFramework.Repository.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\XFramework.BLL\XFramework.BLL.csproj" />
+		<ProjectReference Include="..\XFramework.Configuration\XFramework.Configuration.csproj" />
+		<ProjectReference Include="..\XFramework.DAL\XFramework.DAL.csproj" />
+		<ProjectReference Include="..\XFramework.Dtos\XFramework.Dtos.csproj" />
+		<ProjectReference Include="..\XFramework.Helper\XFramework.Helper.csproj" />
+		<ProjectReference Include="..\XFramework.Repository\XFramework.Repository.csproj" />
+	</ItemGroup>
 
 </Project>

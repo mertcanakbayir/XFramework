@@ -1,7 +1,8 @@
 ﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 using Serilog.Context;
 
-namespace XFramework.API.Middlewares
+namespace XFramework.Extensions.Middlewares
 {
     public class LoggingMiddleware
     {
