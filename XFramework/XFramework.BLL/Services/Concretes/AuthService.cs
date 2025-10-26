@@ -28,9 +28,10 @@ namespace XFramework.BLL.Services.Concretes
         private readonly MailService _mailService;
         private readonly IBaseRepository<UserRole> _userRoleRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly RoleAuthorizationService _roleAuthorizationService;
 
         public AuthService(IBaseRepository<User> userRepository, IBaseRepository<UserRole> userRoleRespository, IHashingHelper hashService, IValidator<LoginDto> loginDtoValidator, IValidator<RegisterDto> registerDtoValidator, ITokenHelper tokenHelper,
-            IMapper mapper, MailService mailService, IValidator<ForgotPasswordDto> forgotPasswordDtoValidator, IValidator<ResetPasswordDto> resetPasswordDtoValidator, IUnitOfWork unitOfWork)
+            IMapper mapper, MailService mailService, IValidator<ForgotPasswordDto> forgotPasswordDtoValidator, IValidator<ResetPasswordDto> resetPasswordDtoValidator, IUnitOfWork unitOfWork, RoleAuthorizationService roleAuthorizationService)
         {
             _hashService = hashService;
             _userRepository = userRepository;
@@ -43,15 +44,16 @@ namespace XFramework.BLL.Services.Concretes
             _forgotPasswordDtoValidator = forgotPasswordDtoValidator;
             _resetPasswordDtoValidator = resetPasswordDtoValidator;
             _unitOfWork = unitOfWork;
+            _roleAuthorizationService = roleAuthorizationService;
         }
 
-        public async Task<ResultViewModel<string>> Login(LoginDto loginDto)
+        public async Task<ResultViewModel<LoginResponseDto>> Login(LoginDto loginDto)
         {
             var validationResult = _loginDtoValidator.Validate(loginDto);
             if (!validationResult.IsValid)
             {
                 var errorMessages = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
-                return ResultViewModel<string>.Failure("Please check credentials.", errorMessages, 400);
+                return ResultViewModel<LoginResponseDto>.Failure("Please check credentials.", errorMessages, 400);
             }
             var existedUser = await _userRepository.GetAsync(new BaseRepoOptions<User>
             {
@@ -60,19 +62,29 @@ namespace XFramework.BLL.Services.Concretes
             });
             if (existedUser == null)
             {
-                return ResultViewModel<string>.Failure("Please check credentials.", null, 401);
+                return ResultViewModel<LoginResponseDto>.Failure("Please check credentials.", null, 401);
             }
             var roles = existedUser.UserRoles.Select(ur => ur.Role.Name).ToList();
             bool verifyPassword = _hashService.VerifyPassword(loginDto.Password, existedUser.Password);
             if (!verifyPassword)
-                return ResultViewModel<string>.Failure("Please check credentials.", null, 401);
+                return ResultViewModel<LoginResponseDto>.Failure("Please check credentials.", null, 401);
+            var userPages = await _roleAuthorizationService.GetAllPagesByUser(existedUser.Id);
+            if (userPages == null)
+            {
+                return ResultViewModel<LoginResponseDto>.Failure("User page information not found.", null, 401);
+            }
             var createTokenDto = _mapper.Map<CreateTokenDto>(existedUser);
             var token = _tokenHelper.CreateToken(createTokenDto);
+            var data = new LoginResponseDto
+            {
+                Token = token.Token,
+                UserPages = userPages
+            };
             if (token != null)
             {
-                return ResultViewModel<string>.Success(token.Token, message: "Login succesful.", 200);
+                return ResultViewModel<LoginResponseDto>.Success(data, message: "Login succesful.", 200);
             }
-            return ResultViewModel<string>.Failure("An eror accoured.", null, 401);
+            return ResultViewModel<LoginResponseDto>.Failure("An eror accoured.", null, 401);
         }
 
         public async Task<ResultViewModel<string>> Register(RegisterDto registerDto)

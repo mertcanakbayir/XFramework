@@ -22,7 +22,7 @@ namespace XFramework.BLL.Services.Concretes
             _cacheOptions = cacheOptions.Value;
         }
 
-        private async Task<List<string>> GetAllPagesByUser(int userId)
+        public async Task<List<string>> GetAllPagesByUser(int userId)
         {
             string PagesCacheKey = "user_pages";
             string cacheKey = $"{PagesCacheKey}:{userId}";
@@ -78,13 +78,8 @@ namespace XFramework.BLL.Services.Concretes
         }
 
 
-        public async Task<bool> HasAccessAsync(string path, string controller, string action, string httpMethod, int userId)
+        public async Task<bool> HasAccessAsync(string controller, string action, string httpMethod, int userId)
         {
-            var userPages = await GetAllPagesByUser(userId);
-            if (!userPages.Contains(path.ToLower()))
-            {
-                return false;
-            }
 
             var userEndpoints = await GetAllEndpointsByUser(userId);
             string endpointKey = $"{controller.ToLower()}:{action.ToLower()}:{httpMethod.ToUpper()}";
