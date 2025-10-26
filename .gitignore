@@ -364,3 +364,5 @@ FodyWeavers.xsd
 /XFramework/XFM.DAL/Migrations/20250806103825_initial.cs
 /XFramework/XFM.DAL/Migrations/20250806103825_initial.cs
 /XFramework/XFramework.zip
+/XFramework/XFramework.API/appsettings.json
+/XFramework/XFramework.API/appsettings.Development.json
