@@ -43,7 +43,6 @@ namespace XFramework.Extensions.Middlewares
             string actionName = actionDescriptor.ActionName;
             string httpMethod = context.Request.Method;
             var userRoles = context.User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
-            string pageUrl = context.Request.Headers["PageUrl"].ToString()?.ToLower();
             var userIdClaim = context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
             if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
             {
@@ -51,13 +50,8 @@ namespace XFramework.Extensions.Middlewares
                 await context.Response.WriteAsync("Unauthorized");
                 return;
             }
-            if (string.IsNullOrEmpty(pageUrl))
-            {
-                context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                await context.Response.WriteAsync("Page URL header missing");
-                return;
-            }
-            bool hasAccess = await authorizationService.HasAccessAsync(pageUrl, controllerName, actionName, httpMethod, userId);
+
+            bool hasAccess = await authorizationService.HasAccessAsync(controllerName, actionName, httpMethod, userId);
 
             if (!hasAccess)
             {

@@ -24,7 +24,7 @@ namespace XFramework.Controllers
         }
         [HttpPost("login")]
         [TypeFilter(typeof(ValidateFilter))]
-        public async Task<ResultViewModel<string>> Login(LoginDto loginDto)
+        public async Task<ResultViewModel<LoginResponseDto>> Login(LoginDto loginDto)
         {
             return await _authService.Login(loginDto);
         }
