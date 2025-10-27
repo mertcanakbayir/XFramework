@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
+﻿using System.Diagnostics;
 
 namespace XFramework.Generator.Utils
 {
@@ -9,7 +7,6 @@ namespace XFramework.Generator.Utils
         public static void Build(string solutionRoot)
         {
             var dalProjectPath = Path.Combine(solutionRoot, "XFramework.DAL", "XFramework.DAL.csproj");
-            Console.WriteLine("[XFramework.Generator] XFramework.DAL build ediliyor...");
 
             var psi = new ProcessStartInfo
             {
@@ -35,7 +32,6 @@ namespace XFramework.Generator.Utils
                 throw new Exception($"XFramework.DAL build başarısız oldu.");
             }
 
-            Console.WriteLine("[XFramework.Generator] Build tamamlandı.");
         }
     }
 }

@@ -31,7 +31,7 @@ namespace XFramework.BLL.Services.Concretes
 }}
 ";
                 File.WriteAllText(Path.Combine(outputPath, $"{entity.Name}Service.cs"), service);
-                Console.WriteLine($"✓ {entity.Name}Service created.");
+                Console.WriteLine($"{entity.Name}Service created.");
             }
         }
     }

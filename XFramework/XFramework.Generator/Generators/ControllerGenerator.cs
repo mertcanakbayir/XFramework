@@ -60,7 +60,7 @@ namespace XFramework.API.Controllers
 }}
 ";
             File.WriteAllText(Path.Combine(outputPath, $"{entity.Name}Controller.cs"), controller);
-            Console.WriteLine($"✓ {entity.Name}Controller created.");
+            Console.WriteLine($"{entity.Name}Controller created.");
         }
     }
 }
