@@ -35,7 +35,7 @@ namespace XFramework.Generator.Generators
                 var newContent = content.Insert(insertPosition, $"{newLine}        {dbSetProperty}");
 
                 File.WriteAllText(contextFile, newContent);
-                Console.WriteLine($"✓ DbSet<{entityName}> Context'e eklendi.");
+                Console.WriteLine($"DbSet<{entityName}> Added to context.");
             }
             else
             {

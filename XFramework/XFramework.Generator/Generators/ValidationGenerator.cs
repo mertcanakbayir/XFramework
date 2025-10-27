@@ -33,7 +33,7 @@ namespace XFramework.BLL.Utilities.ValidationRulers
 
                     var filePath = Path.Combine(entityFolderPath, $"{dtoName}Validator.cs");
                     File.WriteAllText(filePath, validator);
-                    Console.WriteLine($"✓ {dtoName}Validator created: {entity.Name}/{dtoName}Validator.cs");
+                    Console.WriteLine($"{dtoName}Validator created: {entity.Name}/{dtoName}Validator.cs");
 
                 }
             }
