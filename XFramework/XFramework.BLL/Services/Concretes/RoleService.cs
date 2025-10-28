@@ -7,7 +7,6 @@ using XFramework.Dtos.EndpointRole;
 using XFramework.Dtos.PageRole;
 using XFramework.Dtos.Role;
 using XFramework.Helper.ViewModels;
-using XFramework.Repository.Options;
 using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
@@ -33,11 +32,7 @@ namespace XFramework.BLL.Services.Concretes
 
         public async Task<ResultViewModel<List<RoleDto>>> GetRolesByUser(int userId)
         {
-            var user = await _userRepository.GetAsync(new BaseRepoOptions<User>
-            {
-                Filter = u => u.Id == userId,
-                IncludeFunc = i => i.Include(e => e.UserRoles).ThenInclude(r => r.Role)
-            });
+            var user = await _userRepository.GetAsync(filter: u => u.Id == userId, include: i => i.Include(e => e.UserRoles).ThenInclude(r => r.Role));
             if (user == null || user.UserRoles == null || !user.UserRoles.Any())
             {
                 return ResultViewModel<List<RoleDto>>.Failure("User has no roles", statusCode: 400);

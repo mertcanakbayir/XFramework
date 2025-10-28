@@ -1,9 +1,11 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using XFramework.DAL;
 using XFramework.DAL.Entities;
-using XFramework.Repository.Options;
+using XFramework.Helper.Models;
+using XFramework.Helper.ViewModels;
 using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.Repository.Repositories.Concrete
@@ -54,74 +56,70 @@ namespace XFramework.Repository.Repositories.Concrete
             }
             _xfmContext.UpdateRange(entities);
         }
-        public async Task<List<TDto>> GetAllAsync<TDto>(BaseRepoOptions<TEntity>? options = null)
+        public async Task<PagedResult<TDto>> GetAllAsync<TDto>(Expression<Func<TEntity, bool>>? filter = null,
+            Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null,
+            Expression<Func<TEntity, object>>? orderBy = null,
+            bool orderByDescending = false,
+            int? pageNumber = null,
+            int? pageSize = null,
+            bool includeInactive = false,
+            bool asNoTracking = true)
         {
             var query = _xfmContext.Set<TEntity>().AsQueryable();
-            if (options == null)
-            {
-                options = new BaseRepoOptions<TEntity>();
-            }
-            if (!options.IncludeInactive)
-            {
+            if (!includeInactive)
                 query = query.Where(e => e.IsActive);
-            }
 
-            if (options.IncludeFunc != null)
-            {
-                query = options.IncludeFunc(query);
-            }
-            if (options.Filter != null)
-            {
-                query = query.Where(options.Filter);
-            }
-            if (options.OrderBy != null)
-            {
-                query = options.OrderByDescending ? query.OrderByDescending(options.OrderBy) : query.OrderBy(options.OrderBy);
-            }
-            else if (options.PageNumber.HasValue && options.PageSize.HasValue)
-            {
+            if (include != null)
+                query = include(query);
+
+            if (filter != null)
+                query = query.Where(filter);
+
+            var totalCount = await query.CountAsync();
+
+            if (orderBy != null)
+                query = orderByDescending ? query.OrderByDescending(orderBy) : query.OrderBy(orderBy);
+            else if (pageNumber.HasValue && pageSize.HasValue)
                 query = query.OrderBy(e => e.Id);
-            }
 
-            if (options.PageNumber.HasValue && options.PageSize.HasValue)
-            {
-                var totalCount = await query.CountAsync();
-                options.TotalCount = totalCount;
-                query = query.Skip((options.PageNumber.Value - 1) * options.PageSize.Value).Take(options.PageSize.Value);
-            }
-            if (options.AsNoTracking)
-            {
+            if (pageNumber.HasValue && pageSize.HasValue)
+                query = query.Skip((pageNumber.Value - 1) * pageSize.Value).Take(pageSize.Value);
+
+            if (asNoTracking)
                 query = query.AsNoTracking();
-            }
 
-            return await query.ProjectTo<TDto>(_mapper.ConfigurationProvider).ToListAsync();
+            var data = await query.ProjectTo<TDto>(_mapper.ConfigurationProvider).ToListAsync();
+
+            return new PagedResult<TDto>
+            {
+                Data = data,
+                TotalCount = totalCount,
+                PageNumber = pageNumber ?? 1,
+                PageSize = pageSize ?? totalCount
+            };
         }
 
-        public async Task<TEntity> GetAsync(BaseRepoOptions<TEntity>? options)
+        public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>>? filter = null,
+            Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null,
+            bool includeInactive = false,
+            bool asNoTracking = true)
         {
 
             var query = _xfmContext.Set<TEntity>().AsQueryable();
-            if (options == null)
-            {
-                options = new BaseRepoOptions<TEntity>();
-            }
-            if (!options.IncludeInactive)
-            {
+
+            if (!includeInactive)
                 query = query.Where(e => e.IsActive);
-            }
-            if (options.IncludeFunc != null)
-            {
-                query = options.IncludeFunc(query);
-            }
-            if (options.Filter != null)
-            {
-                query = query.Where(options.Filter);
-            }
-            if (options.AsNoTracking)
-            {
+
+            if (include != null)
+                query = include(query);
+
+            if (filter != null)
+                query = query.Where(filter);
+
+            if (asNoTracking)
                 query = query.AsNoTracking();
-            }
-            return await query.FirstOrDefaultAsync();
+
+            return await query.FirstOrDefaultAsync(); ;
         }
 
         public async Task UpdateAsync(TEntity entity)

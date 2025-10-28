@@ -1,5 +1,7 @@
-﻿using XFramework.DAL.Entities;
-using XFramework.Repository.Options;
+﻿using System.Linq.Expressions;
+using XFramework.DAL.Entities;
+using XFramework.Helper.Models;
+using XFramework.Helper.ViewModels;
 
 namespace XFramework.Repository.Repositories.Abstract
 {
@@ -11,9 +13,21 @@ namespace XFramework.Repository.Repositories.Abstract
 
         Task DeleteAsync(int id);
 
-        Task<List<TDto>> GetAllAsync<TDto>(BaseRepoOptions<T>? options = null);
+        Task<PagedResult<TDto>> GetAllAsync<TDto>(
+             Expression<Func<T, bool>>? filter = null,
+             Func<IQueryable<T>, IQueryable<T>>? include = null,
+             Expression<Func<T, object>>? orderBy = null,
+             bool orderByDescending = false,
+             int? pageNumber = null,
+             int? pageSize = null,
+             bool includeInactive = false,
+             bool asNoTracking = true);
 
-        Task<T> GetAsync(BaseRepoOptions<T>? options);
+        Task<T?> GetAsync(
+            Expression<Func<T, bool>>? filter = null,
+            Func<IQueryable<T>, IQueryable<T>>? include = null,
+            bool includeInactive = false,
+            bool asNoTracking = true);
 
         Task AddRangeAsync(IEnumerable<T> entities);
 

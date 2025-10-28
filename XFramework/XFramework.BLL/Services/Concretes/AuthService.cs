@@ -9,7 +9,6 @@ using XFramework.DAL.Entities;
 using XFramework.Dtos;
 using XFramework.Dtos.User;
 using XFramework.Helper.ViewModels;
-using XFramework.Repository.Options;
 using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
@@ -55,11 +54,7 @@ namespace XFramework.BLL.Services.Concretes
                 var errorMessages = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
                 return ResultViewModel<LoginResponseDto>.Failure("Please check credentials.", errorMessages, 400);
             }
-            var existedUser = await _userRepository.GetAsync(new BaseRepoOptions<User>
-            {
-                Filter = e => e.Email == loginDto.Email,
-                IncludeFunc = query => query.Include(u => u.UserRoles).ThenInclude(ur => ur.Role)
-            });
+            var existedUser = await _userRepository.GetAsync(filter: e => e.Email == loginDto.Email, include: query => query.Include(u => u.UserRoles).ThenInclude(ur => ur.Role));
             if (existedUser == null)
             {
                 return ResultViewModel<LoginResponseDto>.Failure("Please check credentials.", null, 401);
@@ -95,11 +90,8 @@ namespace XFramework.BLL.Services.Concretes
                 var errorMessages = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
                 return ResultViewModel<string>.Failure("Please check credentials.", errorMessages, 200);
             }
-            var existingUser = await _userRepository.GetAsync(new BaseRepoOptions<User>
-            {
-                Filter = e => e.Email.Trim().ToLower() == registerDto.Email.Trim().ToLower(),
-                AsNoTracking = true
-            });
+            var existingUser = await _userRepository.GetAsync(filter: e => e.Email.Trim().ToLower() == registerDto.Email.Trim().ToLower(),
+                asNoTracking: true);
             if (existingUser != null)
             {
                 return ResultViewModel<string>.Failure("Please provide a unique email address.");
@@ -136,10 +128,7 @@ namespace XFramework.BLL.Services.Concretes
                 var errorMessages = resetPasswordDtoValidation.Errors.Select(e => e.ErrorMessage).ToList();
                 return ResultViewModel<string>.Failure("Please check credentials.", errorMessages, 400);
             }
-            var user = await _userRepository.GetAsync(new BaseRepoOptions<User>
-            {
-                Filter = u => u.Email == resetPasswordDto.Email
-            });
+            var user = await _userRepository.GetAsync(filter: u => u.Email == resetPasswordDto.Email);
             if (user == null)
             {
                 return ResultViewModel<string>.Failure("User not found.", null, 400);
@@ -169,10 +158,8 @@ namespace XFramework.BLL.Services.Concretes
                 var errorMessages = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
                 return ResultViewModel<PasswordResetTokenDto>.Failure("Please check credentials", errorMessages, 400);
             }
-            var user = await _userRepository.GetAsync(new BaseRepoOptions<User>
-            {
-                Filter = u => u.Email == forgotPasswordDto.Email
-            });
+            var user = await _userRepository.GetAsync(filter: u => u.Email == forgotPasswordDto.Email);
+
             if (user == null)
             {
                 return ResultViewModel<PasswordResetTokenDto>.Failure("User not found.", null, 400);

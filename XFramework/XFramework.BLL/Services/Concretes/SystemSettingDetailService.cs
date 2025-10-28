@@ -4,7 +4,6 @@ using XFramework.BLL.Services.Abstracts;
 using XFramework.Configuration;
 using XFramework.DAL.Entities;
 using XFramework.Dtos.SystemSettingDetail;
-using XFramework.Repository.Options;
 using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
@@ -17,13 +16,9 @@ namespace XFramework.BLL.Services.Concretes
 
         public async Task<MailOptions> GetMailOptionsAsync(int systemSettingsId)
         {
-            var options = new BaseRepoOptions<SystemSettingDetail>
-            {
-                Filter = e => e.SystemSettingId == systemSettingsId
-            };
-            var details = await _baseRepository.GetAllAsync<SystemSettingDetailDto>(options);
+            var details = await _baseRepository.GetAllAsync<SystemSettingDetailDto>(filter: e => e.SystemSettingId == systemSettingsId);
 
-            var dict = details.ToDictionary(d => d.Key, d => d.Value);
+            var dict = details.Data.ToDictionary(d => d.Key, d => d.Value);
 
             return new MailOptions
             {
