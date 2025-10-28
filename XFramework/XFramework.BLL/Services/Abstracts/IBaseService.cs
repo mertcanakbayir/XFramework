@@ -13,7 +13,7 @@ namespace XFramework.BLL.Services.Abstracts
         Task<ResultViewModel<string>> DeleteAsync(int id);
         Task<ResultViewModel<string>> DeleteRangeAsync(List<int> ids);
         Task<ResultViewModel<TDto>> GetAsync(Expression<Func<TDto, bool>>? filter = null);
-        Task<ResultViewModel<List<TDto>>> GetAllAsync(Expression<Func<TDto, bool>>? filter = null);
-        Task<PagedResultViewModel<TDto>> GetPagedAsync(Expression<Func<TDto, bool>>? filter = null, int? pageNumber = 1, int? pageSize = 10);
+        Task<PagedResultViewModel<TDto>> GetAllAsync(Expression<Func<TDto, bool>>? filter = null, int? pageNumber = null,
+            int? pageSize = null);
     }
 }

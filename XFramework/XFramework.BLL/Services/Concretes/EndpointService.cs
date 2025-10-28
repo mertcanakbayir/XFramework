@@ -20,11 +20,7 @@ namespace XFramework.BLL.Services.Concretes
         public async Task<ResultViewModel<List<EndpointDto>>> GetEndpointsByUser(int userId)
         {
 
-            var userEndpoints = await _userRepository.GetAsync(new Repository.Options.BaseRepoOptions<User>
-            {
-                Filter = f => f.Id == userId,
-                IncludeFunc = i => i.Include(e => e.UserRoles).ThenInclude(f => f.Role).ThenInclude(g => g.EndpointRoles).ThenInclude(h => h.Endpoint)
-            });
+            var userEndpoints = await _userRepository.GetAsync(filter: f => f.Id == userId, include: i => i.Include(e => e.UserRoles).ThenInclude(f => f.Role).ThenInclude(g => g.EndpointRoles).ThenInclude(h => h.Endpoint));
             if (userEndpoints == null)
             {
                 return ResultViewModel<List<EndpointDto>>.Failure("No endpoint permissions assigned to this user.", statusCode: 400);

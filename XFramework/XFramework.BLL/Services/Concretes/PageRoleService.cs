@@ -2,14 +2,11 @@
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using XFramework.BLL.Services.Abstracts;
-using XFramework.BLL.Utilities.ValidationRulers;
 using XFramework.DAL.Entities;
 using XFramework.Dtos.PageRole;
 using XFramework.Dtos.User;
 using XFramework.Helper.ViewModels;
-using XFramework.Repository.Options;
 using XFramework.Repository.Repositories.Abstract;
-using XFramework.Repository.Repositories.Concrete;
 
 namespace XFramework.BLL.Services.Concretes
 {
@@ -34,12 +31,9 @@ namespace XFramework.BLL.Services.Concretes
             var pageRole = _mapper.Map<PageRole>(pageRoleAddDto);
             await _baseRepository.AddAsync(pageRole);
             await _unitOfWork.SaveChangesAsync();
-            var usersWithPageRole = await _userRepository.GetAllAsync<UserDto>(new BaseRepoOptions<User>
-            {
-                Filter = q => q.UserRoles.Any(r => r.RoleId == pageRoleAddDto.RoleId),
-                IncludeFunc = query => query.Include(u => u.UserRoles)
-            });
-            foreach (var user in usersWithPageRole)
+            var usersWithPageRole = await _userRepository.GetAllAsync<UserDto>(filter: q => q.UserRoles.Any(r => r.RoleId == pageRoleAddDto.RoleId),
+                include: q => q.Include(u => u.UserRoles));
+            foreach (var user in usersWithPageRole.Data)
             {
                 _roleAuthorizationService.ClearUserPageCache(user.Id);
             }

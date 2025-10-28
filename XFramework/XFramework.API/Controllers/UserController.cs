@@ -17,7 +17,7 @@ namespace XFramework.Controllers
         [TypeFilter(typeof(ValidateFilter))]
         public async Task<PagedResultViewModel<UserDto>> GetAllUsers()
         {
-            return await _userService.GetPagedAsync();
+            return await _userService.GetAllAsync();
         }
 
         [HttpPost]

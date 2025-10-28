@@ -2,7 +2,6 @@
 using Serilog.Events;
 using XFramework.BLL.Services.Abstracts;
 using XFramework.DAL.Entities;
-using XFramework.Repository.Options;
 using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
@@ -20,10 +19,8 @@ namespace XFramework.BLL.Services.Concretes
         }
         public async Task<string> ToggleLogAsync(int systemSettingDetailId, bool isEnabled)
         {
-            var logSetting = await _systemSettingDetailRepository.GetAsync(new BaseRepoOptions<SystemSettingDetail>
-            {
-                Filter = e => e.Id == systemSettingDetailId,
-            });
+            var logSetting = await _systemSettingDetailRepository.GetAsync(e => e.Id == systemSettingDetailId);
+
             if (logSetting == null)
             {
                 return "Log Setting Switch Error";

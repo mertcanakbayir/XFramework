@@ -5,7 +5,6 @@ using XFramework.BLL.Utilities.Hashing;
 using XFramework.DAL.Entities;
 using XFramework.Dtos.User;
 using XFramework.Helper.ViewModels;
-using XFramework.Repository.Options;
 using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
@@ -15,9 +14,9 @@ namespace XFramework.BLL.Services.Concretes
 
         private readonly IHashingHelper _hashingHelper;
 
-        public UserService(IValidator<UserAddDto> addDtoValidator, IMapper mapper, IBaseRepository<User> baseRepository, IUnitOfWork unitOfWork, IValidator<UserUpdateDto> updateDtoValidator,IHashingHelper hashingHelper) : base(addDtoValidator, mapper, baseRepository, unitOfWork, updateDtoValidator)
+        public UserService(IValidator<UserAddDto> addDtoValidator, IMapper mapper, IBaseRepository<User> baseRepository, IUnitOfWork unitOfWork, IValidator<UserUpdateDto> updateDtoValidator, IHashingHelper hashingHelper) : base(addDtoValidator, mapper, baseRepository, unitOfWork, updateDtoValidator)
         {
-            _hashingHelper=hashingHelper;
+            _hashingHelper = hashingHelper;
         }
 
         public async Task<ResultViewModel<UserAddDto>> AddUser(UserAddDto userAddDto)
@@ -41,7 +40,7 @@ namespace XFramework.BLL.Services.Concretes
             {
                 return ResultViewModel<UserUpdateDto>.Failure("Please check credentials.", validationResult.Errors.Select(e => e.ErrorMessage).ToList());
             }
-            var userEntity = await _baseRepository.GetAsync(new BaseRepoOptions<User> { Filter = e => e.Id == id });
+            var userEntity = await _baseRepository.GetAsync(filter: e => e.Id == id);
             if (userEntity == null)
             {
                 return ResultViewModel<UserUpdateDto>.Failure("User not found.", null, 404);

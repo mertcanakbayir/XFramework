@@ -5,7 +5,6 @@ using XFramework.BLL.Services.Abstracts;
 using XFramework.DAL.Entities;
 using XFramework.Dtos.Page;
 using XFramework.Helper.ViewModels;
-using XFramework.Repository.Options;
 using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
@@ -21,12 +20,7 @@ namespace XFramework.BLL.Services.Concretes
 
         public async Task<ResultViewModel<List<PageDto>>> GetPagesByUser(int userId)
         {
-            var user = await _userRepository.GetAsync(new BaseRepoOptions<User>
-            {
-                Filter = q => q.Id == userId,
-                AsNoTracking = true,
-                IncludeFunc = q => q.Include(u => u.UserRoles).ThenInclude(ur => ur.Role).ThenInclude(pr => pr.PageRoles).ThenInclude(p => p.Page)
-            });
+            var user = await _userRepository.GetAsync(filter: q => q.Id == userId, asNoTracking: true, include: q => q.Include(u => u.UserRoles).ThenInclude(ur => ur.Role).ThenInclude(pr => pr.PageRoles).ThenInclude(p => p.Page));
             if (user == null)
             {
                 return ResultViewModel<List<PageDto>>.Failure("User not found");

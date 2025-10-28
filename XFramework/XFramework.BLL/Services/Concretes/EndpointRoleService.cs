@@ -6,7 +6,6 @@ using XFramework.DAL.Entities;
 using XFramework.Dtos.EndpointRole;
 using XFramework.Dtos.User;
 using XFramework.Helper.ViewModels;
-using XFramework.Repository.Options;
 using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
@@ -33,13 +32,9 @@ namespace XFramework.BLL.Services.Concretes
             await _baseRepository.AddAsync(endpoint);
             await _unitOfWork.SaveChangesAsync();
 
-            var usersWithEndpointRole = await _userRepository.GetAllAsync<UserDto>(new BaseRepoOptions<User>
-            {
-                Filter = u => u.UserRoles.Any(ur => ur.RoleId == endpointRoleAddDto.RoleId),
-                IncludeFunc = i => i.Include(u => u.UserRoles)
-            });
+            var usersWithEndpointRole = await _userRepository.GetAllAsync<UserDto>(filter: u => u.UserRoles.Any(ur => ur.RoleId == endpointRoleAddDto.RoleId), include: i => i.Include(u => u.UserRoles));
 
-            foreach (var user in usersWithEndpointRole)
+            foreach (var user in usersWithEndpointRole.Data)
             {
                 _roleAuthorizationService.ClearUserEndpointCache(user.Id);
             }

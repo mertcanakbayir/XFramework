@@ -5,7 +5,6 @@ using FluentValidation;
 using XFramework.BLL.Services.Abstracts;
 using XFramework.DAL.Entities;
 using XFramework.Helper.ViewModels;
-using XFramework.Repository.Options;
 using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
@@ -69,10 +68,7 @@ namespace XFramework.BLL.Services.Concretes
             {
                 return ResultViewModel<string>.Failure("Invalid id provided", errors: new List<string> { "Id must be greater than 0" });
             }
-            var entity = await _baseRepository.GetAsync(new BaseRepoOptions<TEntity>
-            {
-                Filter = e => e.Id == id
-            });
+            var entity = await _baseRepository.GetAsync(e => e.Id == id);
             if (entity == null)
             {
                 return ResultViewModel<string>.Failure("Not Found");
@@ -88,11 +84,8 @@ namespace XFramework.BLL.Services.Concretes
             {
                 return ResultViewModel<string>.Failure("No ids provided");
             }
-            var entities = await _baseRepository.GetAllAsync<TDto>(new BaseRepoOptions<TEntity>
-            {
-                Filter = e => ids.Contains(e.Id)
-            });
-            if (!entities.Any())
+            var entities = await _baseRepository.GetAllAsync<TDto>(filter: e => ids.Contains(e.Id));
+            if (entities.TotalCount == 0)
             {
                 return ResultViewModel<string>.Failure("No records found");
             }
@@ -101,24 +94,26 @@ namespace XFramework.BLL.Services.Concretes
             return ResultViewModel<string>.Success(message: "Records deleted succesfully");
         }
 
-        public async Task<ResultViewModel<List<TDto>>> GetAllAsync(Expression<Func<TDto, bool>>? filter = null)
+        public async Task<PagedResultViewModel<TDto>> GetAllAsync(Expression<Func<TDto, bool>>? filter = null, int? pageNumber = null,
+            int? pageSize = null)
         {
             Expression<Func<TEntity, bool>>? entityFilter = null;
             if (filter != null)
             {
                 entityFilter = _mapper.MapExpression<Expression<Func<TEntity, bool>>>(filter);
             }
-            var dtos = await _baseRepository.GetAllAsync<TDto>(
-                new BaseRepoOptions<TEntity>
-                {
-                    Filter = entityFilter,
-                    AsNoTracking = true
-                });
-            if (dtos == null)
+            var result = await _baseRepository.GetAllAsync<TDto>(filter: entityFilter, asNoTracking: true, pageSize: pageSize, pageNumber: pageNumber);
+            if (result.TotalCount == 0)
             {
-                return ResultViewModel<List<TDto>>.Failure("No records found");
+                return PagedResultViewModel<TDto>.Failure("No records found");
             }
-            return ResultViewModel<List<TDto>>.Success(dtos, "Records:");
+            return PagedResultViewModel<TDto>.Success(
+                data: result.Data,
+                totalCount: result.TotalCount,
+                pageNumber: result.PageNumber,
+                pageSize: result.PageSize,
+                message: "Records:",
+                statusCode: 200);
         }
 
         public async Task<ResultViewModel<TDto>> GetAsync(Expression<Func<TDto, bool>>? filter = null)
@@ -128,47 +123,14 @@ namespace XFramework.BLL.Services.Concretes
             {
                 entityFilter = _mapper.MapExpression<Expression<Func<TEntity, bool>>>(filter);
             }
-            var options = new BaseRepoOptions<TEntity>
-            {
-                Filter = entityFilter,
-                AsNoTracking = true
-            };
-            var entity = await _baseRepository.GetAsync(options);
+            var entity = await _baseRepository.GetAsync(filter: entityFilter, asNoTracking: true);
             if (entity == null)
             {
                 return ResultViewModel<TDto>.Failure("No records found");
             }
             var dto = _mapper.Map<TDto>(entity);
-            return ResultViewModel<TDto>.Success(dto,"Record:");
+            return ResultViewModel<TDto>.Success(dto, "Record:");
         }
-        public async Task<PagedResultViewModel<TDto>> GetPagedAsync(Expression<Func<TDto, bool>>? filter = null, int? pageNumber = 1, int? pageSize = 10)
-        {
-            Expression<Func<TEntity, bool>>? entityFilter = null;
-            if (filter != null)
-            {
-                entityFilter = _mapper.MapExpression<Expression<Func<TEntity, bool>>>(filter);
-            }
-            var options = new BaseRepoOptions<TEntity>
-            {
-                Filter = entityFilter,
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                AsNoTracking = true
-            };
-
-            var entities = await _baseRepository.GetAllAsync<TDto>(options);
-            int totalCount = options.TotalCount ?? 0;
-
-            var dtos = _mapper.Map<List<TDto>>(entities);
-            return new PagedResultViewModel<TDto>
-            {
-                Data = dtos,
-                PageNumber = pageNumber ?? 1,
-                PageSize = pageSize ?? 10,
-                TotalCount = totalCount
-            };
-        }
-
         public async Task<ResultViewModel<string>> UpdateAsync(int id, TUpdateDto dto)
         {
             if (id <= 0)
@@ -181,10 +143,7 @@ namespace XFramework.BLL.Services.Concretes
             {
                 return ResultViewModel<string>.Failure("Check Credentials", errors: validationResult.Errors.Select(e => e.ErrorMessage).ToList());
             }
-            var existing = await _baseRepository.GetAsync(new BaseRepoOptions<TEntity>
-            {
-                Filter = e => e.Id == id
-            });
+            var existing = await _baseRepository.GetAsync(filter: e => e.Id == id);
             if (existing == null)
             {
                 return ResultViewModel<string>.Failure("Not Found", errors: new List<string> { $"Record with {id} does not exist." });

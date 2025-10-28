@@ -26,14 +26,14 @@ namespace XFramework.API.Controllers
         [TypeFilter(typeof(ValidateFilter))]
         public async Task<ResultViewModel<List<PageRoleDto>>> GetPageRolesByPageId(int pageId)
         {
-            return await _pageRoleService.GetPagedAsync(e => e.PageId == pageId);
+            return await _pageRoleService.GetAllAsync(e => e.PageId == pageId);
         }
 
         [HttpGet("role")]
         [TypeFilter(typeof(ValidateFilter))]
         public async Task<ResultViewModel<List<PageRoleDto>>> GetPageRolesByRoleId(int roleId)
         {
-            return await _pageRoleService.GetPagedAsync(e => e.RoleId == roleId);
+            return await _pageRoleService.GetAllAsync(e => e.RoleId == roleId);
         }
 
         [HttpPut]
