@@ -1,0 +1,14 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Mertcan Akbayýr",
+    "classifications": [ "XFramework", "Template", "Architecture" ],
+    "identity": "XFramework.Template",
+    "name": "XFramework Katmanlý Mimari",
+    "shortName": "xframework",
+    "tags": {
+        "language": "C#",
+        "type": "project"
+    },
+    "sourceName": "MyApp",
+    "preferNameDirectory": true
+}

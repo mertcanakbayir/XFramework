@@ -366,3 +366,7 @@ FodyWeavers.xsd
 /XFramework/XFramework.zip
 /XFramework/XFramework.API/appsettings.json
 /XFramework/XFramework.API/appsettings.Development.json
+/XFramework/NuGet.config
+/XFramework/XFramework.Template/4_API/MyApp.API/appsettings.json
+/XFramework/XFramework.Template/4_API/MyApp.API/appsettings.Development.json
+/XFramework/XFramework.Template/4_API/MyApp.API/Properties/launchSettings.json

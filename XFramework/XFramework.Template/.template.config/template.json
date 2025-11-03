@@ -1,0 +1,32 @@
+﻿{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Mertcan Akbayır",
+    "classifications": [ "XFramework", "Layered", "Web API" ],
+    "identity": "XFramework.Template",
+    "name": "XFramework Layered Template",
+    "shortName": "xframework",
+    "sourceName": "MyApp",
+    "defaultName": "MyApp",
+    "preferNameDirectory": false,
+    "description": "5-Layer RAD Architecture built with XFramework (Common, DAL, Repository, BLL, API)",
+    "tags": {
+        "language": "C#",
+        "type": "solution"
+    },
+    "primaryOutputs": [
+        { "path": "MyApp.sln" },
+        { "path": "4_API/MyApp.API/MyApp.API.csproj" }
+    ],
+    "postActions": [
+        {
+            "description": "Forward Steps:\n   1️-dotnet clean\n   2️-dotnet restore\n   3️-dotnet build\n   4️-start <AppName>.sln",
+            "manualInstructions": [
+                { "text": "dotnet clean" },
+                { "text": "dotnet restore" },
+                { "text": "dotnet build" },
+                { "text": "start <MyApp>.sln" }
+            ],
+            "actionId": "AC1156F7-BB77-4DB8-B28F-24EEBCB916F5"
+        }
+    ]
+}
