@@ -8,7 +8,7 @@ using XFramework.Configuration;
 using XFramework.Dtos;
 using XFramework.Dtos.User;
 
-namespace XFM.BLL.Utilities.JWT
+namespace XFramework.BLL.Utilities.JWT
 {
     public class TokenHelper : ITokenHelper
     {
@@ -23,7 +23,7 @@ namespace XFM.BLL.Utilities.JWT
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new List<Claim>
             {
-                  new Claim(JwtRegisteredClaimNames.Sub,createTokenDto.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Sub,createTokenDto.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, createTokenDto.Email),
                 new Claim(JwtRegisteredClaimNames.PreferredUsername,createTokenDto.Username),
             };
