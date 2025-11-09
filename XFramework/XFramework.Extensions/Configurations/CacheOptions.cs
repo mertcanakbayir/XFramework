@@ -1,4 +1,4 @@
-﻿namespace XFramework.Configuration
+﻿namespace XFramework.Extensions.Configurations
 {
     public class CacheOptions
     {

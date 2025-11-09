@@ -2,7 +2,7 @@
 using Dtos;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using XFM.BLL.Utilities.JWT;
+using MyApp.BLL.Utilities.JWT;
 using MyApp.BLL.Services.Abstracts;
 using MyApp.BLL.Utilities.Hashing;
 using MyApp.DAL.Entities;

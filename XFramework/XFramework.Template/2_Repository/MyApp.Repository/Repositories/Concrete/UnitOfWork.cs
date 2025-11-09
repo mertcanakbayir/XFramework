@@ -8,12 +8,12 @@ namespace MyApp.Repository.Repositories.Concrete
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly XFMContext _context;
+        private readonly MyAppContext _context;
         private readonly IServiceProvider _serviceProvider;
         private IDbContextTransaction? _transaction;
         private readonly Dictionary<Type, object> _repositories;
 
-        public UnitOfWork(XFMContext context, IServiceProvider serviceProvider)
+        public UnitOfWork(MyAppContext context, IServiceProvider serviceProvider)
         {
             _context = context;
             _serviceProvider = serviceProvider;

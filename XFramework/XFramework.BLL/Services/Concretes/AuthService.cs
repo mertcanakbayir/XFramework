@@ -2,9 +2,9 @@
 using Dtos;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using XFM.BLL.Utilities.JWT;
 using XFramework.BLL.Services.Abstracts;
 using XFramework.BLL.Utilities.Hashing;
+using XFramework.BLL.Utilities.JWT;
 using XFramework.DAL.Entities;
 using XFramework.Dtos;
 using XFramework.Dtos.User;

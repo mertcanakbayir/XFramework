@@ -12,26 +12,26 @@ namespace MyApp.Repository.Repositories.Concrete
 {
     public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : BaseEntity
     {
-        private readonly XFMContext _xfmContext;
+        private readonly MyAppContext _context;
         private readonly IMapper _mapper;
-        public BaseRepository(XFMContext xfmContext, IMapper mapper)
+        public BaseRepository(MyAppContext context, IMapper mapper)
         {
-            _xfmContext = xfmContext;
+            _context = context;
             _mapper = mapper;
         }
         public async Task AddAsync(TEntity entity)
         {
-            await _xfmContext.AddAsync(entity);
+            await _context.AddAsync(entity);
         }
 
         public async Task AddRangeAsync(IEnumerable<TEntity> entities)
         {
-            await _xfmContext.AddRangeAsync(entities);
+            await _context.AddRangeAsync(entities);
         }
 
         public async Task DeleteAsync(int id)
         {
-            var ent = await _xfmContext.FindAsync<TEntity>(id);
+            var ent = await _context.FindAsync<TEntity>(id);
             if (ent == null)
             {
                 throw new KeyNotFoundException("Record not found.");
@@ -39,13 +39,13 @@ namespace MyApp.Repository.Repositories.Concrete
             if (ent is BaseEntity baseEntity)
             {
                 baseEntity.IsActive = false;
-                _xfmContext.Update(ent);
+                _context.Update(ent);
             }
         }
 
         public async Task DeleteRangeAsync(IEnumerable<int> ids)
         {
-            var entities = await _xfmContext.Set<TEntity>().Where(e => ids.Contains(e.Id)).ToListAsync();
+            var entities = await _context.Set<TEntity>().Where(e => ids.Contains(e.Id)).ToListAsync();
             if (entities == null)
             {
                 throw new KeyNotFoundException("Records not found.");
@@ -54,7 +54,7 @@ namespace MyApp.Repository.Repositories.Concrete
             {
                 entity.IsActive = false;
             }
-            _xfmContext.UpdateRange(entities);
+            _context.UpdateRange(entities);
         }
         public async Task<PagedResult<TDto>> GetAllAsync<TDto>(Expression<Func<TEntity, bool>>? filter = null,
             Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null,
@@ -65,7 +65,7 @@ namespace MyApp.Repository.Repositories.Concrete
             bool includeInactive = false,
             bool asNoTracking = true)
         {
-            var query = _xfmContext.Set<TEntity>().AsQueryable();
+            var query = _context.Set<TEntity>().AsQueryable();
             if (!includeInactive)
                 query = query.Where(e => e.IsActive);
 
@@ -105,7 +105,7 @@ namespace MyApp.Repository.Repositories.Concrete
             bool asNoTracking = true)
         {
 
-            var query = _xfmContext.Set<TEntity>().AsQueryable();
+            var query = _context.Set<TEntity>().AsQueryable();
 
             if (!includeInactive)
                 query = query.Where(e => e.IsActive);
@@ -124,7 +124,7 @@ namespace MyApp.Repository.Repositories.Concrete
 
         public async Task UpdateAsync(TEntity entity)
         {
-            var existingEntity = await _xfmContext.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(e => e.Id == entity.Id);
+            var existingEntity = await _context.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(e => e.Id == entity.Id);
 
             if (existingEntity == null)
                 throw new KeyNotFoundException("Entity not found in the database.");
@@ -141,8 +141,8 @@ namespace MyApp.Repository.Repositories.Concrete
 
                 entity.Revision = currentRevision += 1;
             }
-            _xfmContext.Set<TEntity>().Attach(entity);
-            _xfmContext.Entry(entity).State = EntityState.Modified;
+            _context.Set<TEntity>().Attach(entity);
+            _context.Entry(entity).State = EntityState.Modified;
         }
     }
 }

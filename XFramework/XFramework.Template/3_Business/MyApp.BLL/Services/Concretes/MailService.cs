@@ -9,14 +9,12 @@ namespace MyApp.BLL.Services.Concretes
 {
     public class MailService
     {
-        private readonly EncryptionHelper _crypto;
         private readonly IMapper _mapper;
         private readonly MailQueueService _MailQueueService;
         private readonly SystemSettingDetailService _systemSettingDetailService;
 
-        public MailService(XFMContext context, EncryptionHelper crypto, IMapper mapper, MailQueueService mailQueueService, SystemSettingDetailService systemSettingDetailService)
+        public MailService(IMapper mapper, MailQueueService mailQueueService, SystemSettingDetailService systemSettingDetailService)
         {
-            _crypto = crypto;
             _mapper = mapper;
             _MailQueueService = mailQueueService;
             _systemSettingDetailService = systemSettingDetailService;

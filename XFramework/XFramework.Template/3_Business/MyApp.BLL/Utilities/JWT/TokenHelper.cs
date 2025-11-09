@@ -8,7 +8,7 @@ using MyApp.Configuration;
 using MyApp.Dtos;
 using MyApp.Dtos.User;
 
-namespace XFM.BLL.Utilities.JWT
+namespace MyApp.BLL.Utilities.JWT
 {
     public class TokenHelper : ITokenHelper
     {

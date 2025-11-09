@@ -2,7 +2,7 @@
 using MyApp.Dtos;
 using MyApp.Dtos.User;
 
-namespace XFM.BLL.Utilities.JWT
+namespace MyApp.BLL.Utilities.JWT
 {
     public interface ITokenHelper
     {

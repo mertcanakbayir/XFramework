@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 using MyApp.BLL.Services.Abstracts;
-using MyApp.Configuration;
 using MyApp.DAL.Entities;
 using MyApp.Repository.Repositories.Abstract;
 
@@ -12,17 +11,19 @@ namespace MyApp.BLL.Services.Concretes
     {
         private readonly IBaseRepository<User> _userRepository;
         private readonly IMemoryCache _memoryCache;
-        private readonly CacheOptions _cacheOptions;
-        public RoleAuthorizationService(IMemoryCache memoryCache, IBaseRepository<User> userRepository, IOptions<CacheOptions> cacheOptions)
+        private readonly IConfiguration _configuration;
+        public RoleAuthorizationService(IMemoryCache memoryCache, IBaseRepository<User> userRepository, IConfiguration configuration)
         {
 
             _memoryCache = memoryCache;
             _userRepository = userRepository;
-            _cacheOptions = cacheOptions.Value;
+            _configuration = configuration;
         }
 
         public async Task<List<string>> GetAllPagesByUser(int userId)
         {
+            var config = _configuration.GetSection("Cache");
+            var userPagecacheMinutes = config.GetValue<int>("UserPageCacheMinutes");
             string PagesCacheKey = "user_pages";
             string cacheKey = $"{PagesCacheKey}:{userId}";
             if (_memoryCache.TryGetValue(cacheKey, out List<string> cachedPages))
@@ -34,19 +35,23 @@ namespace MyApp.BLL.Services.Concretes
             {
                 return new List<string>();
             }
+            int cacheMinutes = _configuration.GetValue<int>("Cache:UserPageCacheMinutes", 10);
             var userPages = user.UserRoles.SelectMany(ur => ur.Role.PageRoles)
                 .Select(pr => pr.Page.PageUrl.ToLower())
                 .Distinct()
                 .ToList();
             _memoryCache.Set(cacheKey, userPages, new MemoryCacheEntryOptions
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(_cacheOptions.UserPageCacheMinutes)
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(userPagecacheMinutes)
             });
             return userPages;
         }
 
         private async Task<List<string>> GetAllEndpointsByUser(int userId)
         {
+            var config = _configuration.GetSection("Cache");
+            var userEndpointCacheMinutes = config.GetValue<int>("UserEndpointCacheMinutes");
+
             string EndpointsCacheKey = "user_endpoints";
             string cacheKey = $"{EndpointsCacheKey}:{userId}";
             if (_memoryCache.TryGetValue(cacheKey, out List<string> cachedEndpoints))
@@ -62,7 +67,7 @@ namespace MyApp.BLL.Services.Concretes
 
             _memoryCache.Set(cacheKey, userEndpoints, new MemoryCacheEntryOptions
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(_cacheOptions.UserEndpointCacheMinutes)
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(userEndpointCacheMinutes)
             });
 
             return userEndpoints;

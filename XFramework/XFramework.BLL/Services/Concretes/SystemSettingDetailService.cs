@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using XFramework.BLL.Services.Abstracts;
-using XFramework.Configuration;
 using XFramework.DAL.Entities;
+using XFramework.Dtos;
 using XFramework.Dtos.SystemSettingDetail;
 using XFramework.Repository.Repositories.Abstract;
 

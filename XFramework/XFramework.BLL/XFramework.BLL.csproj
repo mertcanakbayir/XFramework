@@ -25,6 +25,7 @@
 		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
 		<PackageReference Include="MailKit" Version="4.13.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.10" />
 		<PackageReference Include="Microsoft.Extensions.Identity.Core" Version="9.0.8" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="9.0.8" />
 		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.13.0" />
@@ -35,7 +36,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\XFramework.Configuration\XFramework.Configuration.csproj" />
 		<ProjectReference Include="..\XFramework.DAL\XFramework.DAL.csproj" />
 		<ProjectReference Include="..\XFramework.Dtos\XFramework.Dtos.csproj" />
 		<ProjectReference Include="..\XFramework.Repository\XFramework.Repository.csproj" />

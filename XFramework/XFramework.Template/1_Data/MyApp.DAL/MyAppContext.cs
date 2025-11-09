@@ -4,10 +4,10 @@ using MyApp.Helper.Helpers;
 
 namespace MyApp.DAL
 {
-    public class XFMContext : DbContext
+    public class MyAppContext : DbContext
     {
         private readonly CurrentUserProvider _currentUserProvider;
-        public XFMContext(DbContextOptions<XFMContext> options, CurrentUserProvider currentUserProvider)
+        public MyAppContext(DbContextOptions<MyAppContext> options, CurrentUserProvider currentUserProvider)
         : base(options)
         {
             _currentUserProvider = currentUserProvider;
@@ -26,7 +26,7 @@ namespace MyApp.DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(XFMContext).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(MyAppContext).Assembly);
             base.OnModelCreating(modelBuilder);
         }
 
@@ -54,7 +54,6 @@ namespace MyApp.DAL
             var modified = this.ChangeTracker.Entries()
                            .Where(t => t.State == EntityState.Modified)
                            .ToArray();
-
             foreach (var entry in modified)
             {
                 if (entry.Entity is BaseEntity baseEntity)

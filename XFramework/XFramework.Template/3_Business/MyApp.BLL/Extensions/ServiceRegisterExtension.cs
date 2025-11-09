@@ -1,15 +1,15 @@
 ﻿using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using XFM.BLL.Utilities.JWT;
-using XFramework.BLL.Services.Abstracts;
-using XFramework.BLL.Services.Concretes;
-using XFramework.BLL.Utilities.Hashing;
-using XFramework.Helper.Helpers;
-using XFramework.Repository.Repositories.Abstract;
-using XFramework.Repository.Repositories.Concrete;
+using MyApp.BLL.Services.Abstracts;
+using MyApp.BLL.Services.Concretes;
+using MyApp.BLL.Utilities.Hashing;
+using MyApp.BLL.Utilities.JWT;
+using MyApp.Helper.Helpers;
+using MyApp.Repository.Repositories.Abstract;
+using MyApp.Repository.Repositories.Concrete;
 
-namespace XFramework.Extensions.Extensions
+namespace MyApp.BLL.Extensions
 {
     public static class ServiceRegisterExtension
     {
@@ -27,7 +27,6 @@ namespace XFramework.Extensions.Extensions
             // Utilities and Helpers
             services.AddScoped<IHashingHelper, HashingHelper>();
             services.AddScoped<ITokenHelper, TokenHelper>();
-            services.AddScoped<EncryptionHelper>();
             services.AddScoped<CurrentUserProvider>();
             services.AddSingleton<ClientIpResolver>();
 
@@ -51,7 +50,6 @@ namespace XFramework.Extensions.Extensions
             {
                 services.AddScoped(type);
             }
-
         }
     }
 }

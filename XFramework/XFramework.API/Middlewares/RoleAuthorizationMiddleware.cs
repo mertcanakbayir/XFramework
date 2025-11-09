@@ -1,9 +1,8 @@
 ﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using XFramework.BLL.Services.Concretes;
 
-namespace XFramework.Extensions.Middlewares
+namespace XFramework.API.Middlewares
 {
     public class RoleAuthorizationMiddleware
     {

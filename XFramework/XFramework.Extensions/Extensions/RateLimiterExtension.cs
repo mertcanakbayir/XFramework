@@ -1,13 +1,13 @@
-﻿using System.Configuration;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using XFramework.Configuration;
-using XFramework.Helper.Helpers;
+using XFramework.Extensions.Configurations;
+using XFramework.Extensions.Helpers;
+
 
 namespace XFramework.Extensions.Extensions
 {
@@ -16,7 +16,6 @@ namespace XFramework.Extensions.Extensions
         public static IServiceCollection AddCustomRateLimiter(this IServiceCollection services, IConfiguration configuration)
         {
             var rateLimitOptions = configuration.GetSection("RateLimit").Get<RateLimitOptions>() ?? new RateLimitOptions();
-
             if (!rateLimitOptions.EnableRateLimiting)
                 return services;
             services.AddRateLimiter(options =>

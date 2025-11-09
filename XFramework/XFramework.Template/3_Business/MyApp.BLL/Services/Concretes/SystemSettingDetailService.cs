@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using MyApp.BLL.Services.Abstracts;
-using MyApp.Configuration;
 using MyApp.DAL.Entities;
+using MyApp.Dtos;
 using MyApp.Dtos.SystemSettingDetail;
 using MyApp.Repository.Repositories.Abstract;
 

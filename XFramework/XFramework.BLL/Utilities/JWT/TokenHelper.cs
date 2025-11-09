@@ -2,9 +2,8 @@
 using System.Security.Claims;
 using System.Text;
 using Dtos;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using XFramework.Configuration;
 using XFramework.Dtos;
 using XFramework.Dtos.User;
 
@@ -12,14 +11,23 @@ namespace XFramework.BLL.Utilities.JWT
 {
     public class TokenHelper : ITokenHelper
     {
-        private readonly JwtOptions _jwtOptions;
-        public TokenHelper(IOptions<JwtOptions> jwtOptions)
+        private readonly IConfiguration _conf;
+        public TokenHelper(IConfiguration conf)
         {
-            _jwtOptions = jwtOptions.Value;
+            _conf = conf;
         }
+
         public AccessToken CreateToken(CreateTokenDto createTokenDto)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));
+            var jwtSection = _conf.GetSection("Jwt");
+
+            var key = jwtSection.GetValue<string>("Key");
+            var issuer = jwtSection.GetValue<string>("Issuer");
+            var audience = jwtSection.GetValue<string>("Audience");
+            var expireInMinutes = jwtSection.GetValue<int>("ExpireInMinutes");
+
+
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new List<Claim>
             {
@@ -33,11 +41,11 @@ namespace XFramework.BLL.Utilities.JWT
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
-            var tokenExpiry = DateTime.Now.AddMinutes(_jwtOptions.ExpireInMinutes);
+            var tokenExpiry = DateTime.Now.AddMinutes(expireInMinutes);
 
             var token = new JwtSecurityToken(
-                issuer: _jwtOptions.Issuer,
-                audience: _jwtOptions.Audience,
+                issuer: issuer,
+                audience: audience,
                 claims: claims,
                 expires: tokenExpiry,
                 signingCredentials: credentials
@@ -53,7 +61,14 @@ namespace XFramework.BLL.Utilities.JWT
 
         public PasswordResetTokenDto CreatePasswordResetToken(UserDto userDto)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));
+            var jwtSection = _conf.GetSection("Jwt");
+
+            var key = jwtSection.GetValue<string>("Key");
+            var issuer = jwtSection.GetValue<string>("Issuer");
+            var audience = jwtSection.GetValue<string>("Audience");
+            var expireInMinutes = jwtSection.GetValue<int>("ExpireInMinutes");
+
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>
@@ -65,8 +80,8 @@ namespace XFramework.BLL.Utilities.JWT
 
             var tokenExpiry = DateTime.UtcNow.AddMinutes(15);
             var token = new JwtSecurityToken(
-           issuer: _jwtOptions.Issuer,
-           audience: _jwtOptions.Audience,
+           issuer: issuer,
+           audience: audience,
            claims: claims,
            expires: tokenExpiry,
            signingCredentials: credentials
@@ -81,6 +96,13 @@ namespace XFramework.BLL.Utilities.JWT
 
         public bool ValidatePasswordResetToken(string token, UserDto userDto)
         {
+            var jwtSection = _conf.GetSection("Jwt");
+
+            var key = jwtSection.GetValue<string>("Key");
+            var issuer = jwtSection.GetValue<string>("Issuer");
+            var audience = jwtSection.GetValue<string>("Audience");
+            var expireInMinutes = jwtSection.GetValue<int>("ExpireInMinutes");
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var validationParameters = new TokenValidationParameters
             {
@@ -88,9 +110,9 @@ namespace XFramework.BLL.Utilities.JWT
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = _jwtOptions.Issuer,
-                ValidAudience = _jwtOptions.Audience,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key)),
+                ValidIssuer = issuer,
+                ValidAudience = audience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
                 ClockSkew = TimeSpan.Zero
             };
 

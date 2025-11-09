@@ -31,9 +31,8 @@ namespace XFramework.Extensions
             app.UseAuthentication();
             app.UseAuthorization();
 
-            // 🔹 Rate Limiter + RoleAuthorization
+            // 🔹 Rate Limiter
             app.UseRateLimiter();
-            app.UseMiddleware<RoleAuthorizationMiddleware>();
 
             return app;
         }
