@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Serilog;
 using Serilog.Context;
-using XFramework.Helper.ViewModels;
+using System.Net;
+using System.Text.Json;
 
 namespace XFramework.Extensions.Middlewares
 {
@@ -17,39 +18,51 @@ namespace XFramework.Extensions.Middlewares
         public async Task Invoke(HttpContext context)
         {
             var ipAddress = context.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
-
-            var userId = context.User?.Identity.IsAuthenticated == true ? context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value : "Anonymous";
+            var userId = context.User?.Identity?.IsAuthenticated == true
+                ? context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+                : "Anonymous";
             var actionName = context.GetEndpoint()?.DisplayName ?? "Unknown Action";
 
-            LogContext.PushProperty("UserId", userId);
-            LogContext.PushProperty("IPAddress", ipAddress);
-            LogContext.PushProperty("Action", actionName);
-
-            try
+            using (LogContext.PushProperty("UserId", userId))
+            using (LogContext.PushProperty("IPAddress", ipAddress))
+            using (LogContext.PushProperty("Action", actionName))
             {
-                await _next(context);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, $"Unhandled exception in {actionName}");
-
-                context.Response.StatusCode = 500;
-                context.Response.ContentType = "application/json";
-                var result = ex switch
+                try
                 {
-                    KeyNotFoundException => ResultViewModel<object>.Failure("Not Found.", null, 404),
-                    UnauthorizedAccessException => ResultViewModel<object>.Failure("Forbidden", null, 403),
-                    _ => ResultViewModel<object>.Failure("Internal Server Error", null, 500)
-                };
-                context.Response.ContentType = "application/json";
-                context.Response.StatusCode = result.StatusCode;
+                    await _next(context);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, $"Unhandled exception in {actionName}");
 
-                result.Errors ??= new List<string>();
-                result.Errors.Add($"TraceId: {context.TraceIdentifier}");
+                    var statusCode = ex switch
+                    {
+                        KeyNotFoundException => (int)HttpStatusCode.NotFound,
+                        UnauthorizedAccessException => (int)HttpStatusCode.Forbidden,
+                        _ => (int)HttpStatusCode.InternalServerError
+                    };
 
-                await context.Response.WriteAsJsonAsync(result);
+                    var errorResponse = new
+                    {
+                        success = false,
+                        message = statusCode switch
+                        {
+                            404 => "Not Found",
+                            403 => "Forbidden",
+                            _ => "Internal Server Error"
+                        },
+                        traceId = context.TraceIdentifier,
+                        action = actionName,
+                        userId,
+                        ipAddress
+                    };
+
+                    context.Response.StatusCode = statusCode;
+                    context.Response.ContentType = "application/json";
+                    var json = JsonSerializer.Serialize(errorResponse);
+                    await context.Response.WriteAsync(json);
+                }
             }
-
         }
     }
 }

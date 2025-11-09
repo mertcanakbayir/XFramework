@@ -3,15 +3,21 @@ using System.Security.Claims;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using XFramework.Helper.Helpers;
+using XFramework.Extensions.Configurations;
+using XFramework.Extensions.Helpers;
+
 
 namespace XFramework.Extensions.Extensions
 {
     public static class RateLimiterExtension
     {
-        public static IServiceCollection AddCustomRateLimiter(this IServiceCollection services)
+        public static IServiceCollection AddCustomRateLimiter(this IServiceCollection services, IConfiguration configuration)
         {
+            var rateLimitOptions = configuration.GetSection("RateLimit").Get<RateLimitOptions>() ?? new RateLimitOptions();
+            if (!rateLimitOptions.EnableRateLimiting)
+                return services;
             services.AddRateLimiter(options =>
             {
                 var ipLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
@@ -23,8 +29,8 @@ namespace XFramework.Extensions.Extensions
                         ipAddress,
                         _ => new FixedWindowRateLimiterOptions
                         {
-                            PermitLimit = 20,
-                            Window = TimeSpan.FromMinutes(1),
+                            PermitLimit = rateLimitOptions.IpPermitLimit,
+                            Window = TimeSpan.FromMinutes(rateLimitOptions.IpWindowMinutes),
                             QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                             QueueLimit = 0
                         });
@@ -40,8 +46,8 @@ namespace XFramework.Extensions.Extensions
                         userId,
                         _ => new FixedWindowRateLimiterOptions
                         {
-                            PermitLimit = 50,
-                            Window = TimeSpan.FromMinutes(1),
+                            PermitLimit = rateLimitOptions.UserPermitLimit,
+                            Window = TimeSpan.FromMinutes(rateLimitOptions.UserWindowMinutes),
                             QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                             QueueLimit = 0
                         });
@@ -49,6 +55,7 @@ namespace XFramework.Extensions.Extensions
                 options.GlobalLimiter = PartitionedRateLimiter.CreateChained<HttpContext>(
                     new[] { ipLimiter, userLimiter }
                 );
+
                 options.OnRejected = async (context, token) =>
                 {
                     var ipResolver = context.HttpContext.RequestServices.GetRequiredService<ClientIpResolver>();

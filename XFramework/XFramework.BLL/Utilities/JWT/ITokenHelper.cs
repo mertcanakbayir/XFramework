@@ -2,7 +2,7 @@
 using XFramework.Dtos;
 using XFramework.Dtos.User;
 
-namespace XFM.BLL.Utilities.JWT
+namespace XFramework.BLL.Utilities.JWT
 {
     public interface ITokenHelper
     {

@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace XFM.BLL.Utilities.JWT
+namespace XFramework.BLL.Utilities.JWT
 {
     public class AccessToken
     {

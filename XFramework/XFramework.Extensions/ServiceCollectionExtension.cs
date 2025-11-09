@@ -5,44 +5,54 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 using Serilog.Sinks.MSSqlServer;
-using XFramework.BLL.Mappings;
-using XFramework.BLL.Utilities.ValidationRulers;
-using XFramework.Configuration;
-using XFramework.DAL;
+using XFramework.Extensions.Configurations;
 using XFramework.Extensions.Extensions;
+using XFramework.Extensions.Helpers;
+
 namespace XFramework.Extensions
 {
     public static class ServiceCollectionExtension
     {
-        public static IServiceCollection AddXFramework(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddXFramework<TMain, TLog>(this IServiceCollection services, IConfiguration configuration)
+            where TMain : DbContext
+            where TLog : DbContext
         {
-            // 🔹 CORS
-            var allowedOrigins = configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? new[] { "http://localhost:4200" };
-            var allowCredentials = configuration.GetValue<bool>("Cors:AllowCredentials", false);
+            // 🔹 1. Configuration Binding
+            services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
+            services.Configure<CorsOptions>(configuration.GetSection("Cors"));
+            services.Configure<CacheOptions>(configuration.GetSection("Cache"));
+            services.Configure<RateLimitOptions>(configuration.GetSection("RateLimit"));
 
+            // 🔹 2. Options as Concrete Types (for DI)
+            services.AddSingleton(sp => sp.GetRequiredService<IOptions<JwtOptions>>().Value);
+            services.AddSingleton(sp => sp.GetRequiredService<IOptions<CorsOptions>>().Value);
+            services.AddSingleton(sp => sp.GetRequiredService<IOptions<CacheOptions>>().Value);
+            services.AddSingleton(sp => sp.GetRequiredService<IOptions<RateLimitOptions>>().Value);
+
+            // 🔹 3. CORS
+            var corsOptions = configuration.GetSection("Cors").Get<CorsOptions>() ?? new CorsOptions();
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAngularClient",
-                    policy =>
-                    {
-                        policy.WithOrigins(allowedOrigins)
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowCredentials();
-                    });
+                options.AddPolicy("AllowAngularClient", policy =>
+                {
+                    policy.WithOrigins(corsOptions.AllowedOrigins ?? new[] { "http://localhost:4200" })
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+
+                    if (corsOptions.AllowCredentials)
+                        policy.AllowCredentials();
+                });
             });
 
-            // 🔹 JWT
-            var jwtSection = configuration.GetSection("Jwt");
-            var jwtOptions = jwtSection.Get<JwtOptions>();
-            services.Configure<JwtOptions>(jwtSection);
-
+            // 🔹 4. JWT Authentication
+            var jwtOptions = configuration.GetSection("Jwt").Get<JwtOptions>() ?? new JwtOptions();
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -65,32 +75,22 @@ namespace XFramework.Extensions
                 };
             });
 
-            services.AddHttpContextAccessor();
             services.AddAuthorization();
-
-            // 🔹 Business services
-            services.AddBusinessServices(configuration);
-
-            // 🔹 Validators
-            services.AddValidatorsFromAssemblyContaining<PageAddDtoValidator>();
-            services.AddValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
-
-            // 🔹 AutoMapper
-            services.AddAutoMapper(cfg => { }, typeof(PageRoleProfile).Assembly);
-
-            // 🔹 Cache + Controllers
+            services.AddHttpContextAccessor();
             services.AddMemoryCache();
-            services.AddControllers();
-            services.AddEndpointsApiExplorer();
 
-            // 🔹 Swagger
+            // 🔹 5. Validators & AutoMapper
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            services.AddValidatorsFromAssemblies(assemblies);
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.AddMaps(assemblies);
+            });
+
+            // 🔹 6. Swagger
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Title = "XFramework API",
-                    Version = "v1"
-                });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "XFramework API", Version = "v1" });
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -118,14 +118,22 @@ namespace XFramework.Extensions
                 });
             });
 
-            // 🔹 DbContexts
-            services.AddDbContext<XFMContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            services.AddSingleton<ClientIpResolver>();
 
-            services.AddDbContext<XFrameworkLogContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("LogConnection")));
+            // 🔹 7. DbContexts
+            var defaultConnection = configuration.GetConnectionString("DefaultConnection");
+            var logConnection = configuration.GetConnectionString("LogConnection");
 
-            // 🔹 Serilog
+            if (string.IsNullOrWhiteSpace(defaultConnection))
+                throw new InvalidOperationException("Missing 'DefaultConnection' in appsettings.json");
+            if (string.IsNullOrWhiteSpace(logConnection))
+                throw new InvalidOperationException("Missing 'LogConnection' in appsettings.json");
+
+            services.AddDbContext<TMain>(opt => opt.UseSqlServer(defaultConnection));
+            services.AddDbContext<TLog>(opt => opt.UseSqlServer(logConnection));
+
+
+            // 🔹 8. Serilog
             var levelSwitch = new LoggingLevelSwitch(LogEventLevel.Warning);
             services.AddSingleton(levelSwitch);
 
@@ -146,16 +154,15 @@ namespace XFramework.Extensions
                     {
                         AdditionalColumns = new List<SqlColumn>
                         {
-                            new SqlColumn("UserId", SqlDbType.NVarChar, dataLength: 100),
-                            new SqlColumn("IPAddress", SqlDbType.NVarChar, dataLength: 50),
-                            new SqlColumn("ActionName", SqlDbType.NVarChar, dataLength: 250),
+                            new("UserId", SqlDbType.NVarChar, dataLength: 100),
+                            new("IPAddress", SqlDbType.NVarChar, dataLength: 50),
+                            new("ActionName", SqlDbType.NVarChar, dataLength: 250)
                         }
-                    }
-                )
+                    })
                 .CreateLogger();
 
-            services.AddCustomRateLimiter();
-            services.Configure<CacheOptions>(configuration.GetSection("Cache"));
+            // 🔹 9. Rate Limiter
+            services.AddCustomRateLimiter(configuration);
 
             return services;
         }
