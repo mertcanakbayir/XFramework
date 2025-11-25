@@ -36,7 +36,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\0_Common\MyApp.Configuration\MyApp.Configuration.csproj" />
 		<ProjectReference Include="..\..\1_Data\MyApp.DAL\MyApp.DAL.csproj" />
 		<ProjectReference Include="..\..\0_Common\MyApp.Dtos\MyApp.Dtos.csproj" />
 		<ProjectReference Include="..\..\2_Repository\MyApp.Repository\MyApp.Repository.csproj" />
