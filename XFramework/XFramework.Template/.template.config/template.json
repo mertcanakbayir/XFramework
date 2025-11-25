@@ -1,6 +1,6 @@
 ﻿{
     "$schema": "http://json.schemastore.org/template",
-    "author": "Mertcan Akbayır",
+    "author": "mertcanakbayir",
     "classifications": [ "XFramework", "Layered", "Web API" ],
     "identity": "XFramework.Template",
     "name": "XFramework Layered Template",
@@ -8,7 +8,7 @@
     "sourceName": "MyApp",
     "defaultName": "MyApp",
     "preferNameDirectory": false,
-    "description": "5-Layer RAD Architecture built with XFramework (Common, DAL, Repository, BLL, API)",
+    "description": "5-Layer RAD Architecture template built with XFramework (Common, DAL, Repository, BLL, API)",
     "tags": {
         "language": "C#",
         "type": "solution"

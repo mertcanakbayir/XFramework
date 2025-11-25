@@ -156,7 +156,8 @@ namespace XFramework.Extensions
                         {
                             new("UserId", SqlDbType.NVarChar, dataLength: 100),
                             new("IPAddress", SqlDbType.NVarChar, dataLength: 50),
-                            new("ActionName", SqlDbType.NVarChar, dataLength: 250)
+                            new("ActionName", SqlDbType.NVarChar, dataLength: 250),
+                            new SqlColumn("TraceId", SqlDbType.NVarChar, dataLength: 100)
                         }
                     })
                 .CreateLogger();

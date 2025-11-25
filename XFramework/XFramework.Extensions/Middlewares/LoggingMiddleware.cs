@@ -21,9 +21,12 @@ namespace XFramework.Extensions.Middlewares
 
             var actionName = context.GetEndpoint()?.DisplayName ?? "Unknown Action";
 
+            var traceId = context.TraceIdentifier;
+
             LogContext.PushProperty("UserId", userId);
             LogContext.PushProperty("Action", actionName);
             LogContext.PushProperty("IPAddress", ipAddress);
+            LogContext.PushProperty("TraceId", traceId);
             await _next(context);
         }
     }

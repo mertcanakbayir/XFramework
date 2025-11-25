@@ -22,10 +22,11 @@ namespace XFramework.Extensions.Middlewares
                 ? context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
                 : "Anonymous";
             var actionName = context.GetEndpoint()?.DisplayName ?? "Unknown Action";
-
+            var traceId = context.TraceIdentifier;
             using (LogContext.PushProperty("UserId", userId))
             using (LogContext.PushProperty("IPAddress", ipAddress))
             using (LogContext.PushProperty("Action", actionName))
+            using (LogContext.PushProperty("TraceId", traceId))
             {
                 try
                 {
