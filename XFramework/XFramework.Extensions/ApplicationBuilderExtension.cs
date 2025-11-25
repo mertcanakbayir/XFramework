@@ -13,7 +13,7 @@ namespace XFramework.Extensions
 
             app.UseHttpsRedirection();
             // 🔹 CORS
-            app.UseCors("AllowAngularClient");
+            app.UseCors("AllowClient");
 
             app.UseRouting();
             // 🔹 Swagger

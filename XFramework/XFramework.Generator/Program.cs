@@ -28,15 +28,37 @@ for (int i = 1; i < commandArgs.Length; i++)
     }
 }
 
-var solutionRoot = FindSolutionRoot() ?? Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\.."));
-var contextPath = Path.Combine(solutionRoot, "XFramework.DAL");
+var solutionRoot = FindSolutionRoot();
+if (solutionRoot == null)
+{
+    Console.WriteLine("Solution (.sln) not found");
+    return;
+}
+var projectName = Path.GetFileNameWithoutExtension(
+    Directory.GetFiles(solutionRoot, "*.sln").First()
+);
 
-// Outputs
-var dtoOutput = Path.Combine(solutionRoot, "XFramework.Dtos");
-var mapperOutput = Path.Combine(solutionRoot, "XFramework.BLL", "Mappings");
-var validatorOutput = Path.Combine(solutionRoot, "XFramework.BLL", "Utilities", "ValidationRulers");
-var serviceOutput = Path.Combine(solutionRoot, "XFramework.BLL", "Services", "Concretes");
-var controllerOutput = Path.Combine(solutionRoot, "XFramework.API", "Controllers");
+var dalPath = FindProject(solutionRoot, "DAL");
+var bllPath = FindProject(solutionRoot, "BLL");
+var apiPath = FindProject(solutionRoot, "API");
+var dtosPath = FindProject(solutionRoot, "Dtos", "DTOs", "Dto");
+
+if (dalPath == null || bllPath == null || apiPath == null || dtosPath == null)
+{
+    Console.WriteLine("Required projects not found (DAL, BLL, API, Dtos)");
+    Console.WriteLine($"{dalPath}");
+    Console.WriteLine($"{bllPath}");
+    Console.WriteLine($"{apiPath}");
+    Console.WriteLine($"{dtosPath}");
+    return;
+}
+
+var dtoOutput = dtosPath;
+var mapperOutput = Path.Combine(bllPath, "Mappings");
+var validatorOutput = Path.Combine(bllPath, "Utilities", "ValidationRulers");
+var serviceOutput = Path.Combine(bllPath, "Services", "Concretes");
+var controllerOutput = Path.Combine(apiPath, "Controllers");
+
 
 // Generator instances
 var dtoGenerator = new DtoGenerator();
@@ -47,17 +69,28 @@ var controllerGenerator = new ControllerGenerator();
 var contextGenerator = new ContextGenerator();
 
 Console.WriteLine($" Generating code for entity: {entityName}");
-Console.WriteLine($" Solution root: {solutionRoot}");
-
 if (skipComponents.Any())
 {
     Console.WriteLine($"  Skipping: {string.Join(", ", skipComponents)}");
 }
 
 
-DALBuilder.Build(solutionRoot);
-var dalPath = Path.Combine(solutionRoot, "XFramework.DAL", "bin", "Debug", "net8.0", "XFramework.DAL.dll");
-var asm = Assembly.LoadFrom(dalPath);
+var dalCsproj = Directory.GetFiles(dalPath, "*.csproj").First();
+
+DALBuilder.Build(dalCsproj);
+
+var dalDllPath = Directory
+    .GetFiles(Path.Combine(dalPath, "bin"), "*.dll", SearchOption.AllDirectories)
+    .FirstOrDefault(f => f.Contains("DAL", StringComparison.OrdinalIgnoreCase));
+
+if (dalDllPath == null)
+{
+    Console.WriteLine("❌ DAL assembly not found");
+    return;
+}
+
+// 4) Assembly’i yükle
+var asm = Assembly.LoadFrom(dalDllPath);
 var entity = asm.GetTypes().FirstOrDefault(t => t.Name.Equals(entityName, StringComparison.OrdinalIgnoreCase));
 
 if (entity != null)
@@ -67,37 +100,37 @@ if (entity != null)
     if (!skipComponents.Contains("Dto"))
     {
         Console.WriteLine("  Generating DTOs...");
-        dtoNames = dtoGenerator.Generate(entity, dtoOutput).ToArray();
+        dtoNames = dtoGenerator.Generate(entity, projectName, dtoOutput).ToArray();
     }
 
     if (!skipComponents.Contains("Mapper"))
     {
         Console.WriteLine("  Generating Mapper...");
-        mapperGenerator.Generate(new[] { entity }, mapperOutput);
+        mapperGenerator.Generate(new[] { entity }, projectName, mapperOutput);
     }
 
     if (!skipComponents.Contains("Validator") && !skipComponents.Contains("Validation"))
     {
         Console.WriteLine("  Generating Validator...");
-        validationGenerator.Generate(entity, dtoNames, validatorOutput);
+        validationGenerator.Generate(entity, projectName, dtoNames, validatorOutput);
     }
 
     if (!skipComponents.Contains("Service"))
     {
         Console.WriteLine("  Generating Service...");
-        serviceGenerator.Generate(new[] { entity }, dtoNames, serviceOutput);
+        serviceGenerator.Generate(new[] { entity }, projectName, dtoNames, serviceOutput);
     }
 
     if (!skipComponents.Contains("Controller"))
     {
         Console.WriteLine("  Generating Controller...");
-        controllerGenerator.Generate(entity, dtoNames, controllerOutput);
+        controllerGenerator.Generate(entity, projectName, controllerOutput);
     }
 
     if (!skipComponents.Contains("DbSet") && !skipComponents.Contains("Context"))
     {
         Console.WriteLine("  Adding DbSet to Context...");
-        contextGenerator.AddDbSet(entity, contextPath);
+        contextGenerator.AddDbSet(entity, projectName, dalPath);
     }
 
     Console.WriteLine($"\n All files generated successfully for entity: {entityName}");
@@ -145,6 +178,24 @@ static string? FindSolutionRoot()
             return currentDir;
         }
         currentDir = Directory.GetParent(currentDir)?.FullName;
+    }
+
+    return null;
+}
+
+static string? FindProject(string solutionRoot, params string[] suffixes)
+{
+    var csprojs = Directory.GetFiles(solutionRoot, "*.csproj", SearchOption.AllDirectories);
+
+    foreach (var csproj in csprojs)
+    {
+        var name = Path.GetFileNameWithoutExtension(csproj);
+
+        foreach (var suffix in suffixes)
+        {
+            if (name.Contains(suffix, StringComparison.OrdinalIgnoreCase))
+                return Path.GetDirectoryName(csproj);
+        }
     }
 
     return null;
