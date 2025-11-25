@@ -16,7 +16,7 @@
 		<NoWarn>$(NoWarn);NU5128</NoWarn>
 		<NoDefaultExcludes>true</NoDefaultExcludes>
 		<EnableDefaultItems>false</EnableDefaultItems>
-		<PackageOutputPath>./nupkg</PackageOutputPath>
+		<PackageOutputPath>C:\LocalNuGet</PackageOutputPath>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -23,8 +23,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyApp.Repository", "2_Repos
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyApp.DAL", "1_Data\MyApp.DAL\MyApp.DAL.csproj", "{44444444-4444-4444-4444-444444444444}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyApp.Configuration", "0_Common\MyApp.Configuration\MyApp.Configuration.csproj", "{55555555-5555-5555-5555-555555555555}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyApp.Dtos", "0_Common\MyApp.Dtos\MyApp.Dtos.csproj", "{66666666-6666-6666-6666-666666666666}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyApp.Helper", "0_Common\MyApp.Helper\MyApp.Helper.csproj", "{77777777-7777-7777-7777-777777777777}"

@@ -1,29 +1,28 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Dtos;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using MyApp.Configuration;
 using MyApp.Dtos;
 using MyApp.Dtos.User;
+using Dtos;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
 namespace MyApp.BLL.Utilities.JWT
 {
     public class TokenHelper : ITokenHelper
     {
-        private readonly JwtOptions _jwtOptions;
-        public TokenHelper(IOptions<JwtOptions> jwtOptions)
+        private readonly IConfiguration _config;
+        public TokenHelper(IConfiguration config)
         {
-            _jwtOptions = jwtOptions.Value;
+            _config = config;
         }
         public AccessToken CreateToken(CreateTokenDto createTokenDto)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new List<Claim>
             {
-                  new Claim(JwtRegisteredClaimNames.Sub,createTokenDto.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Sub,createTokenDto.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, createTokenDto.Email),
                 new Claim(JwtRegisteredClaimNames.PreferredUsername,createTokenDto.Username),
             };
@@ -33,11 +32,11 @@ namespace MyApp.BLL.Utilities.JWT
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
-            var tokenExpiry = DateTime.Now.AddMinutes(_jwtOptions.ExpireInMinutes);
+            var tokenExpiry = DateTime.Now.AddMinutes(int.Parse(_config["Jwt:ExpireInMinutes"]));
 
             var token = new JwtSecurityToken(
-                issuer: _jwtOptions.Issuer,
-                audience: _jwtOptions.Audience,
+                issuer: _config["Jwt:Issuer"],
+                audience: _config["Jwt:Audience"],
                 claims: claims,
                 expires: tokenExpiry,
                 signingCredentials: credentials
@@ -53,7 +52,9 @@ namespace MyApp.BLL.Utilities.JWT
 
         public PasswordResetTokenDto CreatePasswordResetToken(UserDto userDto)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));
+            var securityKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(_config["Jwt:Key"])
+        );
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>
@@ -65,12 +66,12 @@ namespace MyApp.BLL.Utilities.JWT
 
             var tokenExpiry = DateTime.UtcNow.AddMinutes(15);
             var token = new JwtSecurityToken(
-           issuer: _jwtOptions.Issuer,
-           audience: _jwtOptions.Audience,
-           claims: claims,
-           expires: tokenExpiry,
-           signingCredentials: credentials
-       );
+            issuer: _config["Jwt:Issuer"],
+            audience: _config["Jwt:Audience"],
+            claims: claims,
+            expires: tokenExpiry,
+            signingCredentials: credentials
+    );
 
             return new PasswordResetTokenDto
             {
@@ -88,9 +89,9 @@ namespace MyApp.BLL.Utilities.JWT
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = _jwtOptions.Issuer,
-                ValidAudience = _jwtOptions.Audience,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key)),
+                ValidIssuer = _config["Jwt:Issuer"],
+                ValidAudience = _config["Jwt:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"])),
                 ClockSkew = TimeSpan.Zero
             };
 

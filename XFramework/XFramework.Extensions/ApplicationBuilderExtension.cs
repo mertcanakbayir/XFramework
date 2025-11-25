@@ -9,9 +9,13 @@ namespace XFramework.Extensions
     {
         public static IApplicationBuilder UseXFramework(this IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseMiddleware<ExceptionMiddleware>();
+
+            app.UseHttpsRedirection();
             // 🔹 CORS
             app.UseCors("AllowAngularClient");
 
+            app.UseRouting();
             // 🔹 Swagger
             if (env.IsDevelopment())
             {
@@ -22,14 +26,11 @@ namespace XFramework.Extensions
                 });
             }
 
-            // 🔹 Security + Middlewares
-            app.UseHttpsRedirection();
-            app.UseMiddleware<ExceptionMiddleware>();
-            app.UseMiddleware<LoggingMiddleware>();
-
             // 🔹 Auth & Authz
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseMiddleware<LoggingMiddleware>();
 
             // 🔹 Rate Limiter
             app.UseRateLimiter();
