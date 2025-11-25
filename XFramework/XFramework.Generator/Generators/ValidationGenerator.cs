@@ -2,7 +2,7 @@
 {
     public class ValidationGenerator
     {
-        public void Generate(Type entity, IEnumerable<string> dtoNames, string outputPath)
+        public void Generate(Type entity, string projectName, IEnumerable<string> dtoNames, string outputPath)
         {
             var entityFolderPath = Path.Combine(outputPath, entity.Name);
             Directory.CreateDirectory(entityFolderPath);
@@ -17,9 +17,9 @@
                 {
                     var validator = $@"
 using FluentValidation;
-using XFramework.Dtos.{entity.Name};
+using {projectName}.Dtos.{entity.Name};
 
-namespace XFramework.BLL.Utilities.ValidationRulers
+namespace {projectName}.BLL.Utilities.ValidationRulers
 {{
     public class {dtoName}Validator:AbstractValidator<{dtoName}>
 {{

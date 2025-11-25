@@ -2,17 +2,16 @@
 {
     public class ControllerGenerator
     {
-        public void Generate(Type entity, IEnumerable<string> dtos, string outputPath)
+        public void Generate(Type entity, string projectName, string outputPath)
         {
             Directory.CreateDirectory(outputPath);
-            //var dtoList = dtos.ToList();
             var controller = $@"
 using Microsoft.AspNetCore.Mvc;
-using XFramework.BLL.Services.Concretes;
-using XFramework.Dtos.{entity.Name};
-using XFramework.Helper.ViewModels;
+using {projectName}.BLL.Services.Concretes;
+using {projectName}.Dtos.{entity.Name};
+using {projectName}.Helper.ViewModels;
 
-namespace XFramework.API.Controllers
+namespace {projectName}.API.Controllers
 {{
     [Route(""api/[controller]"")]
     [ApiController]
@@ -35,13 +34,13 @@ namespace XFramework.API.Controllers
         [HttpGet]
         public async Task<ResultViewModel<List<{entity.Name}Dto>>> Get{entity.Name}s()
         {{
-            return await _{entity.Name}Service.GetPagedAsync();
+            return await _{entity.Name}Service.GetAllAsync();
         }}
 
         [HttpGet(""{{id}}"")]
         public async Task<ResultViewModel<{entity.Name}Dto>> GetById(int id)
         {{
-            return await _{entity.Name}Service.GetAsync(id);
+            return await _{entity.Name}Service.GetAsync(e=>e.Id==id);
         }}
         [HttpPut(""{{id}}"")]
         [TypeFilter(typeof(ValidateFilter))]

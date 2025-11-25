@@ -4,14 +4,12 @@ namespace XFramework.Generator.Utils
 {
     public static class DALBuilder
     {
-        public static void Build(string solutionRoot)
+        public static void Build(string dalCsprojFullPath)
         {
-            var dalProjectPath = Path.Combine(solutionRoot, "XFramework.DAL", "XFramework.DAL.csproj");
-
             var psi = new ProcessStartInfo
             {
                 FileName = "dotnet",
-                Arguments = $"build \"{dalProjectPath}\" -c Debug --nologo",
+                Arguments = $"build \"{dalCsprojFullPath}\" -c Debug --nologo",
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,

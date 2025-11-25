@@ -8,7 +8,7 @@ namespace XFramework.Generator.Generators
         {
           "CreatedAt","CreatedBy","UpdatedAt","UpdatedBy","IsActive","DeletedBy","DeletedAt","Revision"
         };
-        public IEnumerable<string> Generate(Type entity, string outputPath)
+        public IEnumerable<string> Generate(Type entity, string projectName, string outputPath)
         {
             var folderPath = Path.Combine(outputPath, entity.Name);
 
@@ -20,20 +20,20 @@ namespace XFramework.Generator.Generators
                     || p.PropertyType == typeof(Guid))
             .Where(p => !typeof(System.Collections.ICollection).IsAssignableFrom(p.PropertyType))
             .Where(p => !_auditFields.Contains(p.Name))
-            .Where(p => p.PropertyType.Namespace != "XFramework.DAL.Entities")
+            .Where(p => p.PropertyType.Namespace != $"{projectName}.DAL.Entities")
             .ToList();
 
             var dtos = new List<string>();
 
             var commonProps = props.Where(p => !_auditFields.Contains(p.Name)).ToList();
             dtos.Add(entity.Name + "Dto");
-            WriteDto(folderPath, entity.Name + "Dto", commonProps, entity.Name);
+            WriteDto(folderPath, projectName, entity.Name + "Dto", commonProps, entity.Name);
 
             var addProps = commonProps
               .Where(p => !string.Equals(p.Name, "Id", StringComparison.OrdinalIgnoreCase))
               .ToList();
             dtos.Add(entity.Name + "AddDto");
-            WriteDto(folderPath, entity.Name + "AddDto", addProps, entity.Name);
+            WriteDto(folderPath, projectName, entity.Name + "AddDto", addProps, entity.Name);
 
             var updateProps = commonProps.Where(p => !string.Equals(p.Name, "Id", StringComparison.OrdinalIgnoreCase)).ToList();
 
@@ -45,16 +45,16 @@ namespace XFramework.Generator.Generators
                 updateProps.Add(revisionProperty);
             }
             dtos.Add(entity.Name + "UpdateDto");
-            WriteDto(folderPath, entity.Name + "UpdateDto", updateProps, entity.Name);
+            WriteDto(folderPath, projectName, entity.Name + "UpdateDto", updateProps, entity.Name);
             return dtos;
         }
-        private void WriteDto(string folderPath, string dtoName, List<PropertyInfo> props, string entityName)
+        private void WriteDto(string folderPath, string projectName, string dtoName, List<PropertyInfo> props, string entityName)
         {
             var properties = string.Join(Environment.NewLine,
                 props.Select(p => $"        public {GetTypeName(p.PropertyType)} {p.Name} {{ get; set; }}"));
 
             var dto = $@"
-namespace XFramework.Dtos.{entityName}
+namespace {projectName}.Dtos.{entityName}
 {{
     public class {dtoName}
     {{

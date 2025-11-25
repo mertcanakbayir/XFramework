@@ -4,9 +4,9 @@ namespace XFramework.Generator.Generators
 {
     public class ContextGenerator
     {
-        public void AddDbSet(Type entity, string contextPath)
+        public void AddDbSet(Type entity, string projectName, string contextPath)
         {
-            var contextFile = Path.Combine(contextPath, "XFMContext.cs");
+            var contextFile = Path.Combine(contextPath, $"{projectName}Context.cs");
 
             if (!File.Exists(contextFile))
             {

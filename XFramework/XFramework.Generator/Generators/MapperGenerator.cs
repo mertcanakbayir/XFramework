@@ -2,7 +2,7 @@
 {
     public class MapperGenerator
     {
-        public void Generate(IEnumerable<Type> entities, string outputPath)
+        public void Generate(IEnumerable<Type> entities, string projectName, string outputPath)
         {
             Directory.CreateDirectory(outputPath);
 
@@ -15,10 +15,10 @@
 
                 var validation = $@"
 using AutoMapper;
-using XFramework.DAL.Entities;
-using XFramework.Dtos.{e.Name};
+using {projectName}.DAL.Entities;
+using {projectName}.Dtos.{e.Name};
 
-namespace XFramework.BLL.Mappings
+namespace {projectName}.BLL.Mappings
 {{
 
 public class {e.Name}Profile : Profile

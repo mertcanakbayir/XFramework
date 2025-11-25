@@ -40,7 +40,7 @@ namespace XFramework.Extensions
             var corsOptions = configuration.GetSection("Cors").Get<CorsOptions>() ?? new CorsOptions();
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAngularClient", policy =>
+                options.AddPolicy("AllowClient", policy =>
                 {
                     policy.WithOrigins(corsOptions.AllowedOrigins ?? new[] { "http://localhost:4200" })
                           .AllowAnyHeader()

@@ -1,10 +1,8 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace XFramework.Generator.Generators
+﻿namespace XFramework.Generator.Generators
 {
     public class ServiceGenerator
     {
-        public void Generate(IEnumerable<Type> entities, IEnumerable<string> dtoNames, string outputPath)
+        public void Generate(IEnumerable<Type> entities, string projectName, IEnumerable<string> dtoNames, string outputPath)
         {
             var dtoList = dtoNames.ToList();
             Directory.CreateDirectory(outputPath);
@@ -14,12 +12,12 @@ namespace XFramework.Generator.Generators
                 var service = $@"
 using AutoMapper;
 using FluentValidation;
-using XFramework.BLL.Services.Abstracts;
-using XFramework.DAL.Entities;
-using XFramework.Dtos.{entity.Name};
-using XFramework.Repository.Repositories.Abstract;
+using {projectName}.BLL.Services.Abstracts;
+using {projectName}.DAL.Entities;
+using {projectName}.Dtos.{entity.Name};
+using {projectName}.Repository.Repositories.Abstract;
 
-namespace XFramework.BLL.Services.Concretes
+namespace {projectName}.BLL.Services.Concretes
 {{
     public class {entity.Name}Service : BaseService<{entity.Name},{dtoList[0]},{dtoList[1]},{dtoList[2]}>,IRegister
     {{
