@@ -3,8 +3,8 @@ using System.Security.Claims;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using XFramework.Extensions.Configurations;
 using XFramework.Extensions.Helpers;
 
@@ -13,15 +13,15 @@ namespace XFramework.Extensions.Extensions
 {
     public static class RateLimiterExtension
     {
-        public static IServiceCollection AddCustomRateLimiter(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddCustomRateLimiter(this IServiceCollection services)
         {
-            var rateLimitOptions = configuration.GetSection("RateLimit").Get<RateLimitOptions>() ?? new RateLimitOptions();
-            if (!rateLimitOptions.EnableRateLimiting)
-                return services;
             services.AddRateLimiter(options =>
             {
                 var ipLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
                 {
+                    var rateLimitOptions = httpContext.RequestServices
+                      .GetRequiredService<IOptions<RateLimitOptions>>()
+                      .Value;
                     var ipResolver = httpContext.RequestServices.GetRequiredService<ClientIpResolver>();
                     var ipAddress = ipResolver.GetClientIp(httpContext);
 
@@ -38,6 +38,9 @@ namespace XFramework.Extensions.Extensions
 
                 var userLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
                 {
+                    var rateLimitOptions = httpContext.RequestServices
+                      .GetRequiredService<IOptions<RateLimitOptions>>()
+                      .Value;
                     var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? httpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
                     if (string.IsNullOrEmpty(userId))
                         return RateLimitPartition.GetNoLimiter<string>("anonymous");

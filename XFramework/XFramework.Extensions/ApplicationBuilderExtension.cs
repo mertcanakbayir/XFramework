@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using XFramework.Extensions.Configurations;
 using XFramework.Extensions.Middlewares;
 
 namespace XFramework.Extensions
@@ -12,8 +15,13 @@ namespace XFramework.Extensions
             app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseHttpsRedirection();
+
+            var corsOptions = app.ApplicationServices
+                .GetRequiredService<IOptions<CorsOptions>>()
+                .Value;
+
             // 🔹 CORS
-            app.UseCors("AllowClient");
+            app.UseCors(corsOptions.PolicyName);
 
             app.UseRouting();
             // 🔹 Swagger
