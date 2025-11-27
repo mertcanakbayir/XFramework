@@ -85,7 +85,7 @@ var dalDllPath = Directory
 
 if (dalDllPath == null)
 {
-    Console.WriteLine("❌ DAL assembly not found");
+    Console.WriteLine(" DAL assembly not found");
     return;
 }
 

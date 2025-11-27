@@ -140,6 +140,7 @@ namespace XFramework.Extensions
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.ControlledBy(levelSwitch)
                 .Enrich.FromLogContext()
+                .WriteTo.Console()
                 .WriteTo.MSSqlServer(
                     connectionString: configuration.GetConnectionString("LogConnection"),
                     sinkOptions: new MSSqlServerSinkOptions
@@ -157,7 +158,7 @@ namespace XFramework.Extensions
                             new("UserId", SqlDbType.NVarChar, dataLength: 100),
                             new("IPAddress", SqlDbType.NVarChar, dataLength: 50),
                             new("ActionName", SqlDbType.NVarChar, dataLength: 250),
-                            new SqlColumn("TraceId", SqlDbType.NVarChar, dataLength: 100)
+                            new("TraceIdentifier", SqlDbType.NVarChar, dataLength: 100)
                         }
                     })
                 .CreateLogger();

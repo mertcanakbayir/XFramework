@@ -7,7 +7,7 @@
 		<Nullable>enable</Nullable>
 		<PackAsTool>true</PackAsTool>
 		<ToolCommandName>xgen</ToolCommandName>
-		<PackageId>XFramework.Generator.Tool</PackageId>
+		<PackageId>MA.XFramework.Generator.Tool</PackageId>
 		<Version>1.0.0</Version>
 		<PackageOutputPath>C:\LocalNuGet</PackageOutputPath>
 	</PropertyGroup>
