@@ -25,8 +25,8 @@ namespace XFramework.Extensions.Middlewares
             var traceId = context.TraceIdentifier;
             using (LogContext.PushProperty("UserId", userId))
             using (LogContext.PushProperty("IPAddress", ipAddress))
-            using (LogContext.PushProperty("Action", actionName))
-            using (LogContext.PushProperty("TraceId", traceId))
+            using (LogContext.PushProperty("ActionName", actionName))
+            using (LogContext.PushProperty("TraceIdentifier", traceId))
             {
                 try
                 {

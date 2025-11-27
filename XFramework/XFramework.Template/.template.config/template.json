@@ -1,8 +1,8 @@
 ﻿{
     "$schema": "http://json.schemastore.org/template",
     "author": "mertcanakbayir",
-    "classifications": [ "XFramework", "Layered", "Web API" ],
-    "identity": "XFramework.Template",
+    "classifications": [ "XFramework", "Layered", "Web API", "Template" ],
+    "identity": "MA.XFramework.Template",
     "name": "XFramework Layered Template",
     "shortName": "xframework",
     "sourceName": "MyApp",

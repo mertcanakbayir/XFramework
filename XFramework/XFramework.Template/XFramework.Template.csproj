@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<PackageType>Template</PackageType>
 		<PackageVersion>1.0.0</PackageVersion>
-		<PackageId>XFramework.Template</PackageId>
+		<PackageId>MA.XFramework.Template</PackageId>
 		<Title>XFramework Template</Title>
 		<Authors>mertcanakbayir</Authors>
 		<Description>Rapid Application Development Template for XFramework</Description>
@@ -26,6 +26,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.10" />
 	</ItemGroup>
 </Project>
