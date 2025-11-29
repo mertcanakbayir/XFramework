@@ -13,6 +13,8 @@ using Serilog.Core;
 using Serilog.Events;
 using Serilog.Sinks.MSSqlServer;
 using XFramework.Extensions.Configurations;
+using XFramework.Extensions.Configurations.ConfigurationValidations;
+using XFramework.Extensions.Configurations.Configurators;
 using XFramework.Extensions.Extensions;
 using XFramework.Extensions.Helpers;
 
@@ -24,62 +26,43 @@ namespace XFramework.Extensions
             where TMain : DbContext
             where TLog : DbContext
         {
-            // 🔹 1. Configuration Binding
-            services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
-            services.Configure<CorsOptions>(configuration.GetSection("Cors"));
-            services.Configure<CacheOptions>(configuration.GetSection("Cache"));
-            services.Configure<RateLimitOptions>(configuration.GetSection("RateLimit"));
 
-            // 🔹 2. Options as Concrete Types (for DI)
-            services.AddSingleton(sp => sp.GetRequiredService<IOptions<JwtOptions>>().Value);
-            services.AddSingleton(sp => sp.GetRequiredService<IOptions<CorsOptions>>().Value);
-            services.AddSingleton(sp => sp.GetRequiredService<IOptions<CacheOptions>>().Value);
-            services.AddSingleton(sp => sp.GetRequiredService<IOptions<RateLimitOptions>>().Value);
+            services.AddOptions<JwtOptions>()
+                .Bind(configuration.GetSection("Jwt"))
+                .ValidateOnStart();
 
-            // 🔹 3. CORS
-            var corsOptions = configuration.GetSection("Cors").Get<CorsOptions>() ?? new CorsOptions();
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AllowClient", policy =>
-                {
-                    policy.WithOrigins(corsOptions.AllowedOrigins ?? new[] { "http://localhost:4200" })
-                          .AllowAnyHeader()
-                          .AllowAnyMethod();
+            services.AddOptions<CorsOptions>()
+                .Bind(configuration.GetSection("Cors"))
+                .ValidateOnStart();
 
-                    if (corsOptions.AllowCredentials)
-                        policy.AllowCredentials();
-                });
-            });
+            services.AddOptions<CacheOptions>()
+                .Bind(configuration.GetSection("Cache"))
+                .ValidateOnStart();
 
-            // 🔹 4. JWT Authentication
-            var jwtOptions = configuration.GetSection("Jwt").Get<JwtOptions>() ?? new JwtOptions();
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.RequireHttpsMetadata = false;
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtOptions.Issuer,
-                    ValidAudience = jwtOptions.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key ?? "")),
-                    ClockSkew = TimeSpan.Zero
-                };
-            });
+            services.AddOptions<RateLimitOptions>()
+                .Bind(configuration.GetSection("RateLimit"))
+                .ValidateOnStart();
+
+            services.AddOptions<EncryptionOptions>()
+                .Bind(configuration.GetSection("Encryption"))
+                .ValidateOnStart();
+
+            services.AddSingleton<IValidateOptions<JwtOptions>, JwtOptionsValidator>();
+            services.AddSingleton<IValidateOptions<CorsOptions>, CorsOptionsValidator>();
+            services.AddSingleton<IValidateOptions<CacheOptions>, CacheOptionsValidator>();
+            services.AddSingleton<IValidateOptions<RateLimitOptions>, RateLimitOptionsValidator>();
+            services.AddSingleton<IValidateOptions<EncryptionOptions>, EncryptionOptionsValidator>();
+
+            services.AddSingleton<IConfigureOptions<JwtBearerOptions>, JwtConfigurator>();
+
+            services.AddCors();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
 
             services.AddAuthorization();
             services.AddHttpContextAccessor();
             services.AddMemoryCache();
 
-            // 🔹 5. Validators & AutoMapper
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             services.AddValidatorsFromAssemblies(assemblies);
             services.AddAutoMapper(cfg =>
@@ -87,7 +70,6 @@ namespace XFramework.Extensions
                 cfg.AddMaps(assemblies);
             });
 
-            // 🔹 6. Swagger
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "XFramework API", Version = "v1" });
@@ -120,7 +102,6 @@ namespace XFramework.Extensions
 
             services.AddSingleton<ClientIpResolver>();
 
-            // 🔹 7. DbContexts
             var defaultConnection = configuration.GetConnectionString("DefaultConnection");
             var logConnection = configuration.GetConnectionString("LogConnection");
 
@@ -132,8 +113,6 @@ namespace XFramework.Extensions
             services.AddDbContext<TMain>(opt => opt.UseSqlServer(defaultConnection));
             services.AddDbContext<TLog>(opt => opt.UseSqlServer(logConnection));
 
-
-            // 🔹 8. Serilog
             var levelSwitch = new LoggingLevelSwitch(LogEventLevel.Warning);
             services.AddSingleton(levelSwitch);
 
@@ -163,8 +142,7 @@ namespace XFramework.Extensions
                     })
                 .CreateLogger();
 
-            // 🔹 9. Rate Limiter
-            services.AddCustomRateLimiter(configuration);
+            services.AddCustomRateLimiter();
 
             return services;
         }
