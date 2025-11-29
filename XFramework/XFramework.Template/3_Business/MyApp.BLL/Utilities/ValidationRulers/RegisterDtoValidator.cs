@@ -1,7 +1,7 @@
 ﻿using Dtos;
 using FluentValidation;
 
-namespace XFM.BLL.Utilities.ValidationRulers
+namespace MyApp.BLL.Utilities.ValidationRulers
 {
     public class RegisterDtoValidator : AbstractValidator<RegisterDto>
     {

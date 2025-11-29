@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using XFramework.DAL.Entities;
 
-namespace XFM.DAL.Configurations
+namespace XFramework.DAL.Configurations
 {
     public class UserConfiguration : IEntityTypeConfiguration<User>
     {
