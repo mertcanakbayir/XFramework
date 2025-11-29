@@ -4,9 +4,8 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageId>MA.XFramework.Extensions</PackageId>
-		<Version>1.0.6</Version>
+		<Version>1.0.10</Version>
 		<Authors>mertcanakbayir</Authors>
 		<Company>XFramework</Company>
 		<Description>XFramework core extensions: middlewares, services, Serilog, RateLimiter, JWT setup, etc.</Description>
