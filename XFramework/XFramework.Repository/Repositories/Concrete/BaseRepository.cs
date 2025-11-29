@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using XFramework.DAL;
 using XFramework.DAL.Entities;
 using XFramework.Helper.Models;
-using XFramework.Helper.ViewModels;
 using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.Repository.Repositories.Concrete

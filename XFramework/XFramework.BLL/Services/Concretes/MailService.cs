@@ -13,7 +13,7 @@ namespace XFramework.BLL.Services.Concretes
         private readonly MailQueueService _MailQueueService;
         private readonly SystemSettingDetailService _systemSettingDetailService;
 
-        public MailService(XFMContext context, IMapper mapper, MailQueueService mailQueueService, SystemSettingDetailService systemSettingDetailService)
+        public MailService(IMapper mapper, MailQueueService mailQueueService, SystemSettingDetailService systemSettingDetailService)
         {
 
             _mapper = mapper;
