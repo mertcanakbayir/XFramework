@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<PackageType>Template</PackageType>
-		<PackageVersion>1.0.1</PackageVersion>
+		<PackageVersion>1.0.6</PackageVersion>
 		<PackageId>MA.XFramework.Template</PackageId>
 		<Title>XFramework Template</Title>
 		<Authors>mertcanakbayir</Authors>
@@ -27,6 +27,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.10" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.11" />
 	</ItemGroup>
 </Project>

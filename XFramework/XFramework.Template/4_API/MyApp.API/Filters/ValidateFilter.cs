@@ -23,7 +23,7 @@ public class ValidateFilter : Attribute, IAsyncActionFilter
                 var message = result.Message;
 
                 _logger.LogWarning(
-                         "Action {ActionName} returned validation/business error. StatusCode {StatusCode}, Message:{Message}, Response: {@Response}",
+                    "Action {ActionName} returned validation/business error. StatusCode {StatusCode}, Message:{Message}, Response: {@Response}",
                     context.ActionDescriptor.DisplayName,
                     statusCode,
                     message,
