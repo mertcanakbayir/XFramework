@@ -36,23 +36,38 @@ namespace XFramework.Extensions.Middlewares
                 {
                     Log.Error(ex, $"Unhandled exception in {actionName}");
 
-                    var statusCode = ex switch
-                    {
-                        KeyNotFoundException => (int)HttpStatusCode.NotFound,
-                        UnauthorizedAccessException => (int)HttpStatusCode.Forbidden,
-                        _ => (int)HttpStatusCode.InternalServerError
-                    };
+                    int statusCode;
+                    string message;
 
-                    var errorResponse = new
+                    if (ex is InvalidOperationException && ex.Message.Contains("[CONFLICT]"))
                     {
-                        success = false,
+                        statusCode = (int)HttpStatusCode.Conflict;
+                        message = ex.Message.Replace("[CONFLICT]", "").Trim();
+
+                    }
+                    else
+                    {
+                        statusCode = ex switch
+                        {
+                            KeyNotFoundException => (int)HttpStatusCode.NotFound,
+                            UnauthorizedAccessException => (int)HttpStatusCode.Forbidden,
+                            _ => (int)HttpStatusCode.InternalServerError
+                        };
+
                         message = statusCode switch
                         {
                             404 => "Not Found",
                             403 => "Forbidden",
                             _ => "Internal Server Error"
-                        },
-                        traceId = context.TraceIdentifier,
+                        };
+                    }
+
+
+                    var errorResponse = new
+                    {
+                        success = false,
+                        message,
+                        traceId,
                         action = actionName,
                         userId,
                         ipAddress

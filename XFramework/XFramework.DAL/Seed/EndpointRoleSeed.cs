@@ -48,7 +48,10 @@ namespace XFramework.DAL.Seed
                  new EndpointRole { Id = 24, EndpointId = 62, RoleId = 1 },
                  new EndpointRole { Id = 25, EndpointId = 63, RoleId = 1 },
                  new EndpointRole { Id = 26, EndpointId = 64, RoleId = 1 },
-                 new EndpointRole { Id = 27, EndpointId = 65, RoleId = 1 }
+                 new EndpointRole { Id = 27, EndpointId = 65, RoleId = 1 },
+
+                 new EndpointRole { Id = 32, EndpointId = 42, RoleId = 1 },
+                 new EndpointRole { Id = 33, EndpointId = 48, RoleId = 1 }
 
                 );
         }
