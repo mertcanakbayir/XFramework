@@ -67,6 +67,12 @@ namespace {projectName}.Dtos.{entityName}
 
         private string GetTypeName(Type type)
         {
+            var underlyingType = Nullable.GetUnderlyingType(type);
+            if (underlyingType != null)
+            {
+                return GetTypeName(underlyingType) + "?";
+            }
+
             return type.Name switch
             {
                 "Int32" => "int",
@@ -79,5 +85,6 @@ namespace {projectName}.Dtos.{entityName}
                 _ => type.Name
             };
         }
+
     }
 }
