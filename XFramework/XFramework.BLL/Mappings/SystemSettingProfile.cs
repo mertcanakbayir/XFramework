@@ -11,6 +11,9 @@ namespace XFramework.BLL.Mappings
             CreateMap<SystemSettingDto, SystemSetting>();
 
             CreateMap<SystemSetting, SystemSettingDto>();
+
+            CreateMap<SystemSettingAddDto, SystemSetting>().ReverseMap();
+            CreateMap<SystemSettingUpdateDto, SystemSetting>().ReverseMap();
         }
     }
 }

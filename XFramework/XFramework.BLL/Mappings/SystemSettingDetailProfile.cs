@@ -9,6 +9,10 @@ namespace XFramework.BLL.Mappings
         public SystemSettingDetailProfile()
         {
             CreateMap<SystemSettingDetail, SystemSettingDetailDto>();
+
+            CreateMap<SystemSettingDetailUpdateDto, SystemSettingDetail>().ReverseMap();
+
+            CreateMap<SystemSettingDetailAddDto, SystemSettingDetail>().ReverseMap();
         }
     }
 }

@@ -4,14 +4,20 @@ using XFramework.BLL.Services.Abstracts;
 using XFramework.DAL.Entities;
 using XFramework.Dtos;
 using XFramework.Dtos.SystemSettingDetail;
+using XFramework.Helper.ViewModels;
 using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
 {
     public class SystemSettingDetailService : BaseService<SystemSettingDetail, SystemSettingDetailDto, SystemSettingDetailAddDto, SystemSettingDetailUpdateDto>, IRegister
     {
-        public SystemSettingDetailService(IValidator<SystemSettingDetailAddDto> addDtoValidator, IMapper mapper, IBaseRepository<SystemSettingDetail> baseRepository, IUnitOfWork unitOfWork, IValidator<SystemSettingDetailUpdateDto> updateDtoValidator) : base(addDtoValidator, mapper, baseRepository, unitOfWork, updateDtoValidator)
+
+        private readonly SystemSettingService _systemSettingService;
+        private readonly IValidator<SystemSettingDetailAddDto> _systemSettingsDetailAddDtoValidator;
+        public SystemSettingDetailService(IValidator<SystemSettingDetailAddDto> addDtoValidator, IMapper mapper, IBaseRepository<SystemSettingDetail> baseRepository, IUnitOfWork unitOfWork, IValidator<SystemSettingDetailUpdateDto> updateDtoValidator, SystemSettingService systemSettingService) : base(addDtoValidator, mapper, baseRepository, unitOfWork, updateDtoValidator)
         {
+            _systemSettingService = systemSettingService;
+            _systemSettingsDetailAddDtoValidator = addDtoValidator;
         }
 
         public async Task<MailOptions> GetMailOptionsAsync(int systemSettingsId)
@@ -30,6 +36,26 @@ namespace XFramework.BLL.Services.Concretes
                 SenderEmail = dict.GetValueOrDefault("SenderEmail", ""),
                 IsQueue = bool.TryParse(dict.GetValueOrDefault("IsQueue"), out var q) && q
             };
+        }
+
+        public async Task<ResultViewModel<string>> AddAsync(int systemSettingId, SystemSettingDetailAddDto dto)
+        {
+            var validationResult = _systemSettingsDetailAddDtoValidator.Validate(dto);
+            if (!validationResult.IsValid)
+            {
+                return ResultViewModel<string>.Failure("Please check credentials", validationResult.Errors.Select(e => e.ErrorMessage).ToList());
+            }
+            var systemSetting = await _systemSettingService.GetAsync(e => e.Id == systemSettingId);
+            if (systemSetting == null)
+            {
+                return ResultViewModel<string>.Failure("System Setting Not Found", null, 404);
+            }
+            var entity = _mapper.Map<SystemSettingDetail>(dto);
+            entity.SystemSettingId = systemSettingId;
+            await _baseRepository.AddAsync(entity);
+            await _unitOfWork.SaveChangesAsync();
+
+            return ResultViewModel<string>.Success("System setting detail added succesfully.", 200);
         }
     }
 }

@@ -4,6 +4,7 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using XFramework.DAL;
 using XFramework.DAL.Entities;
+using XFramework.Helper.Exceptions;
 using XFramework.Helper.Models;
 using XFramework.Repository.Repositories.Abstract;
 
@@ -135,7 +136,7 @@ namespace XFramework.Repository.Repositories.Concrete
 
                 if (currentRevision != incomingRevision)
                 {
-                    throw new InvalidOperationException("Record updated by another user.");
+                    throw new RevisionConflictException(" [CONFLICT] Record updated by another user.");
                 }
 
                 entity.Revision = currentRevision += 1;

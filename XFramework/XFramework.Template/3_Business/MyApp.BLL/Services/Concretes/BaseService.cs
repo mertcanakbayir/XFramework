@@ -146,7 +146,7 @@ namespace MyApp.BLL.Services.Concretes
             var existing = await _baseRepository.GetAsync(filter: e => e.Id == id);
             if (existing == null)
             {
-                return ResultViewModel<string>.Failure("Not Found", errors: new List<string> { $"Record with {id} does not exist." });
+                return ResultViewModel<string>.Failure("Not Found", errors: new List<string> { $"Record does not exist." });
             }
             _mapper.Map(dto, existing);
             await _baseRepository.UpdateAsync(existing);

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using MyApp.BLL.Services.Abstracts;
 using MyApp.BLL.Utilities.Hashing;
 using MyApp.DAL.Entities;
@@ -33,14 +34,14 @@ namespace MyApp.BLL.Services.Concretes
             return ResultViewModel<UserAddDto>.Success("User added succesfully", 201);
         }
 
-        public async Task<ResultViewModel<UserUpdateDto>> UpdateUser(UserUpdateDto userUpdateDto, int id)
+        public async Task<ResultViewModel<UserUpdateDto>> UpdateUser(int id, UserUpdateDto userUpdateDto)
         {
             var validationResult = _updateDtoValidator.Validate(userUpdateDto);
             if (!validationResult.IsValid)
             {
                 return ResultViewModel<UserUpdateDto>.Failure("Please check credentials.", validationResult.Errors.Select(e => e.ErrorMessage).ToList());
             }
-            var userEntity = await _baseRepository.GetAsync(filter: e => e.Id == id);
+            var userEntity = await _baseRepository.GetAsync(filter: e => e.Id == id, include: q => q.Include(e => e.UserRoles).ThenInclude(e => e.Role));
             if (userEntity == null)
             {
                 return ResultViewModel<UserUpdateDto>.Failure("User not found.", null, 404);
@@ -50,7 +51,14 @@ namespace MyApp.BLL.Services.Concretes
             {
                 userEntity.Password = _hashingHelper.HashPassword(userUpdateDto.Password);
             }
+            userEntity.UserRoles.Clear();
+            userEntity.UserRoles.Add(new UserRole
+            {
+                RoleId = userUpdateDto.RoleId,
+                UserId = id
+            });
             await _baseRepository.UpdateAsync(userEntity);
+            await _unitOfWork.SaveChangesAsync();
             return ResultViewModel<UserUpdateDto>.Success("User updated succesfully", 200);
         }
 

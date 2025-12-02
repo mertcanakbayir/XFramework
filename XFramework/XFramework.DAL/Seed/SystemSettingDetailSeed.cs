@@ -10,24 +10,7 @@ namespace XFramework.DAL.Seed
         public void Configure(EntityTypeBuilder<SystemSettingDetail> builder)
         {
             builder.HasData(
-                   new SystemSettingDetail
-                   {
-                       Id = 1,
-                       SystemSettingId = 1,
-                       Key = "Ayar1Detail",
-                       Value = "Merhaba",
-                       Type = SystemSettingType.String,
-                       IsActive = true
-                   },
                 new SystemSettingDetail
-                {
-                    Id = 2,
-                    SystemSettingId = 1,
-                    Key = "Ayar2Detail",
-                    Value = "2025-08-15 10:30:00",
-                    Type = SystemSettingType.DateTime,
-                    IsActive = true
-                }, new SystemSettingDetail
                 {
                     Id = 3,
                     SystemSettingId = 3,
