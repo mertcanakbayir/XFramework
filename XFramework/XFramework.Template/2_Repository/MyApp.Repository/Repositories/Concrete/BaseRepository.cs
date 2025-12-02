@@ -136,7 +136,7 @@ namespace MyApp.Repository.Repositories.Concrete
 
                 if (currentRevision != incomingRevision)
                 {
-                    throw new InvalidOperationException("Record updated by another user.");
+                    throw new InvalidOperationException(" [CONFLICT] Record updated by another user.");
                 }
 
                 entity.Revision = currentRevision += 1;
