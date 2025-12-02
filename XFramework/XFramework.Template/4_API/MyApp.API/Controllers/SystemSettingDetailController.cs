@@ -26,5 +26,12 @@ namespace MyApp.API.Controllers
         {
             return await _systemSettingDetailService.UpdateAsync(id, systemSettingDetailUpdateDto);
         }
+        [HttpPost("/api/SystemSetting/{systemSettingId}/Detail")]
+        public async Task<ResultViewModel<string>> AddSystemSettingDetail(
+    int systemSettingId,
+    [FromBody] SystemSettingDetailAddDto dto)
+        {
+            return await _systemSettingDetailService.AddAsync(systemSettingId, dto);
+        }
     }
 }

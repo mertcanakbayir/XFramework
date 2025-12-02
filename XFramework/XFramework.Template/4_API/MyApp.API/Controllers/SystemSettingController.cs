@@ -31,5 +31,11 @@ namespace MyApp.API.Controllers
         {
             return await _systemSettingService.UpdateAsync(id, systemSettingUpdateDto);
         }
+
+        [HttpPost]
+        public async Task<ResultViewModel<string>> AddSystemSetting(SystemSettingAddDto systemSettingAddDto)
+        {
+            return await _systemSettingService.AddAsync(systemSettingAddDto);
+        }
     }
 }

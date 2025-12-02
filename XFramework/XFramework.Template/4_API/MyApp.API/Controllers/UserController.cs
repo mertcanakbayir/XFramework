@@ -31,7 +31,7 @@ namespace MyApp.Controllers
         [TypeFilter(typeof(ValidateFilter))]
         public async Task<ResultViewModel<UserUpdateDto>> UpdateUser(UserUpdateDto userUpdateDto, int id)
         {
-            return await _userService.UpdateUser(userUpdateDto, id);
+            return await _userService.UpdateUser(id, userUpdateDto);
         }
 
         [HttpGet]
