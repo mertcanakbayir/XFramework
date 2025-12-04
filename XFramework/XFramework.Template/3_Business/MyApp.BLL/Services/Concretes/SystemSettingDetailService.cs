@@ -31,8 +31,7 @@ namespace MyApp.BLL.Services.Concretes
                 SmtpHost = dict.GetValueOrDefault("SmtpHost", ""),
                 SmtpPort = int.TryParse(dict.GetValueOrDefault("SmtpPort"), out var port) ? port : 25,
                 SmtpUser = dict.GetValueOrDefault("SmtpUser", ""),
-                EncryptedPassword = dict.GetValueOrDefault("EncryptedPassword", ""),
-                EnableSsl = bool.TryParse(dict.GetValueOrDefault("EnableSsl"), out var ssl) && ssl,
+                SmtpPassword = dict.GetValueOrDefault("SmtpPassword", ""),
                 SenderEmail = dict.GetValueOrDefault("SenderEmail", ""),
                 IsQueue = bool.TryParse(dict.GetValueOrDefault("IsQueue"), out var q) && q
             };

@@ -9,7 +9,7 @@ namespace XFramework.BLL.Utilities.ValidationRulers
         public MailSettingsDtoValidator()
         {
             RuleFor(x => x.SmtpHost)
-           .NotEmpty().WithMessage("SMTP host is required.");
+            .NotEmpty().WithMessage("SMTP host is required.");
 
             RuleFor(x => x.SmtpPort)
                 .InclusiveBetween(1, 65535)
@@ -20,12 +20,14 @@ namespace XFramework.BLL.Utilities.ValidationRulers
                 .EmailAddress().WithMessage("Sender mail must be valid.");
 
             RuleFor(x => x.SmtpUser)
-                .NotEmpty().When(x => !string.IsNullOrEmpty(x.EncryptedPassword))
-                .WithMessage("If password is not null, SMTP username is required");
+                .NotEmpty()
+                .When(x => !string.IsNullOrWhiteSpace(x.SmtpPassword))
+                .WithMessage("SMTP username is required when SMTP password is provided.");
 
-            //RuleFor(x => x.EncryptedPassword)
-            //    .NotEmpty().When(x => !string.IsNullOrEmpty(x.SmtpUser))
-            //    .WithMessage("SMTP şifre boş olamaz, kullanıcı adı girilmiş ise.");
+            RuleFor(x => x.SmtpPassword)
+                .NotEmpty()
+                .When(x => !string.IsNullOrWhiteSpace(x.SmtpUser))
+                .WithMessage("SMTP password is required when SMTP username is provided.");
         }
     }
 }

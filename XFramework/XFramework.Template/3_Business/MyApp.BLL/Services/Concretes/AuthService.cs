@@ -167,12 +167,12 @@ namespace MyApp.BLL.Services.Concretes
             var userDto = _mapper.Map<UserDto>(user);
             var resetTokenDto = _tokenHelper.CreatePasswordResetToken(userDto);
             var resetLink = $"https://localhost:4200/reset-password?email={userDto.Email}&token={resetTokenDto.Token}";
-            var mailResult = await _mailService.SendEmailAsync(
-               userDto.Email,
-               "Şifre Sıfırlama Talebi",
-               $"Şifre sıfırlama linkiniz: {resetLink}",
-               settingId: 3
-            );
+            var mailResult = await _mailService.SendDirectMailAsync(
+                 userDto.Email,
+                 "Password Reset Request",
+                 $"Your password reset link: {resetLink}",
+                 settingId: 3
+             );
 
             if (!mailResult.IsSuccess)
             {
