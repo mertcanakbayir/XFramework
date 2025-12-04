@@ -47,6 +47,8 @@ namespace XFramework.Extensions
                 .Bind(configuration.GetSection("Encryption"))
                 .ValidateOnStart();
 
+            services.AddOptions<RabbitMqOptions>().Bind(configuration.GetSection("RabbitMQ"));
+
             services.AddSingleton<IValidateOptions<JwtOptions>, JwtOptionsValidator>();
             services.AddSingleton<IValidateOptions<CorsOptions>, CorsOptionsValidator>();
             services.AddSingleton<IValidateOptions<CacheOptions>, CacheOptionsValidator>();

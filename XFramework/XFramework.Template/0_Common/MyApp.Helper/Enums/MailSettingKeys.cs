@@ -5,7 +5,7 @@
         SmtpHost,
         SmtpPort,
         SmtpUser,
-        EncryptedPassword,
+        SmtpPassword,
         EnableSsl,
         SenderEmail,
         IsSmtp

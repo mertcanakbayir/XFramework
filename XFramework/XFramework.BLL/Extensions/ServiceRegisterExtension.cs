@@ -32,14 +32,7 @@ namespace XFramework.BLL.Extensions
 
             // Mail Services
             services.AddTransient<MailService>();
-            services.AddSingleton<MailQueueService>(sp =>
-            {
-                var config = configuration.GetSection("RabbitMQ");
-                var host = config["hostname"];
-                var user = config["username"];
-                var pass = config["password"];
-                return new MailQueueService(host, user, pass);
-            });
+            services.AddSingleton<MailQueueService>();
             return services;
         }
 

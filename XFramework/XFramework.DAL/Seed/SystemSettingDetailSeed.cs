@@ -15,7 +15,7 @@ namespace XFramework.DAL.Seed
                     Id = 3,
                     SystemSettingId = 3,
                     Key = "SmtpHost",
-                    Value = "smtp.freesmtpservers.com",
+                    Value = "<your.smtp.server>",
                     Type = SystemSettingType.String,
                     IsActive = true
                 },
@@ -25,7 +25,7 @@ namespace XFramework.DAL.Seed
                     Id = 4,
                     SystemSettingId = 3,
                     Key = "SmtpPort",
-                    Value = "25",
+                    Value = "<your.smtp.port>",
                     Type = SystemSettingType.Int,
                     IsActive = true
                 },
@@ -44,19 +44,9 @@ namespace XFramework.DAL.Seed
                 {
                     Id = 6,
                     SystemSettingId = 3,
-                    Key = "EncryptedPassword",
+                    Key = "SmtpPassword",
                     Value = "",
                     Type = SystemSettingType.String,
-                    IsActive = true
-                },
-
-                new SystemSettingDetail
-                {
-                    Id = 7,
-                    SystemSettingId = 3,
-                    Key = "EnableSsl",
-                    Value = "false",
-                    Type = SystemSettingType.Bool,
                     IsActive = true
                 },
 
@@ -65,7 +55,7 @@ namespace XFramework.DAL.Seed
                     Id = 8,
                     SystemSettingId = 3,
                     Key = "SenderEmail",
-                    Value = "deneme@mertcan.com",
+                    Value = "<your.sender.email>",
                     Type = SystemSettingType.String,
                     IsActive = true
                 },

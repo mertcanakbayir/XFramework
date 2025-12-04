@@ -16,18 +16,18 @@ namespace MyApp.API.Controllers
             _mailService = mailService;
         }
 
-        [HttpPost("send")]
+        [HttpPost("send-direct")]
         [TypeFilter(typeof(ValidateFilter))]
         public async Task<ResultViewModel<string>> SendMail([FromBody] MailDto request)
         {
-            return await _mailService.SendEmailAsync(request.To, request.Subject, request.Body, 3);
+            return await _mailService.SendDirectMailAsync(request.To, request.Subject, request.Body, 3);
         }
 
-        [HttpPost("send-mq")]
+        [HttpPost("send-queue")]
         [TypeFilter(typeof(ValidateFilter))]
         public async Task<ResultViewModel<string>> SendMailMQ([FromBody] MailDto request)
         {
-            return await _mailService.SendEmailAsync(request.To, request.Subject, request.Body, 3, isQueue: true);
+            return await _mailService.SendQueueMailAsync(request.To, request.Subject, request.Body, 3, isQueue: true);
         }
     }
 }
