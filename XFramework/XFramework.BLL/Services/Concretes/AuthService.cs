@@ -63,6 +63,19 @@ namespace XFramework.BLL.Services.Concretes
             bool verifyPassword = _hashService.VerifyPassword(loginDto.Password, existedUser.Password);
             if (!verifyPassword)
                 return ResultViewModel<LoginResponseDto>.Failure("Please check credentials.", null, 401);
+
+            if (existedUser.IsFirstLogin == true)
+            {
+                var userDto = _mapper.Map<UserDto>(existedUser);
+                var firstTimeLoginToken = _tokenHelper.CreateFirstTimeLoginToken(userDto);
+                var loginResponse = new LoginResponseDto
+                {
+                    Token = firstTimeLoginToken.Token,
+                    UserPages = null
+                };
+                return ResultViewModel<LoginResponseDto>.Success(loginResponse, "First time login token created, please change your password.", 200);
+            }
+
             var userPages = await _roleAuthorizationService.GetAllPagesByUser(existedUser.Id);
             if (userPages == null)
             {
@@ -135,8 +148,8 @@ namespace XFramework.BLL.Services.Concretes
             }
 
             var userDto = _mapper.Map<UserDto>(user);
-
-            if (!_tokenHelper.ValidatePasswordResetToken(resetPasswordDto.Token, userDto))
+            string expectedTokenType = user.IsFirstLogin ? "FirstTimeLogin" : "PasswordReset";
+            if (!_tokenHelper.ValidatePasswordResetToken(resetPasswordDto.Token, userDto, expectedTokenType))
             {
                 return ResultViewModel<string>.Failure("Token is invalid or expired.", null, 401);
             }
@@ -146,6 +159,16 @@ namespace XFramework.BLL.Services.Concretes
             user.Password = hashedPassword;
             await _userRepository.UpdateAsync(user);
             await _unitOfWork.SaveChangesAsync();
+
+            if (user.IsFirstLogin == true)
+            {
+                user.IsFirstLogin = false;
+
+                await _userRepository.UpdateAsync(user);
+                await _unitOfWork.SaveChangesAsync();
+
+                return ResultViewModel<string>.Success("First time login password change completed succesfully", null, 200);
+            }
 
             return ResultViewModel<string>.Success("Password updated succesfully.", null, 200);
         }

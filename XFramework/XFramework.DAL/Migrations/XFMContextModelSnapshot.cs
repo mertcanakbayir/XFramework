@@ -486,6 +486,19 @@ namespace XFramework.DAL.Migrations
                             IsActive = true,
                             Revision = 0,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 66,
+                            Action = "Assign",
+                            Controller = "UserRole",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0,
+                            DeletedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HttpMethod = "POST",
+                            IsActive = true,
+                            Revision = 0,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -920,6 +933,18 @@ namespace XFramework.DAL.Migrations
                             Revision = 0,
                             RoleId = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 34,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0,
+                            DeletedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndpointId = 66,
+                            IsActive = true,
+                            Revision = 0,
+                            RoleId = 1,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -1350,7 +1375,7 @@ namespace XFramework.DAL.Migrations
                             SystemSettingId = 3,
                             Type = "S",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Value = "smtp.freesmtpservers.com"
+                            Value = "<your.smtp.server>"
                         },
                         new
                         {
@@ -1364,7 +1389,7 @@ namespace XFramework.DAL.Migrations
                             SystemSettingId = 3,
                             Type = "I",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Value = "25"
+                            Value = "<your.smtp.port>"
                         },
                         new
                         {
@@ -1387,26 +1412,12 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             DeletedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = true,
-                            Key = "EncryptedPassword",
+                            Key = "SmtpPassword",
                             Revision = 0,
                             SystemSettingId = 3,
                             Type = "S",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = ""
-                        },
-                        new
-                        {
-                            Id = 7,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = 0,
-                            DeletedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = true,
-                            Key = "EnableSsl",
-                            Revision = 0,
-                            SystemSettingId = 3,
-                            Type = "B",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Value = "false"
                         },
                         new
                         {
@@ -1420,7 +1431,7 @@ namespace XFramework.DAL.Migrations
                             SystemSettingId = 3,
                             Type = "S",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Value = "deneme@mertcan.com"
+                            Value = "<your.sender.email>"
                         },
                         new
                         {
@@ -1480,6 +1491,9 @@ namespace XFramework.DAL.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsFirstLogin")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1511,6 +1525,7 @@ namespace XFramework.DAL.Migrations
                             DeletedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@test.com",
                             IsActive = true,
+                            IsFirstLogin = true,
                             Password = "AQAAAAIAAYagAAAAEBV9CdhPcsGb7++CWXFC+hFKkqkxKR7LfvNFEgWzEBolNu1bW3WXvLd5FF/mCcDwAw==",
                             Revision = 0,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(1089),

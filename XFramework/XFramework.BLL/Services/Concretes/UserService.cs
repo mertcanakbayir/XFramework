@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using XFramework.BLL.Services.Abstracts;
 using XFramework.BLL.Utilities.Hashing;
 using XFramework.DAL.Entities;
@@ -14,10 +13,12 @@ namespace XFramework.BLL.Services.Concretes
     {
 
         private readonly IHashingHelper _hashingHelper;
+        private readonly IBaseRepository<UserRole> _userRoleRepository;
 
-        public UserService(IValidator<UserAddDto> addDtoValidator, IMapper mapper, IBaseRepository<User> baseRepository, IUnitOfWork unitOfWork, IValidator<UserUpdateDto> updateDtoValidator, IHashingHelper hashingHelper) : base(addDtoValidator, mapper, baseRepository, unitOfWork, updateDtoValidator)
+        public UserService(IValidator<UserAddDto> addDtoValidator, IMapper mapper, IBaseRepository<User> baseRepository, IUnitOfWork unitOfWork, IValidator<UserUpdateDto> updateDtoValidator, IHashingHelper hashingHelper, IBaseRepository<UserRole> userRoleRepository) : base(addDtoValidator, mapper, baseRepository, unitOfWork, updateDtoValidator)
         {
             _hashingHelper = hashingHelper;
+            _userRoleRepository = userRoleRepository;
         }
 
         public async Task<ResultViewModel<UserAddDto>> AddUser(UserAddDto userAddDto)
@@ -29,6 +30,13 @@ namespace XFramework.BLL.Services.Concretes
             }
             var userEntity = _mapper.Map<User>(userAddDto);
             userEntity.Password = _hashingHelper.HashPassword(userEntity.Password);
+            userEntity.IsFirstLogin = true;
+
+            userEntity.UserRoles.Add(new UserRole
+            {
+                RoleId = 3
+            });
+
             await _baseRepository.AddAsync(userEntity);
             await _unitOfWork.SaveChangesAsync();
             return ResultViewModel<UserAddDto>.Success("User added succesfully", 201);
@@ -41,25 +49,25 @@ namespace XFramework.BLL.Services.Concretes
             {
                 return ResultViewModel<UserUpdateDto>.Failure("Please check credentials.", validationResult.Errors.Select(e => e.ErrorMessage).ToList());
             }
-            var userEntity = await _baseRepository.GetAsync(filter: e => e.Id == id, include: q => q.Include(e => e.UserRoles).ThenInclude(e => e.Role));
+
+            var userEntity = await _baseRepository.GetAsync(filter: e => e.Id == id);
             if (userEntity == null)
             {
                 return ResultViewModel<UserUpdateDto>.Failure("User not found.", null, 404);
             }
+
             _mapper.Map(userUpdateDto, userEntity);
+
             if (!string.IsNullOrEmpty(userUpdateDto.Password))
             {
                 userEntity.Password = _hashingHelper.HashPassword(userUpdateDto.Password);
+                userEntity.IsFirstLogin = true;
             }
-            userEntity.UserRoles.Clear();
-            userEntity.UserRoles.Add(new UserRole
-            {
-                RoleId = userUpdateDto.RoleId,
-                UserId = id
-            });
+
             await _baseRepository.UpdateAsync(userEntity);
             await _unitOfWork.SaveChangesAsync();
-            return ResultViewModel<UserUpdateDto>.Success("User updated succesfully", 200);
+
+            return ResultViewModel<UserUpdateDto>.Success("User updated successfully.", 200);
         }
 
     }
