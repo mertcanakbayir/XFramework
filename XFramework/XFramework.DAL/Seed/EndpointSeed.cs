@@ -48,7 +48,9 @@ namespace XFramework.DAL.Seed
                 new Endpoint { Id = 62, Controller = "PageRole", Action = "AddPageRole", HttpMethod = "POST", IsActive = true },
                 new Endpoint { Id = 63, Controller = "PageRole", Action = "GetPageRolesByPageId", HttpMethod = "GET", IsActive = true },
                 new Endpoint { Id = 64, Controller = "PageRole", Action = "GetPageRolesByRoleId", HttpMethod = "GET", IsActive = true },
-                new Endpoint { Id = 65, Controller = "PageRole", Action = "UpdatePageRole", HttpMethod = "PUT", IsActive = true }
+                new Endpoint { Id = 65, Controller = "PageRole", Action = "UpdatePageRole", HttpMethod = "PUT", IsActive = true },
+
+                new Endpoint { Id = 66, Controller = "UserRole", Action = "Assign", HttpMethod = "POST", IsActive = true }
                 );
         }
     }

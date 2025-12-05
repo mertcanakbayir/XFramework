@@ -10,7 +10,9 @@ namespace XFramework.BLL.Utilities.JWT
 
         PasswordResetTokenDto CreatePasswordResetToken(UserDto userDto);
 
-        bool ValidatePasswordResetToken(string token, UserDto userDto);
+        PasswordResetTokenDto CreateFirstTimeLoginToken(UserDto userDto);
+
+        bool ValidatePasswordResetToken(string token, UserDto userDto, string tokenType);
 
     }
 }

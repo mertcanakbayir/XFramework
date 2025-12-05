@@ -3,49 +3,44 @@ using System.Security.Claims;
 using System.Text;
 using Dtos;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using XFramework.Dtos;
 using XFramework.Dtos.User;
+using XFramework.Extensions.Configurations;
 
 namespace XFramework.BLL.Utilities.JWT
 {
     public class TokenHelper : ITokenHelper
     {
-        private readonly IConfiguration _conf;
-        public TokenHelper(IConfiguration conf)
+        private readonly JwtOptions _jwt;
+        public TokenHelper(IOptions<JwtOptions> jwtOptions)
         {
-            _conf = conf;
+            _jwt = jwtOptions.Value;
         }
 
         public AccessToken CreateToken(CreateTokenDto createTokenDto)
         {
-            var jwtSection = _conf.GetSection("Jwt");
 
-            var key = jwtSection.GetValue<string>("Key");
-            var issuer = jwtSection.GetValue<string>("Issuer");
-            var audience = jwtSection.GetValue<string>("Audience");
-            var expireInMinutes = jwtSection.GetValue<int>("ExpireInMinutes");
-
-
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Sub,createTokenDto.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, createTokenDto.Email),
-                new Claim(JwtRegisteredClaimNames.PreferredUsername,createTokenDto.Username),
-            };
+                {
+                    new Claim(JwtRegisteredClaimNames.Sub,createTokenDto.Id.ToString()),
+                    new Claim(JwtRegisteredClaimNames.Email, createTokenDto.Email),
+                    new Claim(JwtRegisteredClaimNames.PreferredUsername,createTokenDto.Username),
+                };
 
             foreach (var role in createTokenDto.Role)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
-            var tokenExpiry = DateTime.Now.AddMinutes(expireInMinutes);
+            var tokenExpiry = DateTime.UtcNow.AddMinutes(_jwt.ExpireInMinutes);
 
             var token = new JwtSecurityToken(
-                issuer: issuer,
-                audience: audience,
+                issuer: _jwt.Issuer,
+                audience: _jwt.Audience,
                 claims: claims,
                 expires: tokenExpiry,
                 signingCredentials: credentials
@@ -61,31 +56,34 @@ namespace XFramework.BLL.Utilities.JWT
 
         public PasswordResetTokenDto CreatePasswordResetToken(UserDto userDto)
         {
-            var jwtSection = _conf.GetSection("Jwt");
+            return CreatePasswordResetToken(userDto, "PasswordReset");
+        }
+        public PasswordResetTokenDto CreateFirstTimeLoginToken(UserDto userDto)
+        {
+            return CreatePasswordResetToken(userDto, "FirstTimeLogin");
+        }
 
-            var key = jwtSection.GetValue<string>("Key");
-            var issuer = jwtSection.GetValue<string>("Issuer");
-            var audience = jwtSection.GetValue<string>("Audience");
-            var expireInMinutes = jwtSection.GetValue<int>("ExpireInMinutes");
+        private PasswordResetTokenDto CreatePasswordResetToken(UserDto userDto, string tokenType)
+        {
 
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>
-                {
-                new Claim(JwtRegisteredClaimNames.Sub,userDto.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email,userDto.Email),
-                new Claim("TokenType","ResetToken")
-            };
+                    {
+                    new Claim(JwtRegisteredClaimNames.Sub,userDto.Id.ToString()),
+                    new Claim(JwtRegisteredClaimNames.Email,userDto.Email),
+                    new Claim("TokenType",tokenType)
+                };
 
             var tokenExpiry = DateTime.UtcNow.AddMinutes(15);
             var token = new JwtSecurityToken(
-           issuer: issuer,
-           audience: audience,
-           claims: claims,
-           expires: tokenExpiry,
-           signingCredentials: credentials
-       );
+            issuer: _jwt.Issuer,
+            audience: _jwt.Audience,
+            claims: claims,
+            expires: tokenExpiry,
+            signingCredentials: credentials
+    );
 
             return new PasswordResetTokenDto
             {
@@ -94,14 +92,8 @@ namespace XFramework.BLL.Utilities.JWT
             };
         }
 
-        public bool ValidatePasswordResetToken(string token, UserDto userDto)
+        public bool ValidatePasswordResetToken(string token, UserDto userDto, string tokenType)
         {
-            var jwtSection = _conf.GetSection("Jwt");
-
-            var key = jwtSection.GetValue<string>("Key");
-            var issuer = jwtSection.GetValue<string>("Issuer");
-            var audience = jwtSection.GetValue<string>("Audience");
-            var expireInMinutes = jwtSection.GetValue<int>("ExpireInMinutes");
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var validationParameters = new TokenValidationParameters
@@ -110,18 +102,18 @@ namespace XFramework.BLL.Utilities.JWT
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = issuer,
-                ValidAudience = audience,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+                ValidIssuer = _jwt.Issuer,
+                ValidAudience = _jwt.Audience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key)),
                 ClockSkew = TimeSpan.Zero
             };
 
             try
             {
                 var principal = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
-                var tokenType = principal.Claims.FirstOrDefault(c => c.Type == "TokenType")?.Value;
+                var tokenTypeFromToken = principal.Claims.FirstOrDefault(c => c.Type == "TokenType")?.Value;
 
-                if (tokenType != "ResetToken")
+                if (tokenTypeFromToken != tokenType)
                 {
                     return false;
                 }
