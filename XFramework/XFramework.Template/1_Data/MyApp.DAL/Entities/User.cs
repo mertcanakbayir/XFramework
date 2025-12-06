@@ -9,6 +9,8 @@ namespace MyApp.DAL.Entities
 
         public string Password { get; set; }
 
+        public bool IsFirstLogin { get; set; }
+
         public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
     }
 }
