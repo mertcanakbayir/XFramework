@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using MyApp.BLL.Services.Concretes;
+﻿using System.Security.Claims;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using MyApp.BLL.Services.Concretes;
+using MyApp.Helper.ViewModels;
+
 namespace MyApp.API.Middlewares
 {
     public class RoleAuthorizationMiddleware
@@ -25,8 +25,16 @@ namespace MyApp.API.Middlewares
             }
             if (context.User.Identity?.IsAuthenticated == false)
             {
-                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                await context.Response.WriteAsync("Unauthorized");
+                context.Response.StatusCode = 401;
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsync(JsonSerializer.Serialize(
+                ResultViewModel<string>.Failure(
+                "Unauthorized request.",
+                new List<string> { "User is not authenticated." },
+                401
+                ),
+                new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
+            ));
                 return;
             }
 
@@ -47,8 +55,17 @@ namespace MyApp.API.Middlewares
             var userIdClaim = context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
             if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
             {
-                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                await context.Response.WriteAsync("Unauthorized");
+                context.Response.StatusCode = 401;
+                context.Response.ContentType = "application/json";
+
+                await context.Response.WriteAsync(JsonSerializer.Serialize(
+                    ResultViewModel<string>.Failure(
+                        "Unauthorized",
+                        new List<string> { "Invalid or missing user identifier." },
+                        401
+                    ),
+                    new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
+                ));
                 return;
             }
 
@@ -56,8 +73,17 @@ namespace MyApp.API.Middlewares
 
             if (!hasAccess)
             {
-                context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                await context.Response.WriteAsync("Forbidden");
+                context.Response.StatusCode = 403;
+                context.Response.ContentType = "application/json";
+
+                await context.Response.WriteAsync(JsonSerializer.Serialize(
+                    ResultViewModel<string>.Failure(
+                        "Access Denied",
+                        new List<string> { "You do not have permission to perform this action." },
+                        403
+                    ),
+                    new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
+                ));
                 return;
             }
             await _next(context);
