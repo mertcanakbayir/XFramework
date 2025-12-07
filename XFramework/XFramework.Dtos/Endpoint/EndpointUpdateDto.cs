@@ -1,6 +1,6 @@
 ﻿namespace XFramework.Dtos.Endpoint
 {
-    public class EndpontUpdateDto
+    public class EndpointUpdateDto
     {
         public string Controller { get; set; }
 

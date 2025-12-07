@@ -12,7 +12,7 @@ using XFramework.DAL;
 namespace XFramework.DAL.Migrations
 {
     [DbContext(typeof(XFMContext))]
-    [Migration("20251205211342_initial")]
+    [Migration("20251207140243_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -206,6 +206,19 @@ namespace XFramework.DAL.Migrations
                         },
                         new
                         {
+                            Id = 11,
+                            Action = "DeletePage",
+                            Controller = "Page",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0,
+                            DeletedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HttpMethod = "DELETE",
+                            IsActive = true,
+                            Revision = 0,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
                             Id = 16,
                             Action = "AddEndpoint",
                             Controller = "Endpoint",
@@ -232,8 +245,34 @@ namespace XFramework.DAL.Migrations
                         },
                         new
                         {
+                            Id = 18,
+                            Action = "UpdateEndpoint",
+                            Controller = "Endpoint",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0,
+                            DeletedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HttpMethod = "PUT",
+                            IsActive = true,
+                            Revision = 0,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Action = "DeleteEndpoint",
+                            Controller = "Endpoint",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0,
+                            DeletedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HttpMethod = "DELETE",
+                            IsActive = true,
+                            Revision = 0,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
                             Id = 23,
-                            Action = "AddUserRole",
+                            Action = "AddRole",
                             Controller = "Role",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
@@ -246,12 +285,25 @@ namespace XFramework.DAL.Migrations
                         new
                         {
                             Id = 24,
-                            Action = "AddPageRole",
+                            Action = "DeleteRole",
                             Controller = "Role",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             DeletedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            HttpMethod = "POST",
+                            HttpMethod = "DELETE",
+                            IsActive = true,
+                            Revision = 0,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Action = "UpdateRole",
+                            Controller = "Role",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0,
+                            DeletedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HttpMethod = "PUT",
                             IsActive = true,
                             Revision = 0,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -492,6 +544,19 @@ namespace XFramework.DAL.Migrations
                         },
                         new
                         {
+                            Id = 70,
+                            Action = "DeletePageRole",
+                            Controller = "PageRole",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0,
+                            DeletedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HttpMethod = "DELETE",
+                            IsActive = true,
+                            Revision = 0,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
                             Id = 66,
                             Action = "Assign",
                             Controller = "UserRole",
@@ -499,6 +564,19 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             DeletedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             HttpMethod = "POST",
+                            IsActive = true,
+                            Revision = 0,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 67,
+                            Action = "GetAssignedRoles",
+                            Controller = "UserRole",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0,
+                            DeletedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HttpMethod = "GET",
                             IsActive = true,
                             Revision = 0,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -675,6 +753,18 @@ namespace XFramework.DAL.Migrations
                         },
                         new
                         {
+                            Id = 37,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0,
+                            DeletedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndpointId = 11,
+                            IsActive = true,
+                            Revision = 0,
+                            RoleId = 1,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
                             Id = 7,
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
@@ -699,6 +789,30 @@ namespace XFramework.DAL.Migrations
                         },
                         new
                         {
+                            Id = 35,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0,
+                            DeletedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndpointId = 18,
+                            IsActive = true,
+                            Revision = 0,
+                            RoleId = 1,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 36,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0,
+                            DeletedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndpointId = 19,
+                            IsActive = true,
+                            Revision = 0,
+                            RoleId = 1,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
                             Id = 9,
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
@@ -716,6 +830,18 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             DeletedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndpointId = 24,
+                            IsActive = true,
+                            Revision = 0,
+                            RoleId = 1,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 39,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0,
+                            DeletedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndpointId = 25,
                             IsActive = true,
                             Revision = 0,
                             RoleId = 1,
@@ -944,6 +1070,30 @@ namespace XFramework.DAL.Migrations
                             CreatedBy = 0,
                             DeletedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndpointId = 66,
+                            IsActive = true,
+                            Revision = 0,
+                            RoleId = 1,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 40,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0,
+                            DeletedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndpointId = 67,
+                            IsActive = true,
+                            Revision = 0,
+                            RoleId = 1,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 38,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0,
+                            DeletedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndpointId = 70,
                             IsActive = true,
                             Revision = 0,
                             RoleId = 1,
@@ -1609,7 +1759,7 @@ namespace XFramework.DAL.Migrations
                     b.HasOne("XFramework.DAL.Entities.Role", "Role")
                         .WithMany("EndpointRoles")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Endpoint");

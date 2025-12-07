@@ -12,6 +12,8 @@ namespace XFramework.BLL.Mappings
             CreateMap<Role, RoleDto>().ReverseMap();
 
             CreateMap<RoleAddDto, Role>().ReverseMap();
+
+            CreateMap<RoleUpdateDto, Role>().ReverseMap();
         }
     }
 }

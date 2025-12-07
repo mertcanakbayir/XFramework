@@ -13,6 +13,8 @@ namespace XFramework.BLL.Mappings
             CreateMap<EndpointDto, Endpoint>();
 
             CreateMap<EndpointAddDto, Endpoint>();
+
+            CreateMap<EndpointUpdateDto, Endpoint>().ReverseMap();
         }
     }
 }

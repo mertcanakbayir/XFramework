@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using XFramework.BLL.Services.Abstracts;
 using XFramework.DAL.Entities;
 using XFramework.Dtos;
+using XFramework.Dtos.Role;
 using XFramework.Helper.ViewModels;
 using XFramework.Repository.Repositories.Abstract;
 
@@ -11,16 +13,36 @@ namespace XFramework.BLL.Services.Concretes
     {
         private readonly IBaseRepository<User> _userRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        private readonly IBaseRepository<Role> _roleRepository;
 
-        public UserRoleService(IBaseRepository<User> userRepository, IUnitOfWork unitOfWork)
+        public UserRoleService(IBaseRepository<User> userRepository, IBaseRepository<Role> roleRepository, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _userRepository = userRepository;
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
+            _roleRepository = roleRepository;
         }
 
         public async Task<ResultViewModel<string>> AssignRolesAsync(UserRoleAssignDto userRoleAssignDto)
         {
-            var user = await _userRepository.GetAsync(f => f.Id == userRoleAssignDto.UserId, include: q => q.Include(r => r.UserRoles), asNoTracking: false);
+            var roles = await _roleRepository.GetAllAsync<RoleDto>();
+            var validRoleIds = roles.Data.Select(r => r.Id).ToList();
+            var invalidRoleIds = userRoleAssignDto.RoleIds.Except(validRoleIds);
+
+            if (invalidRoleIds.Any())
+            {
+                return ResultViewModel<string>.Failure(
+                "Invalid role(s) provided",
+                errors: invalidRoleIds.Select(x => $"RoleId not found").ToList(),
+                statusCode: 400
+            );
+            }
+
+            var user = await _userRepository.GetAsync(
+                f => f.Id == userRoleAssignDto.UserId,
+                include: q => q.Include(r => r.UserRoles),
+                asNoTracking: false);
 
             if (user == null)
                 return ResultViewModel<string>.Failure("User not found", null, 404);
@@ -51,6 +73,21 @@ namespace XFramework.BLL.Services.Concretes
             await _unitOfWork.SaveChangesAsync();
 
             return ResultViewModel<string>.Success("Roles updated successfully.", 200);
+        }
+        public async Task<ResultViewModel<UserRoleDto>> GetAssignedRolesAsync(int userId)
+        {
+            var user = await _userRepository.GetAsync(
+                e => e.Id == userId,
+                include: q => q.Include(u => u.UserRoles).ThenInclude(r => r.Role));
+
+            if (user == null)
+            {
+                return ResultViewModel<UserRoleDto>.Failure("User not found", null, 404);
+            }
+
+            var dto = _mapper.Map<UserRoleDto>(user);
+
+            return ResultViewModel<UserRoleDto>.Success(dto, "User roles retrieved successfully.", 200);
         }
     }
 }

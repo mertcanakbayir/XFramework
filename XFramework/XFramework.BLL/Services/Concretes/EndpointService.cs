@@ -9,10 +9,10 @@ using XFramework.Repository.Repositories.Abstract;
 
 namespace XFramework.BLL.Services.Concretes
 {
-    public class EndpointService : BaseService<Endpoint, EndpointDto, EndpointAddDto, EndpontUpdateDto>, IRegister
+    public class EndpointService : BaseService<Endpoint, EndpointDto, EndpointAddDto, EndpointUpdateDto>, IRegister
     {
         private readonly IBaseRepository<User> _userRepository;
-        public EndpointService(IValidator<EndpointAddDto> addDtoValidator, IMapper mapper, IBaseRepository<Endpoint> baseRepository, IUnitOfWork unitOfWork, IValidator<EndpontUpdateDto> updateDtoValidator, IBaseRepository<User> userRepository) : base(addDtoValidator, mapper, baseRepository, unitOfWork, updateDtoValidator)
+        public EndpointService(IValidator<EndpointAddDto> addDtoValidator, IMapper mapper, IBaseRepository<Endpoint> baseRepository, IUnitOfWork unitOfWork, IValidator<EndpointUpdateDto> updateDtoValidator, IBaseRepository<User> userRepository) : base(addDtoValidator, mapper, baseRepository, unitOfWork, updateDtoValidator)
         {
             _userRepository = userRepository;
         }
