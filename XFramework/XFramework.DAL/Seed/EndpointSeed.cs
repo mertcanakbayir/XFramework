@@ -30,6 +30,7 @@ namespace XFramework.DAL.Seed
                 new Endpoint { Id = 23, Controller = "Role", Action = "AddRole", HttpMethod = "POST", IsActive = true },
                 new Endpoint { Id = 24, Controller = "Role", Action = "DeleteRole", HttpMethod = "DELETE", IsActive = true },
                 new Endpoint { Id = 25, Controller = "Role", Action = "UpdateRole", HttpMethod = "PUT", IsActive = true },
+                new Endpoint { Id = 26, Controller = "Role", Action = "GetUserRoles", HttpMethod = "GET", IsActive = true },
 
                 new Endpoint { Id = 31, Controller = "Mail", Action = "SendMail", HttpMethod = "POST", IsActive = true },
                 new Endpoint { Id = 32, Controller = "Test", Action = "GetEnumTests", HttpMethod = "GET", IsActive = true },

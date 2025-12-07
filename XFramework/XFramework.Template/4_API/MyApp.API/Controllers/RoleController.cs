@@ -26,5 +26,17 @@ namespace MyApp.API.Controllers
         {
             return await _roleService.AddAsync(addRole);
         }
+
+        [HttpDelete]
+        public async Task<ResultViewModel<string>> DeleteRole(int id)
+        {
+            return await _roleService.DeleteAsync(id);
+        }
+
+        [HttpPut]
+        public async Task<ResultViewModel<string>> UpdateRole(int id, RoleUpdateDto roleUpdateDto)
+        {
+            return await _roleService.UpdateAsync(id, roleUpdateDto);
+        }
     }
 }

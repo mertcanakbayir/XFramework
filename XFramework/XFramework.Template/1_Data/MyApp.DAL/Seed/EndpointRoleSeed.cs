@@ -22,12 +22,16 @@ namespace MyApp.DAL.Seed
                  new EndpointRole { Id = 4, EndpointId = 8, RoleId = 1 },
                  new EndpointRole { Id = 5, EndpointId = 9, RoleId = 1 },
                  new EndpointRole { Id = 6, EndpointId = 10, RoleId = 1 },
+                 new EndpointRole { Id = 37, EndpointId = 11, RoleId = 1 },
 
                  new EndpointRole { Id = 7, EndpointId = 16, RoleId = 1 },
                  new EndpointRole { Id = 8, EndpointId = 17, RoleId = 1 },
+                 new EndpointRole { Id = 35, EndpointId = 18, RoleId = 1 },
+                 new EndpointRole { Id = 36, EndpointId = 19, RoleId = 1 },
 
                  new EndpointRole { Id = 9, EndpointId = 23, RoleId = 1 },
                  new EndpointRole { Id = 10, EndpointId = 24, RoleId = 1 },
+                 new EndpointRole { Id = 39, EndpointId = 25, RoleId = 1 },
 
                  new EndpointRole { Id = 12, EndpointId = 31, RoleId = 1 },
                  new EndpointRole { Id = 13, EndpointId = 32, RoleId = 1 },
@@ -53,7 +57,11 @@ namespace MyApp.DAL.Seed
                  new EndpointRole { Id = 32, EndpointId = 42, RoleId = 1 },
                  new EndpointRole { Id = 33, EndpointId = 48, RoleId = 1 },
 
-                 new EndpointRole { Id = 34, EndpointId = 66, RoleId = 1 }
+                 new EndpointRole { Id = 34, EndpointId = 66, RoleId = 1 },
+                 new EndpointRole { Id = 40, EndpointId = 67, RoleId = 1 },
+
+                 new EndpointRole { Id = 38, EndpointId = 70, RoleId = 1 }
+
                 );
         }
     }

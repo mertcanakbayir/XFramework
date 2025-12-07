@@ -3,7 +3,7 @@ using MyApp.Dtos.Endpoint;
 
 namespace MyApp.BLL.Utilities.ValidationRulers
 {
-    public class EndpointUpdateDtoValidator : AbstractValidator<EndpontUpdateDto>
+    public class EndpointUpdateDtoValidator : AbstractValidator<EndpointUpdateDto>
     {
         public EndpointUpdateDtoValidator()
         {

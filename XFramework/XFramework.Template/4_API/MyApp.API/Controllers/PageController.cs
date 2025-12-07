@@ -27,7 +27,7 @@ namespace MyApp.API.Controllers
         [TypeFilter(typeof(ValidateFilter))]
         public async Task<ResultViewModel<List<PageDto>>> GetPagesByUser(int userId)
         {
-            return await _pageService.GetAllAsync();
+            return await _pageService.GetPagesByUser(userId);
         }
 
         [HttpGet("parent")]

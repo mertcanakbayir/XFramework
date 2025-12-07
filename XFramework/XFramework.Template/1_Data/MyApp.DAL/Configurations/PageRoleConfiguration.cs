@@ -13,11 +13,12 @@ namespace MyApp.DAL.Configurations
 
             builder.HasOne(pr => pr.Page)
                 .WithMany(p => p.PageRoles)
-                .HasForeignKey(pr => pr.PageId);
+                .HasForeignKey(pr => pr.PageId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(pr => pr.Role)
                 .WithMany(r => r.PageRoles)
-               .HasForeignKey(pr => pr.RoleId);
+                .HasForeignKey(pr => pr.RoleId);
         }
     }
 }
