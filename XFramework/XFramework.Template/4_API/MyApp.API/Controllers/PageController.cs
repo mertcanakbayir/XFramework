@@ -50,5 +50,11 @@ namespace MyApp.API.Controllers
             return await _pageService.UpdateAsync(id, pageUpdateDto);
         }
 
+        [HttpDelete]
+        public async Task<ResultViewModel<string>> DeletePage(int id)
+        {
+            return await _pageService.DeleteAsync(id);
+        }
+
     }
 }

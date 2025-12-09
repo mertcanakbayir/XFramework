@@ -39,7 +39,7 @@
 		<ProjectReference Include="..\..\1_Data\MyApp.DAL\MyApp.DAL.csproj" />
 		<ProjectReference Include="..\..\0_Common\MyApp.Dtos\MyApp.Dtos.csproj" />
 		<ProjectReference Include="..\..\2_Repository\MyApp.Repository\MyApp.Repository.csproj" />
-		<PackageReference Include="MA.XFramework.Extensions" Version="1.0.14" />
+		<PackageReference Include="MA.XFramework.Extensions" Version="1.0.15" />
 
 	</ItemGroup>
 

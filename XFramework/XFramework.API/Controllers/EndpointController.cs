@@ -18,10 +18,11 @@ namespace XFramework.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ResultViewModel<List<EndpointDto>>> GetEndpointsByUser(int userId)
+        public async Task<PagedResultViewModel<EndpointDto>> GetEndpointsByUser(int userId)
         {
             return await _endpointService.GetEndpointsByUser(userId);
         }
+
 
         [HttpPost]
         public async Task<ResultViewModel<string>> AddEndpoint(EndpointAddDto endpointAddDto)

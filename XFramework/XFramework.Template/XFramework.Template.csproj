@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<PackageType>Template</PackageType>
-		<PackageVersion>1.0.10</PackageVersion>
+		<PackageVersion>1.0.11</PackageVersion>
 		<PackageId>MA.XFramework.Template</PackageId>
 		<Title>XFramework Template</Title>
 		<Authors>mertcanakbayir</Authors>

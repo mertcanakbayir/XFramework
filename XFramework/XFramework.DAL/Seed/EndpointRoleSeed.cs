@@ -32,6 +32,7 @@ namespace XFramework.DAL.Seed
                  new EndpointRole { Id = 9, EndpointId = 23, RoleId = 1 },
                  new EndpointRole { Id = 10, EndpointId = 24, RoleId = 1 },
                  new EndpointRole { Id = 39, EndpointId = 25, RoleId = 1 },
+                 new EndpointRole { Id = 41, EndpointId = 26, RoleId = 1 },
 
                  new EndpointRole { Id = 12, EndpointId = 31, RoleId = 1 },
                  new EndpointRole { Id = 13, EndpointId = 32, RoleId = 1 },
@@ -40,9 +41,14 @@ namespace XFramework.DAL.Seed
                  new EndpointRole { Id = 15, EndpointId = 39, RoleId = 1 },
                  new EndpointRole { Id = 16, EndpointId = 40, RoleId = 1 },
                  new EndpointRole { Id = 17, EndpointId = 41, RoleId = 1 },
+                 new EndpointRole { Id = 32, EndpointId = 42, RoleId = 1 },
+                 new EndpointRole { Id = 42, EndpointId = 43, RoleId = 1 },
 
                  new EndpointRole { Id = 18, EndpointId = 46, RoleId = 1 },
                  new EndpointRole { Id = 19, EndpointId = 47, RoleId = 1 },
+                 new EndpointRole { Id = 33, EndpointId = 48, RoleId = 1 },
+                 new EndpointRole { Id = 43, EndpointId = 49, RoleId = 1 },
+                 new EndpointRole { Id = 44, EndpointId = 50, RoleId = 1 },
 
                  new EndpointRole { Id = 20, EndpointId = 53, RoleId = 1 },
                  new EndpointRole { Id = 21, EndpointId = 54, RoleId = 1 },
@@ -53,9 +59,6 @@ namespace XFramework.DAL.Seed
                  new EndpointRole { Id = 25, EndpointId = 63, RoleId = 1 },
                  new EndpointRole { Id = 26, EndpointId = 64, RoleId = 1 },
                  new EndpointRole { Id = 27, EndpointId = 65, RoleId = 1 },
-
-                 new EndpointRole { Id = 32, EndpointId = 42, RoleId = 1 },
-                 new EndpointRole { Id = 33, EndpointId = 48, RoleId = 1 },
 
                  new EndpointRole { Id = 34, EndpointId = 66, RoleId = 1 },
                  new EndpointRole { Id = 40, EndpointId = 67, RoleId = 1 },

@@ -68,9 +68,6 @@ namespace XFramework.Extensions.Middlewares
                         success = false,
                         message,
                         traceId,
-                        action = actionName,
-                        userId,
-                        ipAddress
                     };
 
                     context.Response.StatusCode = statusCode;

@@ -22,7 +22,7 @@ namespace MyApp.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ResultViewModel<string>> AddUserRole(RoleAddDto addRole)
+        public async Task<ResultViewModel<string>> AddRole(RoleAddDto addRole)
         {
             return await _roleService.AddAsync(addRole);
         }

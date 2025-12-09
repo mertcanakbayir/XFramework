@@ -30,6 +30,7 @@ namespace MyApp.DAL.Seed
                 new Endpoint { Id = 23, Controller = "Role", Action = "AddRole", HttpMethod = "POST", IsActive = true },
                 new Endpoint { Id = 24, Controller = "Role", Action = "DeleteRole", HttpMethod = "DELETE", IsActive = true },
                 new Endpoint { Id = 25, Controller = "Role", Action = "UpdateRole", HttpMethod = "PUT", IsActive = true },
+                new Endpoint { Id = 26, Controller = "Role", Action = "GetUserRoles", HttpMethod = "GET", IsActive = true },
 
                 new Endpoint { Id = 31, Controller = "Mail", Action = "SendMail", HttpMethod = "POST", IsActive = true },
                 new Endpoint { Id = 32, Controller = "Test", Action = "GetEnumTests", HttpMethod = "GET", IsActive = true },
@@ -39,10 +40,13 @@ namespace MyApp.DAL.Seed
                 new Endpoint { Id = 40, Controller = "SystemSetting", Action = "GetSystemSettingById", HttpMethod = "GET", IsActive = true },
                 new Endpoint { Id = 41, Controller = "SystemSetting", Action = "UpdateSystemSetting", HttpMethod = "PUT", IsActive = true },
                 new Endpoint { Id = 42, Controller = "SystemSetting", Action = "AddSystemSetting", HttpMethod = "POST", IsActive = true },
+                new Endpoint { Id = 43, Controller = "SystemSetting", Action = "DeleteSystemSetting", HttpMethod = "DELETE", IsActive = true },
 
                 new Endpoint { Id = 46, Controller = "SystemSettingDetail", Action = "GetSystemSettingDetailById", HttpMethod = "GET", IsActive = true },
                 new Endpoint { Id = 47, Controller = "SystemSettingDetail", Action = "UpdateSystemSettingDetail", HttpMethod = "PUT", IsActive = true },
                 new Endpoint { Id = 48, Controller = "SystemSettingDetail", Action = "AddSystemSettingDetail", HttpMethod = "POST", IsActive = true },
+                new Endpoint { Id = 49, Controller = "SystemSettingDetail", Action = "DeleteSystemSettingDetail", HttpMethod = "DELETE", IsActive = true },
+                new Endpoint { Id = 50, Controller = "SystemSettingDetail", Action = "GetSystemSettingDetailsBySystemSettingId", HttpMethod = "GET", IsActive = true },
 
                 new Endpoint { Id = 53, Controller = "EndpointRole", Action = "AddEndpointRole", HttpMethod = "POST", IsActive = true },
                 new Endpoint { Id = 54, Controller = "EndpointRole", Action = "GetEndpointRolesByEndpointId", HttpMethod = "GET", IsActive = true },
