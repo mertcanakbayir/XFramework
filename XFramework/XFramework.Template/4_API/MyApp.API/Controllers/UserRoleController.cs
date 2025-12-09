@@ -21,5 +21,11 @@ namespace MyApp.API.Controllers
         {
             return await _userRoleService.AssignRolesAsync(dto);
         }
+
+        [HttpGet("assigned-roles")]
+        public async Task<ResultViewModel<UserRoleDto>> GetAssignedRoles(int userId)
+        {
+            return await _userRoleService.GetAssignedRolesAsync(userId);
+        }
     }
 }

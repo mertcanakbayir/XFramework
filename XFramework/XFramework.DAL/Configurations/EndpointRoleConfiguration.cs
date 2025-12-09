@@ -14,11 +14,13 @@ namespace XFramework.DAL.Configurations
 
             builder.HasOne(er => er.Endpoint)
                .WithMany(e => e.EndpointRoles)
-               .HasForeignKey(e => e.EndpointId);
+               .HasForeignKey(e => e.EndpointId)
+               .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(er => er.Role)
                .WithMany(r => r.EndpointRoles)
-               .HasForeignKey(er => er.RoleId);
+               .HasForeignKey(er => er.RoleId)
+               .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

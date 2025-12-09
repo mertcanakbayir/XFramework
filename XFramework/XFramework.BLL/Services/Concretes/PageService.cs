@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using XFramework.BLL.Services.Abstracts;
 using XFramework.DAL.Entities;
 using XFramework.Dtos.Page;
@@ -11,26 +10,37 @@ namespace XFramework.BLL.Services.Concretes
 {
     public class PageService : BaseService<Page, PageDto, PageAddDto, PageUpdateDto>, IRegister
     {
-        private readonly IBaseRepository<User> _userRepository;
 
-        public PageService(IValidator<PageAddDto> addDtoValidator, IMapper mapper, IBaseRepository<Page> baseRepository, IUnitOfWork unitOfWork, IValidator<PageUpdateDto> updateDtoValidator, IBaseRepository<User> userRepository) : base(addDtoValidator, mapper, baseRepository, unitOfWork, updateDtoValidator)
+        public PageService(IValidator<PageAddDto> addDtoValidator, IMapper mapper, IBaseRepository<Page> baseRepository, IUnitOfWork unitOfWork, IValidator<PageUpdateDto> updateDtoValidator) : base(addDtoValidator, mapper, baseRepository, unitOfWork, updateDtoValidator)
         {
-            _userRepository = userRepository;
         }
 
-        public async Task<ResultViewModel<List<PageDto>>> GetPagesByUser(int userId)
+        public async Task<PagedResultViewModel<PageDto>> GetPagesByUser(int userId)
         {
-            var user = await _userRepository.GetAsync(filter: q => q.Id == userId, asNoTracking: true, include: q => q.Include(u => u.UserRoles).ThenInclude(ur => ur.Role).ThenInclude(pr => pr.PageRoles).ThenInclude(p => p.Page));
-            if (user == null)
+            if (userId <= 0)
             {
-                return ResultViewModel<List<PageDto>>.Failure("User not found");
+                return PagedResultViewModel<PageDto>.Failure("Invalrid user ID");
             }
-            var pages = user.UserRoles.SelectMany(ur => ur.Role.PageRoles)
-                .Select(pr => pr.Page)
-                .Distinct()
-                .ToList();
-            var pagesDto = _mapper.Map<List<PageDto>>(pages);
-            return ResultViewModel<List<PageDto>>.Success(pagesDto, "Pages the user have permission:");
+
+            var pages = await _baseRepository.GetAllAsync<PageDto>(filter: p => p.PageRoles.Any(pr => pr.Role.UserRoles.Any(ur => ur.UserId == userId)));
+
+            if (pages == null || pages.Data == null || !pages.Data.Any())
+            {
+                return PagedResultViewModel<PageDto>.Failure(
+                    "User has no page permissions",
+                    statusCode: 404
+                );
+            }
+
+            return PagedResultViewModel<PageDto>.Success(
+                pages.Data,
+                pages.TotalCount,
+                pages.PageNumber,
+                pages.PageSize,
+                "User accessible pages",
+                200
+            );
         }
+
     }
 }

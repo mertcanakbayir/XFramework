@@ -43,5 +43,12 @@ namespace MyApp.API.Controllers
             return await _pageRoleService.UpdateAsync(id, pageRoleUpdateDto);
         }
 
+        [HttpDelete]
+        [TypeFilter(typeof(ValidateFilter))]
+        public async Task<ResultViewModel<string>> DeletePageRole(int id)
+        {
+            return await _pageRoleService.DeleteAsync(id);
+        }
+
     }
 }

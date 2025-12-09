@@ -71,7 +71,7 @@ namespace XFramework.BLL.Services.Concretes
             var entity = await _baseRepository.GetAsync(e => e.Id == id);
             if (entity == null)
             {
-                return ResultViewModel<string>.Failure("Not Found");
+                return ResultViewModel<string>.Failure("Not Found",statusCode:404);
             }
             await _baseRepository.DeleteAsync(id);
             await _unitOfWork.SaveChangesAsync();
@@ -87,7 +87,7 @@ namespace XFramework.BLL.Services.Concretes
             var entities = await _baseRepository.GetAllAsync<TDto>(filter: e => ids.Contains(e.Id));
             if (entities.TotalCount == 0)
             {
-                return ResultViewModel<string>.Failure("No records found");
+                return ResultViewModel<string>.Failure("No records found",statusCode:404);
             }
             await _baseRepository.DeleteRangeAsync(ids);
             await _unitOfWork.SaveChangesAsync();
@@ -105,7 +105,7 @@ namespace XFramework.BLL.Services.Concretes
             var result = await _baseRepository.GetAllAsync<TDto>(filter: entityFilter, asNoTracking: true, pageSize: pageSize, pageNumber: pageNumber);
             if (result.TotalCount == 0)
             {
-                return PagedResultViewModel<TDto>.Failure("No records found");
+                return PagedResultViewModel<TDto>.Failure("No records found",statusCode:404);
             }
             return PagedResultViewModel<TDto>.Success(
                 data: result.Data,
@@ -126,7 +126,7 @@ namespace XFramework.BLL.Services.Concretes
             var entity = await _baseRepository.GetAsync(filter: entityFilter, asNoTracking: true);
             if (entity == null)
             {
-                return ResultViewModel<TDto>.Failure("No records found");
+                return ResultViewModel<TDto>.Failure("No records found", statusCode: 404);
             }
             var dto = _mapper.Map<TDto>(entity);
             return ResultViewModel<TDto>.Success(dto, "Record:");
@@ -146,7 +146,7 @@ namespace XFramework.BLL.Services.Concretes
             var existing = await _baseRepository.GetAsync(filter: e => e.Id == id);
             if (existing == null)
             {
-                return ResultViewModel<string>.Failure("Not Found", errors: new List<string> { $"Record does not exist." });
+                return ResultViewModel<string>.Failure("Not Found", errors: new List<string> { $"Record does not exist." },statusCode:404);
             }
             _mapper.Map(dto, existing);
             await _baseRepository.UpdateAsync(existing);

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using XFramework.BLL.Services.Concretes;
+using XFramework.Dtos.SystemSetting;
 using XFramework.Dtos.SystemSettingDetail;
 using XFramework.Helper.ViewModels;
 
@@ -33,6 +34,18 @@ namespace XFramework.API.Controllers
     [FromBody] SystemSettingDetailAddDto dto)
         {
             return await _systemSettingDetailService.AddAsync(systemSettingId, dto);
+        }
+
+        [HttpDelete]
+        public async Task<ResultViewModel<string>> DeleteSystemSettingDetail(int id)
+        {
+            return await _systemSettingDetailService.DeleteAsync(id);
+        }
+
+        [HttpGet("{systemSettingId}/details")]
+        public async Task<PagedResultViewModel<SystemSettingDetailDto>> GetSystemSettingDetailsBySystemSettingId(int id)
+        {
+            return await _systemSettingDetailService.GetAllAsync(e => e.SystemSettingId == id);
         }
     }
 }

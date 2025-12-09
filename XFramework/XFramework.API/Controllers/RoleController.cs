@@ -22,9 +22,21 @@ namespace XFramework.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ResultViewModel<string>> AddUserRole(RoleAddDto addRole)
+        public async Task<ResultViewModel<string>> AddRole(RoleAddDto addRole)
         {
             return await _roleService.AddAsync(addRole);
+        }
+
+        [HttpDelete]
+        public async Task<ResultViewModel<string>> DeleteRole(int id)
+        {
+            return await _roleService.DeleteAsync(id);
+        }
+
+        [HttpPut]
+        public async Task<ResultViewModel<string>> UpdateRole(int id, RoleUpdateDto roleUpdateDto)
+        {
+            return await _roleService.UpdateAsync(id, roleUpdateDto);
         }
     }
 }

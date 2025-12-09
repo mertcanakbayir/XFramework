@@ -37,5 +37,11 @@ namespace XFramework.API.Controllers
         {
             return await _systemSettingService.AddAsync(systemSettingAddDto);
         }
+
+        [HttpDelete]
+        public async Task<ResultViewModel<string>> DeleteSystemSetting(int id)
+        {
+            return await _systemSettingService.DeleteAsync(id);
+        }
     }
 }

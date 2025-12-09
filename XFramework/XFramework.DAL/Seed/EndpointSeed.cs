@@ -20,12 +20,17 @@ namespace XFramework.DAL.Seed
                 new Endpoint { Id = 8, Controller = "Page", Action = "GetByParentId", HttpMethod = "GET", IsActive = true },
                 new Endpoint { Id = 9, Controller = "Page", Action = "GetPages", HttpMethod = "GET", IsActive = true },
                 new Endpoint { Id = 10, Controller = "Page", Action = "UpdatePage", HttpMethod = "PUT", IsActive = true },
+                new Endpoint { Id = 11, Controller = "Page", Action = "DeletePage", HttpMethod = "DELETE", IsActive = true },
 
                 new Endpoint { Id = 16, Controller = "Endpoint", Action = "AddEndpoint", HttpMethod = "POST", IsActive = true },
                 new Endpoint { Id = 17, Controller = "Endpoint", Action = "GetEndpointsByUser", HttpMethod = "GET", IsActive = true },
+                new Endpoint { Id = 18, Controller = "Endpoint", Action = "UpdateEndpoint", HttpMethod = "PUT", IsActive = true },
+                new Endpoint { Id = 19, Controller = "Endpoint", Action = "DeleteEndpoint", HttpMethod = "DELETE", IsActive = true },
 
-                new Endpoint { Id = 23, Controller = "Role", Action = "AddUserRole", HttpMethod = "POST", IsActive = true },
-                new Endpoint { Id = 24, Controller = "Role", Action = "AddPageRole", HttpMethod = "POST", IsActive = true },
+                new Endpoint { Id = 23, Controller = "Role", Action = "AddRole", HttpMethod = "POST", IsActive = true },
+                new Endpoint { Id = 24, Controller = "Role", Action = "DeleteRole", HttpMethod = "DELETE", IsActive = true },
+                new Endpoint { Id = 25, Controller = "Role", Action = "UpdateRole", HttpMethod = "PUT", IsActive = true },
+                new Endpoint { Id = 26, Controller = "Role", Action = "GetUserRoles", HttpMethod = "GET", IsActive = true },
 
                 new Endpoint { Id = 31, Controller = "Mail", Action = "SendMail", HttpMethod = "POST", IsActive = true },
                 new Endpoint { Id = 32, Controller = "Test", Action = "GetEnumTests", HttpMethod = "GET", IsActive = true },
@@ -35,10 +40,13 @@ namespace XFramework.DAL.Seed
                 new Endpoint { Id = 40, Controller = "SystemSetting", Action = "GetSystemSettingById", HttpMethod = "GET", IsActive = true },
                 new Endpoint { Id = 41, Controller = "SystemSetting", Action = "UpdateSystemSetting", HttpMethod = "PUT", IsActive = true },
                 new Endpoint { Id = 42, Controller = "SystemSetting", Action = "AddSystemSetting", HttpMethod = "POST", IsActive = true },
+                new Endpoint { Id = 43, Controller = "SystemSetting", Action = "DeleteSystemSetting", HttpMethod = "DELETE", IsActive = true },
 
                 new Endpoint { Id = 46, Controller = "SystemSettingDetail", Action = "GetSystemSettingDetailById", HttpMethod = "GET", IsActive = true },
                 new Endpoint { Id = 47, Controller = "SystemSettingDetail", Action = "UpdateSystemSettingDetail", HttpMethod = "PUT", IsActive = true },
                 new Endpoint { Id = 48, Controller = "SystemSettingDetail", Action = "AddSystemSettingDetail", HttpMethod = "POST", IsActive = true },
+                new Endpoint { Id = 49, Controller = "SystemSettingDetail", Action = "DeleteSystemSettingDetail", HttpMethod = "DELETE", IsActive = true },
+                new Endpoint { Id = 50, Controller = "SystemSettingDetail", Action = "GetSystemSettingDetailsBySystemSettingId", HttpMethod = "GET", IsActive = true },
 
                 new Endpoint { Id = 53, Controller = "EndpointRole", Action = "AddEndpointRole", HttpMethod = "POST", IsActive = true },
                 new Endpoint { Id = 54, Controller = "EndpointRole", Action = "GetEndpointRolesByEndpointId", HttpMethod = "GET", IsActive = true },
@@ -49,8 +57,10 @@ namespace XFramework.DAL.Seed
                 new Endpoint { Id = 63, Controller = "PageRole", Action = "GetPageRolesByPageId", HttpMethod = "GET", IsActive = true },
                 new Endpoint { Id = 64, Controller = "PageRole", Action = "GetPageRolesByRoleId", HttpMethod = "GET", IsActive = true },
                 new Endpoint { Id = 65, Controller = "PageRole", Action = "UpdatePageRole", HttpMethod = "PUT", IsActive = true },
+                new Endpoint { Id = 70, Controller = "PageRole", Action = "DeletePageRole", HttpMethod = "DELETE", IsActive = true },
 
-                new Endpoint { Id = 66, Controller = "UserRole", Action = "Assign", HttpMethod = "POST", IsActive = true }
+                new Endpoint { Id = 66, Controller = "UserRole", Action = "Assign", HttpMethod = "POST", IsActive = true },
+                new Endpoint { Id = 67, Controller = "UserRole", Action = "GetAssignedRoles", HttpMethod = "GET", IsActive = true }
                 );
         }
     }

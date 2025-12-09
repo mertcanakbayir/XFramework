@@ -27,7 +27,7 @@ namespace MyApp.API.Controllers
         [TypeFilter(typeof(ValidateFilter))]
         public async Task<ResultViewModel<List<PageDto>>> GetPagesByUser(int userId)
         {
-            return await _pageService.GetAllAsync();
+            return await _pageService.GetPagesByUser(userId);
         }
 
         [HttpGet("parent")]
@@ -48,6 +48,12 @@ namespace MyApp.API.Controllers
         public async Task<ResultViewModel<string>> UpdatePage(int id, PageUpdateDto pageUpdateDto)
         {
             return await _pageService.UpdateAsync(id, pageUpdateDto);
+        }
+
+        [HttpDelete]
+        public async Task<ResultViewModel<string>> DeletePage(int id)
+        {
+            return await _pageService.DeleteAsync(id);
         }
 
     }

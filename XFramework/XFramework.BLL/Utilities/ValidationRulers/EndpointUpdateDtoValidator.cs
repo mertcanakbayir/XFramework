@@ -3,7 +3,7 @@ using XFramework.Dtos.Endpoint;
 
 namespace XFramework.BLL.Utilities.ValidationRulers
 {
-    public class EndpointUpdateDtoValidator : AbstractValidator<EndpontUpdateDto>
+    public class EndpointUpdateDtoValidator : AbstractValidator<EndpointUpdateDto>
     {
         public EndpointUpdateDtoValidator()
         {
