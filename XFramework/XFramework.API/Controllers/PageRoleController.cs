@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using XFramework.BLL.Services.Concretes;
-using XFramework.Dtos.EndpointRole;
 using XFramework.Dtos.PageRole;
 using XFramework.Helper.ViewModels;
 

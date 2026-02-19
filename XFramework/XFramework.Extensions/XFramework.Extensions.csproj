@@ -4,16 +4,17 @@
 		<TargetFramework>net9.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<PackageId>MA.XFramework.Extensions</PackageId>
-		<Version>1.0.15</Version>
+		<PackageId>MCAkbayir.XFramework.Extensions</PackageId>
+		<Version>1.0.17</Version>
 		<Authors>mertcanakbayir</Authors>
-		<Company>XFramework</Company>
 		<Description>XFramework core extensions: middlewares, services, Serilog, RateLimiter, JWT setup, etc.</Description>
 		<RepositoryUrl>https://github.com/mertcanakbayir/XFramework</RepositoryUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageTags>xframework;extensions;middleware;serilog;jwt;automapper;fluentvalidation</PackageTags>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-		<PackageOutputPath>C:\LocalNuGet</PackageOutputPath>
+		<PackageOutputPath>../nupkg</PackageOutputPath>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -31,6 +32,10 @@
 		<PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.6.2" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.6.2" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.6.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
 
 </Project>

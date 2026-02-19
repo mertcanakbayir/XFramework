@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using XFramework.BLL.Services.Concretes;
-using XFramework.Dtos.SystemSetting;
 using XFramework.Dtos.SystemSettingDetail;
 using XFramework.Helper.ViewModels;
 

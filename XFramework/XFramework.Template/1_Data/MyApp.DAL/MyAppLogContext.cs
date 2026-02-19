@@ -14,6 +14,7 @@ namespace MyApp.DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfiguration(new Configurations.LogConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }

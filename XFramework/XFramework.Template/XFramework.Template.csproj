@@ -1,11 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<PackageType>Template</PackageType>
-		<PackageVersion>1.0.11</PackageVersion>
-		<PackageId>MA.XFramework.Template</PackageId>
+		<PackageVersion>1.0.13</PackageVersion>
+		<PackageId>MCAkbayir.XFramework.Template</PackageId>
 		<Title>XFramework Template</Title>
 		<Authors>mertcanakbayir</Authors>
 		<Description>Rapid Application Development Template for XFramework</Description>
+		<RepositoryUrl>https://github.com/mertcanakbayir/XFramework</RepositoryUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageTags>dotnet-new;templates;xframework</PackageTags>
 
 		<TargetFramework>net9.0</TargetFramework>
@@ -16,7 +18,8 @@
 		<NoWarn>$(NoWarn);NU5128</NoWarn>
 		<NoDefaultExcludes>true</NoDefaultExcludes>
 		<EnableDefaultItems>false</EnableDefaultItems>
-		<PackageOutputPath>C:\LocalNuGet</PackageOutputPath>
+		<PackageOutputPath>../nupkg</PackageOutputPath>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -28,5 +31,9 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.11" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
 </Project>

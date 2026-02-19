@@ -1,7 +1,5 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using XFramework.BLL.Services.Concretes;
-using XFramework.Helper.ViewModels;
 
 namespace XFramework.API.Controllers
 {

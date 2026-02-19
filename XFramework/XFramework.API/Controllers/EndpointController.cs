@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using XFramework.BLL.Services.Concretes;
 using XFramework.Dtos.Endpoint;
 using XFramework.Helper.ViewModels;

@@ -128,7 +128,7 @@ namespace XFramework.Extensions
                     {
                         TableName = "Logs",
                         SchemaName = "dbo",
-                        AutoCreateSqlTable = true,
+                        AutoCreateSqlTable = false,
                         BatchPostingLimit = 50,
                         BatchPeriod = TimeSpan.FromSeconds(10)
                     },

@@ -11,28 +11,36 @@ namespace MyApp.DAL.Configurations
             builder.ToTable("Logs");
 
             builder.HasKey(l => l.Id);
+
             builder.Property(l => l.Message)
-               .IsRequired()
-               .HasMaxLength(2000);
+                .HasColumnType("nvarchar(max)");
+
+            builder.Property(l => l.MessageTemplate)
+                .HasColumnType("nvarchar(max)");
 
             builder.Property(l => l.Level)
-                .IsRequired()
-                .HasMaxLength(50);
+                .HasMaxLength(128);
 
-            builder.Property(l => l.Timestamp)
+            builder.Property(l => l.TimeStamp)
                 .IsRequired();
 
             builder.Property(l => l.Exception)
-                .HasMaxLength(4000);
+                .HasColumnType("nvarchar(max)");
+
+            builder.Property(l => l.Properties)
+                .HasColumnType("nvarchar(max)");
+
+            builder.Property(l => l.UserId)
+                .HasMaxLength(100);
+
+            builder.Property(l => l.IPAddress)
+                .HasMaxLength(50);
 
             builder.Property(l => l.ActionName)
                 .HasMaxLength(250);
 
-            builder.Property(l => l.IpAddress)
-                .HasMaxLength(50);
-
-            builder.Property(l => l.UserId)
-                .IsRequired(false);
+            builder.Property(l => l.TraceIdentifier)
+                .HasMaxLength(100);
         }
     }
 }

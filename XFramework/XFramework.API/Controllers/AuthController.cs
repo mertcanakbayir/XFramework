@@ -4,7 +4,7 @@ using XFramework.BLL.Services.Concretes;
 using XFramework.Dtos;
 using XFramework.Helper.ViewModels;
 
-namespace XFramework.Controllers
+namespace XFramework.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
